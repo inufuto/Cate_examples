@@ -1,0 +1,23 @@
+
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Wall equ 64
+Char_Solver equ 80
+Char_Solver_Left equ 80
+Char_Solver_Right equ 88
+Char_Solver_Up equ 96
+Char_Solver_Down equ 104
+Char_Monster equ 112
+Char_Monster_Left equ 112
+Char_Monster_Right equ 120
+Char_Monster_Up equ 128
+Char_Monster_Down equ 136
+Char_Card equ 144
+Char_Title equ 200
+Char_N equ 200
+Char_E equ 204
+Char_U equ 208
+Char_R equ 212
+Char_A equ 216
+Char_S equ 220
+Char_End equ 224
