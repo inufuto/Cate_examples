@@ -1,0 +1,24 @@
+
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 64
+Char_Soil equ 80
+Char_Bedrock equ 82
+Char_Wall equ 83
+Char_Wall_Space equ 83
+Char_Wall_Left equ 84
+Char_Wall_Right equ 85
+Char_Wall_Top equ 86
+Char_Wall_Bottom equ 87
+Char_Wall_LeftTop equ 88
+Char_Wall_RightTop equ 89
+Char_Wall_LeftBottom equ 90
+Char_Wall_RightBottom equ 91
+Char_Man equ 92
+Char_Ghost equ 156
+Char_Chaser equ 220
+Char_Rock equ 224
+Char_Point equ 228
+Char_Loose equ 244
+Char_Box equ 252
+Char_End equ 256
