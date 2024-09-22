@@ -1,7 +1,15 @@
 #include "VVram.h"
-#include "Chars.h"
+#include "Block.h"
+#include "Sprite.h"
+#include "Vram.h"
+#include "Sound.h"
 
-byte[VVramWidth * VVramHeight] VVramBack;
-byte[VVramWidth * VVramHeight] VVramFront;
-bool VVramChanged;
-byte[3] RowFlags;
+byte[VVramWidth * VVramHeight] VVram;
+
+void DrawAll() {    
+    DrawBackground();
+    DrawBlocks();
+    DrawSprites();
+    VVramToVram();
+    CallSound();
+}

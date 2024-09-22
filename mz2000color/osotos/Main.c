@@ -1,51 +1,40 @@
 #include "Main.h"
-#include "Stage.h"
 #include "ScanKeys.h"
-#include "Status.h"
-#include "Sprite.h"
 #include "Vram.h"
-#include "Robo.h"
-#include "Bullet.h"
-#include "Bang.h"
-#include "Fort.h"
 #include "Sound.h"
+#include "Sprite.h"
+#include "Status.h"
+#include "Stage.h"
+#include "Man.h"
+#include "Monster.h"
+#include "Block.h"
+#include "Point.h"
 #include "VVram.h"
 
-// extern void Init();
-// extern void Fin();
-// extern void WaitTimer(byte t);
-// extern void WaitBlankOn();
-// extern void WaitBlankOff();
-extern void WaitSync();
-// extern byte PrevKey;
-
-constexpr byte MaxTimeDenom = 50;
-constexpr byte BonusRate = 4;
+constexpr byte MaxTimeDenom = 50 / (8 / CoordRate);
+constexpr byte BonusRate = 5;
 
 word Score;
 word HiScore;
 byte RemainCount;
 byte CurrentStage;
 byte StageTime;
-byte Clock;
+byte ItemCount;
+static byte Clock;
+static sbyte monsterNum;
 
-extern void Wait();
-
+extern void _deb();
 void Main()
 {
-    byte key, timeDenom;
-
-    // Init(); 
-    InitVram();
-    // PrevKey = 0;
-    // InitSprites(); 
     HiScore = 0;
     Score = 0;
     CurrentStage = 0;
     RemainCount = 3;
     StageTime = 0;
+    
     title:
-    Title(); 
+    Title();
+    byte key;
     do {
         // if (ScanStop()) goto exit;
         key = ScanKeys();
@@ -53,125 +42,81 @@ void Main()
     
     play:
     Score = 0;
-    if ((key & Keys_Button1) == 0) {
+    if ((key & Keys_Button1) == 0 && (key & Keys_Dir) == 0) {
         CurrentStage = 0;
     }
     RemainCount = 3;
     stage:
-    InitStage();   
+    InitStage();
     try:
-    Clock = 0;
-    InitSound();
     InitTrying();
-    PrintStatus();
-    DrawFence();
-    while (!StartEnemyRobo());
-    DrawAll();
+    Clock = 0;
+    monsterNum = 0;
+    byte timeDenom = MaxTimeDenom;
     Sound_Start();     
     // StartBGM();
-    // WaitTimer(1);
-    ScanKeys();
-    // PrevKey = 0;
-    timeDenom = MaxTimeDenom;
     do {
-        // if (ScanStop()) goto exit;
-        MoveMyBullets();
-        if ((Clock & 1) == 0) {
-            MoveEnemyBullets();
-        }
+        //     if (ScanStop()) goto exit;
         if ((Clock & 3) == 0) {
-            UpdateBangs();
-            MoveMyRobo();
+            MoveMan();
+            if (monsterNum >= 0) {
+                MoveMonsters();
+                monsterNum -= 10;
+            }
+            monsterNum += 6;
+            
             --timeDenom;
             if (timeDenom == 0) {
                 --StageTime;
                 timeDenom = MaxTimeDenom;
                 PrintTime();
                 if (StageTime == 0) {
-                    // StopBGM();
                     PrintTimeUp();
-                    Wait();
-                    goto lose;
+                    lose:
+                    // StopBGM();
+                    LooseMan();
+                    --RemainCount;
+                    if (RemainCount > 0) {
+                        goto try;
+                    } 
+                    PrintGameOver();
+                    Sound_GameOver();
+                    goto title;
                 }
             }
+            UpdateBlocks();
+            UpdatePoints();
         }
-        if ((Clock & 7) == 0) {
-            StartEnemyRobo();
-            MoveEnemyRobos();
+        if ((Clock & 1) == 0) {
+            MoveBlocks();
         }
-        if ((Clock & 0x03) == 0) {
-            // WaitBlankOff();
-            // WaitBlankOn();
-            // WaitTimer(1);
-            WaitSync();
-            ScanKeys();
+        if ((Clock & 3) == 0) {
             DrawAll();
-            CallSound();
+            WaitTimer(7 / CoordRate);
         }
+        // UpdateSprites();
         ++Clock;
-        if (MyFort.life == 0) {
-            Wait();
-            // StopBGM();
-            lose:
-            --RemainCount;
-            if (RemainCount > 0) {
-                goto try;
-            } 
-            PrintGameOver();
-            Sound_GameOver();
-            goto title;
+        if ((Man.status & Movable_Live) == 0) {
+            goto lose;
         }
-    } while (EnemyFort.life > 0);
-    Wait();
+    } while (ItemCount != 0);
+    // UpdateSprites();
     // StopBGM();
+    WaitTimer(10);
     Sound_Clear();
     while (StageTime >= BonusRate) {
-        AddScore(3);
+        AddScore(5);
         StageTime -= BonusRate;
         PrintTime();
         Sound_Beep();
-        // Sound_Fire();
-        WaitSync();
-        // repeat(5) {
-        // WaitBlankOff();
-        // WaitBlankOn();
-        // }
+        WaitTimer(6);
     }
     StageTime = 0;
     PrintStatus();
     ++CurrentStage;
     goto stage;
-// exit:
-//     Fin();
 }
 
-static void Wait()
-{
-    repeat(100) {
-        UpdateBangs();
-        // WaitTimer(1);
-        // WaitBlankOff();
-        // WaitBlankOn();
-        WaitSync();
-        DrawAll();
-        CallSound();
-    }
-}
-
-void DrawAll()
-{
-    if (VVramChanged) {
-        VVramBackToFront();
-        DrawSprites();
-        VVramToVramAll();
-        VVramChanged = false;
-    }
-    else {
-        EraseSprites();
-        DrawSprites();
-        VVramToVramChanged();
-    }
-}
 
 void AddScore(word pts) 
 {
@@ -181,3 +126,5 @@ void AddScore(word pts)
     }
     PrintScore();
 }
+
+void _deb(){}

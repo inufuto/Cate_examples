@@ -8,6 +8,8 @@
 
 // extern bool JoystickAvailable;
 
+constexpr byte Char_Remain = Char_Man_Left_Stop;
+
 static word PrintS(word vram, ptr<byte> p)
 {
     byte c;
@@ -20,38 +22,34 @@ static word PrintS(word vram, ptr<byte> p)
 
 void PrintStatus() 
 {
-    PrintS(Vram + VramRowSize * 1 + 32 * 2, "SCORE");
-    PrintS(Vram + VramRowSize * 5 + 32 * 2, "HI-SCORE");
-    PrintS(Vram + VramRowSize * 9 + 32 * 2, "STAGE");
-    PrintByteNumber2(Vram + VramRowSize * 9 + 38 * 2, CurrentStage + 1);
-    PrintS(Vram + VramRowSize * 12 + 32 * 2, "TIME");
+    PrintS(Vram + VramRowSize * 1 + 32 * VramStep, "SCORE");
+    PrintS(Vram + VramRowSize * 5 + 32 * VramStep, "HI-SCORE");
+    PrintS(Vram + VramRowSize * 9 + 32 * VramStep, "STAGE");
+    PrintByteNumber2(Vram + VramRowSize * 9 + 38 * VramStep, CurrentStage + 1);
+    PrintS(Vram + VramRowSize * 12 + 32 * VramStep, "TIME");
 
     {
-        static const byte[] RemainChars = {
-            Char_MyFort + 2, 
-            Char_MyFort + 3,
-            Char_MyFort + 6,
-            Char_MyFort + 7,
-        };
         word vram;
-        vram = Vram + VramRowSize * 21 + 33 * 2;
+        vram = Vram + VramRowSize * 22 + 33 * VramStep;
         if (RemainCount > 1) {
             byte i;
             i = RemainCount - 1;
-            do {
-                ptr<byte> pChars;
-                pChars = RemainChars;
-                repeat (2) {
-                    repeat (2) {
-                        VPut(vram, *pChars);
-                        vram += 2;
-                        ++pChars;
-                    }
-                    vram += VramRowSize - 2 * 2;
-                }
-                vram += 3 * 2 - VramRowSize * 2;
-                --i;
-            } while (i > 0);
+            if (i > 2) {
+                Put2C(vram, Char_Remain);
+                vram += 2 * VramStep;
+                vram = Put(vram, Char_Space);
+                vram = Put(vram, Char_Space);
+                vram += VramRowSize - 2 * VramStep;
+                vram = Put(vram, i + 0x10);
+                vram = Put(vram, Char_Space);
+            }
+            else {
+                do {
+                    Put2C(vram, Char_Remain);
+                    vram += 2 * VramStep;
+                    --i;
+                } while (i > 0);
+            }
         }
     }
 
@@ -63,16 +61,16 @@ void PrintScore()
 {
     word vram;
     
-    vram = PrintNumber5(Vram + VramRowSize * 2 + 34 * 2, Score);
+    vram = PrintNumber5(Vram + VramRowSize * 2 + 34 * VramStep, Score);
     PrintC(vram, '0');
 
-    vram = PrintNumber5(Vram + VramRowSize * 6 + 34 * 2, HiScore);
+    vram = PrintNumber5(Vram + VramRowSize * 6 + 34 * VramStep, HiScore);
     PrintC(vram, '0');
 }
 
 void PrintTime()
 {
-    PrintByteNumber3(Vram + VramRowSize * 12 + 37 * 2, StageTime);
+    PrintByteNumber3(Vram + VramRowSize * 12 + 37 * VramStep, StageTime);
 }
 
 static void EraseWindow() 
@@ -81,101 +79,83 @@ static void EraseWindow()
     constexpr byte height = 3;    
     word vram;
 
-    vram = Vram + VramRowSize * 10 + 10;
+    vram = Vram + VramRowSize * 10 + 10 * VramStep;
     repeat (height) {
         repeat (width) {
             vram = PrintC(vram, ' ');
         }
-        vram += VramRowSize - width;
+        vram += VramRowSize - width * VramStep;
     }
 }
 
 void PrintGameOver()
 {
     EraseWindow();
-    PrintS(Vram + VramRowSize * 11 + 12 * 2, "GAME OVER");
+    PrintS(Vram + VramRowSize * 11 + 12 * VramStep, "GAME OVER");
 }
 
 void PrintTimeUp() 
 {
     EraseWindow();
-    PrintS(Vram + VramRowSize * 11 + 13 * 2, "TIME UP");
+    PrintS(Vram + VramRowSize * 11 + 13 * VramStep, "TIME UP");
 }
 
 void Title()
 {
-    static const byte[] TitleBytes = {
-        //	B
-        0x4c, 0x47, 0x45, 0x4b, 
-        0x4c, 0x4b, 0x4a, 0x47, 
-        0x4c, 0x43, 0x40, 0x4f, 
-        0x44, 0x45, 0x45, 0x41, 
-        //	A
-        0x40, 0x4e, 0x4d, 0x42, 
-        0x4c, 0x43, 0x40, 0x4f, 
-        0x4c, 0x47, 0x45, 0x4f, 
-        0x44, 0x41, 0x40, 0x45, 
-        //	T
-        0x44, 0x4d, 0x47, 0x41, 
-        0x40, 0x4c, 0x43, 0x40, 
-        0x40, 0x4c, 0x43, 0x40, 
-        0x40, 0x44, 0x41, 0x40, 
-        //	T
-        0x44, 0x4d, 0x47, 0x41, 
-        0x40, 0x4c, 0x43, 0x40, 
-        0x40, 0x4c, 0x43, 0x40, 
-        0x40, 0x44, 0x41, 0x40, 
-        //	L
-        0x4c, 0x43, 0x40, 0x40, 
-        0x4c, 0x43, 0x40, 0x40, 
-        0x4c, 0x43, 0x40, 0x40, 
-        0x44, 0x45, 0x45, 0x41, 
-        //	O
-        0x48, 0x47, 0x45, 0x4b, 
-        0x4c, 0x43, 0x40, 0x4f, 
-        0x4c, 0x43, 0x40, 0x4f, 
-        0x40, 0x45, 0x45, 0x41, 
-        //	T
-        0x44, 0x4d, 0x47, 0x41, 
-        0x40, 0x4c, 0x43, 0x40, 
-        0x40, 0x4c, 0x43, 0x40, 
-        0x40, 0x44, 0x41, 0x40, 
-    };
-
     ClearScreen(); 
     HideAllSprites();
     PrintStatus();
     {
+        static const byte[] TitleBytes = {
+            0x40, 0x48, 0x47, 0x4d, 
+            0x40, 0x4c, 0x43, 0x4c, 
+            0x40, 0x4c, 0x43, 0x4c, 
+            0x40, 0x40, 0x45, 0x45, 
+            0x42, 0x4e, 0x45, 0x41, 
+            0x43, 0x44, 0x4d, 0x43, 
+            0x43, 0x45, 0x45, 0x40, 
+            0x40, 0x40, 0x40, 0x40, 
+            0x40, 0x40, 0x44, 0x4d, 
+            0x4e, 0x45, 0x4b, 0x4c, 
+            0x4f, 0x40, 0x4f, 0x44, 
+            0x44, 0x45, 0x41, 0x40, 
+            0x47, 0x41, 0x40, 0x40, 
+            0x43, 0x4e, 0x4d, 0x42, 
+            0x41, 0x4f, 0x4c, 0x43, 
+            0x40, 0x44, 0x45, 0x40, 
+            0x4e, 0x45, 0x41, 0x40, 
+            0x44, 0x4d, 0x43, 0x40, 
+            0x45, 0x45, 0x40, 0x40, 
+            0x40, 0x40, 0x40, 0x40, 
+        };
+        constexpr byte LogoLength = 5;
         ptr<byte> p;
         word vram;
-        vram = Vram + VramRowSize * 8 + 2 * 2;
+        vram = Vram + VramRowSize * 8 + (32 - LogoLength * 4) / 2 * VramStep;
         p = TitleBytes;
-        repeat (7) {
+        repeat (LogoLength) {
             repeat (4) {
                 repeat (4) {
-                    VPut(vram, *p);
-                    vram += 2;
+                    vram = Put(vram, *p);
                     ++p;
                 }
-                vram += VramRowSize - 4 * 2;
+                vram += VramRowSize - 4 * VramStep;
             }
-            vram += 4 * 2 - VramRowSize * 4;
+            vram += 4 * VramStep - VramRowSize * 4;
         }
     }
-    PrintS(Vram + VramRowSize * 20 + 9 * 2, "PUSH SPACE KEY");
-    PrintS(Vram + VramRowSize * 21 + 9 * 2, "OR TAB KEY");
-}
-
-
-void DrawFence()
-{
-    word top, bottom;
-    top = Vram;
-    bottom = Vram + VramRowSize * 23;
-    repeat(StageWidth) {
-        VPut(top, Char_Fence);
-        top += 2;
-        VPut(bottom, Char_Fence + 1);
-        bottom += 2;
-    }
+    PrintS(Vram + VramRowSize * 20 + 9 * VramStep, "PUSH SPACE KEY");
+    PrintS(Vram + VramRowSize * 21 + 9 * VramStep, "OR TAB KEY");
+    PrintS(Vram + VramRowSize * 23 + 20 * VramStep, "INUFUTO 2024");
+    // {
+    //     word vram = Vram;
+    //     byte c = 0;
+    //     repeat (0) {
+    //         vram = Put(vram, c);
+    //         ++c;
+    //         if ((c & 15) == 0) {
+    //             vram += VramRowSize - 16 * VramStep;
+    //         }
+    //     }
+    // }
 }

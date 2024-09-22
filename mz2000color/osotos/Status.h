@@ -6,4 +6,3 @@ extern void PrintTime();
 extern void PrintGameOver();
 extern void PrintTimeUp();
 extern void Title();
-extern void DrawFence();

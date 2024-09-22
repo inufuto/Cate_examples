@@ -1,7 +1,7 @@
 include "mz2000.inc"
 
 ext Main_
-ext InitVram_, InitSound_
+ext InitVram, InitSound
 
 Interval equ 31250/60
 Text equ 0d000h
@@ -27,8 +27,8 @@ cseg
         out (c),a
     wend
 
-    call InitVram_
-    call InitSound_
+    call InitVram
+    call InitSound
 jp Main_
 
 PortTable:
