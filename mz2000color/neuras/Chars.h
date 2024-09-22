@@ -1,0 +1,24 @@
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Ascii = 0x0;
+constexpr byte Char_Wall = 0x40;
+constexpr byte Char_Title = 0x50;
+constexpr byte Char_N = 0x50;
+constexpr byte Char_E = 0x54;
+constexpr byte Char_U = 0x58;
+constexpr byte Char_R = 0x5C;
+constexpr byte Char_A = 0x60;
+constexpr byte Char_S = 0x64;
+constexpr byte Char_Card = 0x68;
+constexpr byte Char_Color = 0xA0;
+constexpr byte Char_Solver = 0xA0;
+constexpr byte Char_Solver_Left = 0xA0;
+constexpr byte Char_Solver_Right = 0xA8;
+constexpr byte Char_Solver_Up = 0xB0;
+constexpr byte Char_Solver_Down = 0xB8;
+constexpr byte Char_Monster = 0xC0;
+constexpr byte Char_Monster_Left = 0xC0;
+constexpr byte Char_Monster_Right = 0xC8;
+constexpr byte Char_Monster_Up = 0xD0;
+constexpr byte Char_Monster_Down = 0xD8;
+constexpr byte Char_End = 0xE0;
