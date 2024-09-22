@@ -3,29 +3,26 @@
 #include "VVram.h"
 #include "Vram.h"
 
-constexpr byte InvalidPattern = 0xff;
-struct Sprite {
-    byte x, y;
-    byte pattern;
-};
-Sprite[Sprite_End] Sprites;
+constexpr byte InvalidCode = 0xff;
+Sprite[SpriteCount] Sprites;
 
 void HideAllSprites()
 {
     ptr<Sprite> p;
     for (p : Sprites) {
-        p->pattern = InvalidPattern;
+        p->code = InvalidCode;
+        p->oldCode = InvalidCode;
     }
 }
 
 
-void ShowSprite(ptr<Movable> pMovable, byte pattern)
+void ShowSprite(byte index, byte x, byte y, byte code)
 {
     ptr<Sprite> p;
-    p = Sprites + pMovable->sprite;
-    p->x = pMovable->x;
-    p->y = pMovable->y;
-    p->pattern = pattern;
+    p = Sprites + index;
+    p->x = x;
+    p->y = y;
+    p->code = code;
 }
 
 
@@ -33,7 +30,42 @@ void HideSprite(byte index)
 {
     ptr<Sprite> p;
     p = Sprites + index;
-    p->pattern = InvalidPattern;
+    p->code = InvalidCode;
+}
+
+void EraseSprites() 
+{
+    ptr<Sprite> p;
+    for (p : Sprites) {
+        if (p->oldCode != InvalidCode && (
+            p->oldX != p->x || 
+            p->oldY != p->y ||
+            p->code == InvalidCode
+        )) {
+            word offset;
+            ptr<byte> pFront, pBack, pFlags;
+            byte y, iy, bits;
+            y = p->oldY;
+            offset = VVramOffset(p->oldX, y);
+            pFront = VVramFront + offset;
+            pBack = VVramBack + offset;
+            pFlags = RowFlags + (y >> 3);
+            bits = ((byte)1) << (y & 7);
+            pFront[0] = pBack[0];
+            *pFlags |= bits;
+            if (p->oldCode >= Char_MyRobo) {
+                pFront[1] = pBack[1];
+                pFront[VVramWidth] = pBack[VVramWidth];
+                pFront[VVramWidth + 1] = pBack[VVramWidth + 1];
+                bits <<= 1;
+                if (bits == 0) {
+                    ++pFlags;
+                    bits = 1;
+                }
+                *pFlags |= bits;
+            }
+        }
+    }
 }
 
 
@@ -41,32 +73,36 @@ void DrawSprites()
 {
     ptr<Sprite> p;
     for (p : Sprites) {
-        if (p->pattern != InvalidPattern) {
-            ptr<byte> pVVram;
-            byte x, y, c;
-            x = p->x;
+        if (p->code != InvalidCode) {
+            bool changed;
+            ptr<byte> pFront, pFlags;
+            byte y, iy, c, bits;
+            changed = p->oldX != p->x || p->oldY != p->y || p->oldCode != p->code;
             y = p->y;
-            pVVram = VVramPtr(x, y);
-            c = p->pattern;
-            repeat (2) {
-                if (y < VVramHeight) {
-                    repeat (2) {
-                        if (x < VVramWidth) {
-                            *pVVram = c;
-                        }
-                        ++pVVram;
-                        ++c;
-                        ++x;
+            pFront = VVramFront + VVramOffset(p->x, y);
+            pFlags = RowFlags + (y >> 3);
+            bits = ((byte)1) << (y & 7);
+            c = p->code;
+            pFront[0] = c; 
+            if (changed) {
+                *pFlags |= bits;
+            }
+            if (p->code >= Char_MyRobo) {
+                ++c; pFront[1] = c;
+                ++c; pFront[VVramWidth] = c;
+                ++c; pFront[VVramWidth + 1] = c;
+                if (changed) {
+                    bits <<= 1;
+                    if (bits == 0) {
+                        ++pFlags;
+                        bits = 1;
                     }
-                    x -= 2;
-                    pVVram -= 2;
+                    *pFlags |= bits;
                 }
-                else {
-                    c += 2;
-                }
-                pVVram += VVramWidth;
-                ++y;
             }
         }
+        p->oldX = p->x;
+        p->oldY = p->y;
+        p->oldCode = p->code;
     }
 }

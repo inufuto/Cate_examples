@@ -1,44 +1,28 @@
-#include "Movable.h"
+constexpr byte MapWidth = 16;
+constexpr byte MapHeight = 11;
 
-constexpr byte ColumnCount = 16;
-constexpr byte FloorCount = 6;
-constexpr byte RowCount = FloorCount * 2; 
+constexpr byte StageWidth = MapWidth * 2;
+constexpr byte StageHeight = MapHeight * 2;
+// constexpr byte StageTop = 2;
 
-constexpr byte CellSize = 2;
-constexpr byte ColumnWidth = CellSize;
-constexpr byte RowHeight = CellSize;
-constexpr byte FloorHeight = RowHeight * 2;
+constexpr byte Wall_None = 0;
+constexpr byte Wall_Crack = 1;
+constexpr byte Wall_Soft = 2;
+constexpr byte Wall_Hard = 3;
+constexpr byte Wall_MyRobo = 4;
+constexpr byte Wall_MyFort = 5;
+constexpr byte Wall_MyBullet = 6;
+constexpr byte Wall_EnemyRobo = 7;
+constexpr byte Wall_EnemyFort = 8;
+constexpr byte Wall_EnemyBullet = 9;
 
-constexpr byte CellShift = 1;
-constexpr byte CellMask = ColumnWidth - 1;
-constexpr byte CellCoordShift = CellShift + CoordShift;
-constexpr byte CellCoordMask = CellSize * CoordRate - 1;
-
-constexpr byte Cell_Down = 0x1;
-constexpr byte Cell_Up = 0x2;
-constexpr byte Cell_Block = 0x8;
-constexpr byte Cell_Ceiling = 0x4; // upper cell (even row)
-constexpr byte Cell_Item = 0x4; // lower cell (odd row)
-
-constexpr byte StageWidth = ColumnCount * ColumnWidth;
-constexpr byte StageHeight = FloorCount * FloorHeight;
-
-constexpr byte ColumnsPerByte = 4;
 struct Stage {
-    byte start;
-    byte blockCount;
-    ptr<byte> pBlocks;
-    byte enemyCount;
-    ptr<byte> pEnemies;
-    byte[ColumnCount / ColumnsPerByte * FloorCount] bytes;
+    byte myFort;
+    byte enemyFort;
+    byte[MapWidth / 4 * MapHeight] bytes;
 };
-
-extern ptr<Stage> pStage;
-extern byte[] CellMap;
 
 extern void InitStage();
 extern void InitTrying();
-extern byte GetCell(byte column, byte row);
-// extern void DrawCellCR(byte column, byte row);
-
-extern ptr<byte> CellMapPtr(byte column, byte row);
+extern byte GetWall(byte x, byte y);
+extern void SetWall(byte x, byte y, byte wall);

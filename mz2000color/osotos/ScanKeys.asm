@@ -1,5 +1,3 @@
-include "mz2000.inc"
-
 Keys_Left equ 01h
 Keys_Right equ 02h
 Keys_Up equ 04h
@@ -15,27 +13,31 @@ Keys_Bit_Down equ 3
 Keys_Bit_Button0 equ 4
 Keys_Bit_Button1 equ 5
 
+PortABits equ 90h
+PortA equ 0e8h
+PortC equ 0eah
 
-cseg
-ScanKeys_: public ScanKeys_
+    cseg
+ScanKeys_:
+    public ScanKeys_
     push bc
         ld c,0
 
-        in a,(PortPIO_A)
+        in a,(PortA)
         and 0e0h
         or 1 or 10h
-        out (PortPIO_A),a
-        in a,(PortPIO_B)
+        out (PortA),a
+        in a,(PortC)
         bit 2,a     ;8
         if z
             set Keys_Bit_Up,c
         endif
 
-        in a,(PortPIO_A)
+        in a,(PortA)
         and 0e0h
         or 2 or 10h
-        out (PortPIO_A),a
-        in a,(PortPIO_B)
+        out (PortA),a
+        in a,(PortC)
         bit 2,a ;2
         if z
             set Keys_Bit_Down,c
@@ -49,11 +51,11 @@ ScanKeys_: public ScanKeys_
             set Keys_Bit_Right,c
         endif
 
-        in a,(PortPIO_A)
+        in a,(PortA)
         and 0e0h
         or 3 or 10h
-        out (PortPIO_A),a
-        in a,(PortPIO_B)
+        out (PortA),a
+        in a,(PortC)
 
         bit 0,a ;tab
         if z
