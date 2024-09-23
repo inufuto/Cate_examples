@@ -1,0 +1,15 @@
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 64
+Char_Wall equ 80
+Char_HardWall equ 82
+Char_Meter equ 83
+Char_Bullet equ 85
+Char_Fence equ 87
+Char_MyFort equ 89
+Char_EnemyFort equ 101
+Char_MyRobo equ 113
+Char_EnemyRobo equ 145
+Char_SmallBang equ 177
+Char_LargeBang equ 181
+Char_End equ 197
