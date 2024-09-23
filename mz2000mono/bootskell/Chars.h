@@ -1,0 +1,10 @@
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Ascii = 0x0;
+constexpr byte Char_Logo = 0x40;
+constexpr byte Char_Wall = 0x50;
+constexpr byte Char_Block = 0x54;
+constexpr byte Char_Man = 0x78;
+constexpr byte Char_Monster = 0xA8;
+constexpr byte Char_Point = 0xD8;
+constexpr byte Char_Fence = 0xE8;
+constexpr byte Char_End = 0xEA;

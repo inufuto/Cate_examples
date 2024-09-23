@@ -1,0 +1,10 @@
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 64
+Char_Wall equ 80
+Char_Block equ 84
+Char_Man equ 120
+Char_Monster equ 168
+Char_Point equ 216
+Char_Fence equ 232
+Char_End equ 234
