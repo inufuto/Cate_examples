@@ -60,12 +60,14 @@ void PrintTime()
 
 void PrintGameOver()
 {
-    PrintS(Vram + VramRowSize * 2, "GAME OVER");
+    VPrintS(VVram + VVramWidth * 6 + 3, "GAME OVER");
+    VVramToVram();
 }
 
 void PrintTimeUp() 
 {
-    PrintS(Vram + VramRowSize * 2, "TIME UP");
+    VPrintS(VVram + VVramWidth * 6 + 5, "TIME UP");
+    VVramToVram();
 }
 
 void Title()
