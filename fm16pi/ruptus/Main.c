@@ -32,7 +32,7 @@ void Main()
     HiScore = 0;
     Score = 0;
     CurrentStage = 0;
-    RemainFighterCount = 3+5;
+    RemainFighterCount = 3;
     title:
     Title();
     do {
