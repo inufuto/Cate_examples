@@ -4,7 +4,7 @@ include "Chars.inc"
 
 ext MonoPattern,ColorPattern,SpritePattern
 
-Color0 equ 0
+Color0 equ 5
 Color1 equ 14
 Color2 equ 10
 
@@ -31,7 +31,7 @@ CharMap:
 cseg
 ColorSource:
 defb 64,1 ; Ascii
-defb 16,3 ; Logo
+defb 16,6 ; Logo
 defb 16,6 ; Wall
 defb 4,7 ; Dot
 defb 4,1 ; Remain
