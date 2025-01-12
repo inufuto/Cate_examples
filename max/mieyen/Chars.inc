@@ -1,0 +1,42 @@
+
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 32
+Char_Wall equ 48
+Char_Dot equ 64
+Char_Color equ 68
+Char_Remain equ 68
+Char_Food equ 72
+Char_End equ 76
+
+
+Pattern_Man equ 203
+Pattern_Man_Left equ 203
+Pattern_Man_Left0 equ 203
+Pattern_Man_Left1 equ 204
+Pattern_Man_Right equ 205
+Pattern_Man_Right0 equ 205
+Pattern_Man_Right1 equ 206
+Pattern_Man_Up equ 207
+Pattern_Man_Up0 equ 207
+Pattern_Man_Up1 equ 208
+Pattern_Man_Down equ 209
+Pattern_Man_Down0 equ 209
+Pattern_Man_Down1 equ 210
+Pattern_Monster equ 211
+Pattern_Monster_Left equ 211
+Pattern_Monster_Left0 equ 211
+Pattern_Monster_Left1 equ 212
+Pattern_Monster_Right equ 213
+Pattern_Monster_Right0 equ 213
+Pattern_Monster_Right1 equ 214
+Pattern_Monster_Up equ 215
+Pattern_Monster_Up0 equ 215
+Pattern_Monster_Up1 equ 216
+Pattern_Monster_Down equ 217
+Pattern_Monster_Down0 equ 217
+Pattern_Monster_Down1 equ 218
+Pattern_FireBullet equ 219
+Pattern_Fire equ 220
+Pattern_Point equ 221
+Pattern_End equ 225
