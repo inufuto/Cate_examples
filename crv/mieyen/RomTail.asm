@@ -7,7 +7,7 @@ cseg
     defw 0
     defw 0
     defw 0
-    defb $02,$e2,$06,$ff,$03,$36,$07,$00
+    defb $02,$e2,$06,$ff,$03,$36,$07,$04
     defw 0
     defw 0
     defw $f808

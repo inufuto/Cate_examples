@@ -14,12 +14,12 @@ charByte equ ZB2
 
 cseg
 ColorSource:
-defb 64, $f0 ; Ascii
-defb 16, $70 ; Logo
-defb 16, $50 ; Wall
-defb 4, $a0 ; Dot
-defb 4, $b0 ; Food
-defb 4, $f0 ; Remain
+defb 64, $f4 ; Ascii
+defb 16, $74 ; Logo
+defb 16, $74 ; Wall
+defb 4, $a4 ; Dot
+defb 4, $b4 ; Food
+defb 4, $f4 ; Remain
 defb 0
 cseg
 InitVram: public InitVram
