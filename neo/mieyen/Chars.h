@@ -1,0 +1,41 @@
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Ascii = 0x0;
+constexpr byte Char_Logo = 0x40;
+constexpr byte Char_Wall = 0x50;
+constexpr byte Char_Dot = 0x60;
+constexpr byte Char_Food = 0x64;
+constexpr byte Char_Remain = 0x68;
+constexpr byte Char_End = 0x6C;
+
+
+constexpr byte Pattern_Man = 0;
+constexpr byte Pattern_Man_Left = 0;
+constexpr byte Pattern_Man_Left0 = 0;
+constexpr byte Pattern_Man_Left1 = 1;
+constexpr byte Pattern_Man_Right = 2;
+constexpr byte Pattern_Man_Right0 = 2;
+constexpr byte Pattern_Man_Right1 = 3;
+constexpr byte Pattern_Man_Up = 4;
+constexpr byte Pattern_Man_Up0 = 4;
+constexpr byte Pattern_Man_Up1 = 5;
+constexpr byte Pattern_Man_Down = 6;
+constexpr byte Pattern_Man_Down0 = 6;
+constexpr byte Pattern_Man_Down1 = 7;
+constexpr byte Pattern_Monster = 8;
+constexpr byte Pattern_Monster_Left = 8;
+constexpr byte Pattern_Monster_Left0 = 8;
+constexpr byte Pattern_Monster_Left1 = 9;
+constexpr byte Pattern_Monster_Right = 10;
+constexpr byte Pattern_Monster_Right0 = 10;
+constexpr byte Pattern_Monster_Right1 = 11;
+constexpr byte Pattern_Monster_Up = 12;
+constexpr byte Pattern_Monster_Up0 = 12;
+constexpr byte Pattern_Monster_Up1 = 13;
+constexpr byte Pattern_Monster_Down = 14;
+constexpr byte Pattern_Monster_Down0 = 14;
+constexpr byte Pattern_Monster_Down1 = 15;
+constexpr byte Pattern_FireBullet = 16;
+constexpr byte Pattern_Fire = 17;
+constexpr byte Pattern_Point = 18;
+constexpr byte Pattern_End = 22;
