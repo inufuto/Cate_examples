@@ -1,0 +1,20 @@
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Logo = 0x0;
+constexpr byte Char_Dot = 0x10;
+constexpr byte Char_Wall = 0x11;
+constexpr byte Char_Point = 0x12;
+constexpr byte Char_Man = 0x17;
+constexpr byte Char_Man_Left = 0x17;
+constexpr byte Char_Man_Right = 0x1B;
+constexpr byte Char_Man_Up = 0x1F;
+constexpr byte Char_Man_Down = 0x23;
+constexpr byte Char_Monster = 0x27;
+constexpr byte Char_Monster_Left = 0x27;
+constexpr byte Char_Monster_Right = 0x2B;
+constexpr byte Char_Monster_Up = 0x2F;
+constexpr byte Char_Monster_Down = 0x33;
+constexpr byte Char_FireBullet = 0x37;
+constexpr byte Char_Fire = 0x3B;
+constexpr byte Char_Food = 0x3F;
+constexpr byte Char_End = 0x43;

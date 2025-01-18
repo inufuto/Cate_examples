@@ -1,0 +1,20 @@
+
+Char_Space equ 0
+Char_Logo equ 0
+Char_Dot equ 16
+Char_Wall equ 17
+Char_Point equ 18
+Char_Man equ 23
+Char_Man_Left equ 23
+Char_Man_Right equ 27
+Char_Man_Up equ 31
+Char_Man_Down equ 35
+Char_Monster equ 39
+Char_Monster_Left equ 39
+Char_Monster_Right equ 43
+Char_Monster_Up equ 47
+Char_Monster_Down equ 51
+Char_FireBullet equ 55
+Char_Fire equ 59
+Char_Food equ 63
+Char_End equ 67
