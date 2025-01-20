@@ -254,29 +254,39 @@ ret
 
 
 BGM_B:
-    defb N8,0, N8,C5, N8,C5, N8,C5, N8,C5, N4,G4, N4,C5
-    defb N8,C5, N8,D5, N8,C5, N4,D5, N4,E5
-    defb N8,0, N8,C5, N8,C5, N8,C5, N8,C5, N4,D5, N4,F5
-    defb N8,F5, N8,E5, N8,C5, N4,C5, N4,D5
-    defb N8,0, N8,C5, N8,C5, N8,C5, N8,C5, N4,G4, N4,C5
-    defb N8,C5, N8,D5, N8,C5, N4,D5, N4,E5
-    defb N4,F5, N4,F5, N4,E5, N4,E5
-    defb N4,D5, N8,D5, N4,E5, N8,E5, N8,D5, N8,C5
-    defb N4,C5, N4,C5, N8,D5, N4,D5, N4P,C5, N2P,0
+    defb N4,C4, N4,G4, N8,C4, N4,G4, N4,A4
+    defb N8,A4, N8,G4, N8,G4, N8,F4, N8,F4, N8,E4, N8,E4
+    defb N4,D4, N4,D4, N8,D4, N4,E4, N4P,D4
+    defb N2P,0
+
+    defb N4,C4, N4,G4, N8,C4, N4,G4, N4,A4
+    defb N8,A4, N8,G4, N8,G4, N8,F4, N8,F4, N8,E4, N8,E4
+    defb N4,F4, N4,F4, N8,F4, N4,A4, N4P,G4
+    defb N2P,0
+
+    defb N8,E4, N8,E4, N8,E4, N4,E4, N8,E4, N4,A4
+    defb N8,D4, N8,D4, N8,D4, N4,D4, N8,D4, N4,G4
+    defb N8,0, N8,A4, N8,0, N8,G4, N8,0, N8,F4, N8,0, N8,E4
+    defb N4,D4, N4,E4, N2,C4
+
     defb 0ffh
 BGM_C:
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0 ; 3
-    defb N8,A2, N4,0, N4P,C3, N8,E3, N8,0 ; 4
-    defb N8,D3, N4,0, N4P,F3, N8,A3, N8,0 ; 5
-    defb N8,G2, N4,0, N4P,B2, N8,D3, N8,0 ; 6
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0 ; 7
-    defb N8,A2, N4,0, N4P,C3, N8,E3, N8,0 ; 8
-    defb N8,F2, N4,0, N4P,A2, N8,C3, N8,0 ; 9
-    defb N8,D3, N4,0, N4P,E3, N8,A3, N8,0 ; 10
-    defb N8,F2, N4,0, N8,F2, N8,G2, N8,0, N8,B2, N8,D3 ; 11
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0 ; 12
-    defb 0ffh
+    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 3
+    defb N8,A2, N4,0, N4P,C3, N8,E3, N8,0; 4
+    defb N8,D3, N4,0, N4P,F3, N8,A3, N8,0; 5
+    defb N8,G2, N4,0, N4P,B2, N8,D3, N8,0; 6
 
+    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 7
+    defb N8,A2, N4,0, N4P,C3, N8,E3, N8,0; 8
+    defb N8,F3, N4,0, N8,F3, N8,G2, N4,0, N8,G2; 9
+    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 10
+
+    defb N8,C3, N4,0, N8,C3, N8,A2, N4,0, N8,A2; 11
+    defb N8,D3, N4,0, N8,D3, N8,G2, N4,0, N8,G2; 12
+    defb N8,0, N8,F2, N8,0, N8,F2, N8,0, N8,G2, N8,0, N8,G2
+    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 14
+
+    defb 0ffh
 
 StartBGMPsg: public StartBGMPsg
     push af | push hl
