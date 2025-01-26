@@ -10,7 +10,7 @@ extern void _deb();
 
 constexpr byte Fire_Moving = 0x40;
 constexpr byte Fire_PointMask = 0x30;
-constexpr byte MaxCount = Sprite_End - Sprite_Fire;
+constexpr byte MaxCount = Sprite_Point - Sprite_Fire;
 
 // static const byte[4] SpriteColors = { 8, 11, 10, 9 };
 Fire[MaxCount] Fires;
