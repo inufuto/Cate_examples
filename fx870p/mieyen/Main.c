@@ -1,0 +1,117 @@
+#include "Main.h"
+#include "Status.h"
+#include "ScanKeys.h"
+#include "Stage.h"
+#include "Sprite.h"
+#include "Sound.h"
+#include "Man.h"
+#include "Monster.h"
+#include "Fire.h"
+#include "Point.h"
+#include "VVram.h"
+#include "Vram.h"
+
+constexpr byte MaxTimeDenom = 50 / (8 / CoordRate);
+
+word Score;
+word HiScore;
+byte RemainCount;
+byte CurrentStage;
+byte FoodCount;
+static byte Clock;
+static sbyte monsterNum;
+
+extern void _deb();
+void Main()
+{
+    HiScore = 0;
+    Score = 0;
+    CurrentStage = 0;
+    RemainCount = 3;
+    FoodCount = 0;
+
+    title:
+    Title();
+    byte key;
+    do {
+        if (ScanStop()) return;
+        key = ScanKeys();
+    } while ((key & (Keys_Button0 | Keys_Button1)) == 0);
+
+    play:
+    Score = 0;
+    if ((key & Keys_Button1) == 0 && (key & Keys_Dir) == 0) {
+        CurrentStage = 0;
+    }
+    RemainCount = 3;
+    stage:
+    InitStage();
+    try:
+    InitTrying();
+    Clock = 0;
+    monsterNum = 0;
+    byte timeDenom = MaxTimeDenom;
+    Sound_Start();     
+    // StartBGM();
+    do {
+        if (ScanStop()) return;
+        if ((Clock & 3) == 0) {
+            MoveMan();
+            UpdatePoints();
+            if (monsterNum >= 0) {
+                MoveMonsters();
+                monsterNum -= 10;
+            }
+            monsterNum += 3;
+        }
+        MoveFires();
+        if ((Clock & 3) == 0) {
+            DrawAll();
+            Wait(8 / CoordRate);
+        }
+        ++Clock;
+        if (FoodCount == 0) {
+            Wait(30);
+            lose:
+            // StopBGM();
+            LooseMan();
+            --RemainCount;
+            if (RemainCount > 0) {
+                goto try;
+            } 
+            PrintGameOver();
+            Sound_GameOver();
+            goto title;
+        }
+        if ((Man.status & Movable_Live) == 0) {
+            goto lose;
+        }
+    } while (MonsterCount != 0);
+    DrawAll();
+    Wait(30);
+    // StopBGM();
+    Sound_Clear();
+    while (FoodCount != 0) {
+        --FoodCount;
+        AddScore(50);
+        PrintStatus();
+        PresentVram();
+        Sound_Bonus();
+        Wait(30);
+    }
+    ++CurrentStage;
+    goto stage;
+}
+
+
+void AddScore(word pts) 
+{
+    Score += pts;
+    if (Score > HiScore) {
+        HiScore = Score;
+    }
+    PrintScore();
+}
+
+
+void _deb(){}
