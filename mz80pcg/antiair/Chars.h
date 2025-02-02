@@ -1,0 +1,19 @@
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Fence = 0x70;
+
+constexpr byte Char_Logo = 0x80;
+constexpr byte Char_Cannon = 0x88;
+constexpr byte Char_CannonOn = 0x88;
+constexpr byte Char_CannonOff = 0x8C;
+constexpr byte Char_Bullet = 0x90;
+constexpr byte Char_Block = 0x94;
+constexpr byte Char_BlockA = 0x94;
+constexpr byte Char_BlockB = 0x98;
+constexpr byte Char_BlockC = 0x9C;
+constexpr byte Char_Bang = 0xA0;
+constexpr byte Char_SmallBang = 0xA0;
+constexpr byte Char_LargeBang = 0xA4;
+constexpr byte Char_Ufo = 0xB4;
+constexpr byte Char_UfoU = 0xB4;
+constexpr byte Char_UfoL = 0xB8;
+constexpr byte Char_End = 0xBC;

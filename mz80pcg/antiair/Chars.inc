@@ -1,0 +1,19 @@
+Char_Space equ 0
+Char_Fence equ 112
+
+Char_Logo equ 128
+Char_Cannon equ 136
+Char_CannonOn equ 136
+Char_CannonOff equ 140
+Char_Bullet equ 144
+Char_Block equ 148
+Char_BlockA equ 148
+Char_BlockB equ 152
+Char_BlockC equ 156
+Char_Bang equ 160
+Char_SmallBang equ 160
+Char_LargeBang equ 164
+Char_Ufo equ 180
+Char_UfoU equ 180
+Char_UfoL equ 184
+Char_End equ 188
