@@ -1,0 +1,24 @@
+Char_Space equ 0
+
+Char_Logo equ 128
+Char_Ground equ 136
+Char_GroundFlat equ 136
+Char_GroundUp equ 137
+Char_GroundDown equ 138
+Char_MyFighter equ 139
+Char_MyFighter_Right equ 139
+Char_MyFighter_RightDown equ 143
+Char_MyFighter_RightUp equ 147
+Char_EnemyFighter equ 151
+Char_EnemyFighter_Left equ 151
+Char_EnemyFighter_Right equ 155
+Char_Track equ 159
+Char_Rocket equ 163
+Char_SmallBang equ 167
+Char_LargeBang equ 171
+Char_Item equ 187
+Char_Fort equ 191
+Char_Bullet equ 219
+Char_MyBullet equ 219
+Char_EnemyBullet equ 223
+Char_End equ 227
