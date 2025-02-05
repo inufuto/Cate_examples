@@ -1,0 +1,21 @@
+Char_Space equ 0
+Char_FighterBullet equ 61
+
+Char_Logo equ 128
+Char_EnemyBullet equ 136
+Char_Barrier equ 137
+Char_BarrierHead equ 138
+Char_Fighter equ 139
+Char_SkyEnemy equ 143
+Char_SkyEnemyA equ 143
+Char_SkyEnemyB equ 147
+Char_SkyEnemyC equ 179
+Char_GroundEnemy equ 183
+Char_Bang equ 191
+Char_Item equ 195
+Char_Fort equ 199
+Char_Terrain equ 235
+Char_Water equ 235
+Char_Grass equ 236
+Char_Concrete equ 237
+Char_End equ 245
