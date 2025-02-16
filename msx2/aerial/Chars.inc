@@ -1,0 +1,32 @@
+
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 64
+Char_Ground equ 80
+Char_GroundUp equ 81
+Char_GroundUpUp equ 83
+Char_GroundUpDown equ 85
+Char_GroundDown equ 87
+Char_GroundDownDown equ 89
+Char_GroundDownUp equ 91
+Char_Remain equ 93
+Char_Fort equ 97
+Char_Fort0 equ 97
+Char_Fort1 equ 129
+Char_End equ 161
+
+Pattern_MyFighter equ 0
+Pattern_MyFighter_Right equ 0
+Pattern_MyFighter_RightDown equ 3
+Pattern_MyFighter_RightUp equ 6
+Pattern_EnemyFighter equ 9
+Pattern_EnemyFighter_Left equ 9
+Pattern_EnemyFighter_Right equ 12
+Pattern_Track equ 15
+Pattern_Rocket equ 16
+Pattern_SmallBang equ 17
+Pattern_LargeBang equ 18
+Pattern_Item equ 22
+Pattern_MyBullet equ 23
+Pattern_EnemyBullet equ 24
+Pattern_End equ 25
