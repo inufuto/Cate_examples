@@ -1,6 +1,7 @@
 include "Apple2.inc"
 
 ext InitVram, InitSound, Main_
+ext ReadStick, stickIndex
 
 cseg
     lda TXTCLR
@@ -29,4 +30,7 @@ WaitValue equ $28
         while ne | wend
         dec Wait_@Param0
     while ne | wend
+    pha
+        jsr ReadStick
+    pla
 rts
