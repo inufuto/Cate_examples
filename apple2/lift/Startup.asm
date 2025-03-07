@@ -20,7 +20,7 @@ Wait_t:
 cseg
 Wait_: public Wait_
 WaitValue equ 40
-    sty Wait_t
+    ldy #2 | sty Wait_t
     do
         ldx #WaitValue
         do

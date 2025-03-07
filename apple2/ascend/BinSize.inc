@@ -1,2 +1,2 @@
-BinSize equ 11277
+BinSize equ 11279
 Entry equ $4000
