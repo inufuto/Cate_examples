@@ -1,0 +1,8 @@
+SubBin_start equ $0200
+SubBin_size equ 155
+SUBCYCLES equ $0043
+SUBIRQ equ $023F
+SUBMAIN equ $0200
+SUBNMI equ $029A
+SUBTONESAMPLES equ $0010
+SUBVOLUMES equ $0040
