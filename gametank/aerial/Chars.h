@@ -1,0 +1,29 @@
+
+constexpr word Char_Space = 0x0;
+constexpr word Char_Logo = 0x0;
+constexpr word Char_Color = 0x10;
+constexpr word Char_Remain = 0x10;
+constexpr word Char_Ground = 0x14;
+constexpr word Char_GroundUp = 0x15;
+constexpr word Char_GroundUpUp = 0x19;
+constexpr word Char_GroundUpDown = 0x1D;
+constexpr word Char_GroundDown = 0x21;
+constexpr word Char_GroundDownDown = 0x25;
+constexpr word Char_GroundDownUp = 0x29;
+constexpr word Char_End = 0x2D;
+
+constexpr byte Pattern_MyFighter = 0;
+constexpr byte Pattern_MyFighter_Right = 0;
+constexpr byte Pattern_MyFighter_RightDown = 1;
+constexpr byte Pattern_MyFighter_RightUp = 2;
+constexpr byte Pattern_EnemyFighter = 3;
+constexpr byte Pattern_EnemyFighter_Left = 3;
+constexpr byte Pattern_EnemyFighter_Right = 4;
+constexpr byte Pattern_Track = 5;
+constexpr byte Pattern_Rocket = 6;
+constexpr byte Pattern_SmallBang = 7;
+constexpr byte Pattern_LargeBang = 8;
+constexpr byte Pattern_MyBullet = 12;
+constexpr byte Pattern_EnemyBullet = 13;
+constexpr byte Pattern_Item = 14;
+constexpr byte Pattern_End = 15;
