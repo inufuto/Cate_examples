@@ -1,0 +1,6 @@
+FixedCode_start equ 8000h
+FixedCode_size equ 185
+HIDEALLSPRITES equ 8049h
+HIDESPRITE equ 80A2h
+INITPLUS equ 8000h
+SHOWSPRITE equ 8063h
