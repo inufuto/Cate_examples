@@ -17,12 +17,12 @@ Keys_Bit_Button1 equ 5
 ScanKeys_: public ScanKeys_
     di
         push bc
+            xor a
             ld bc,0f782h | out (c),c
             ld bc,0f40eh | out (c),c
             ld bc,0f6c0h | out (c),c
+            out (c),a
             ld bc,0f792h | out (c),c
-
-            xor a
             
             ld bc,0f640h | out (c),c
             ld b,0f4h | in c,(c)
