@@ -1,0 +1,13 @@
+Char_Space equ 0
+Char_Logo equ 0
+Char_Star equ 4
+Char_FighterBullet equ 6
+Char_EnemyBullet equ 7
+Char_Enemy equ 8
+Char_EnemyA equ 8
+Char_EnemyB equ 72
+Char_EnemyC equ 136
+Char_Fighter equ 200
+Char_Bang equ 208
+Char_Item equ 248
+Char_End equ 256
