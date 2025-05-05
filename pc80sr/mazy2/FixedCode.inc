@@ -1,0 +1,6 @@
+FixedCode_start	equ	0C000h
+FixedCode_size	equ	140
+CLEARVRAM	equ	0C000h
+FROMOFFSCREEN	equ	0C076h
+INITOFFSCREEN	equ	0C063h
+WRITEVRAM	equ	0C030h
