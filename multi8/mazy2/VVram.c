@@ -1,0 +1,14 @@
+#include "VVram.h"
+#include "Sprite.h"
+#include "Vram.h"
+#include "Chars.h"
+// #include "Sound.h"
+
+byte[VVramWidth * VVramHeight] VVramBack, VVramFront;
+
+void DrawAll() {    
+    VVramBackToFront();
+    DrawSprites();
+    VVramToVram();
+    // CallSound();
+}
