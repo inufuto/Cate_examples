@@ -3,9 +3,11 @@ include "Vram.inc"
 include "Chars.inc"
 
 ext SpritePattern
+ext DisableNmi, EnableNmi
 ext SetVdpAddressHL
 ext WRTVRM
 ext LDIRVM
+ext RDVRM
 ext FILVRM
 ext WRTVDP
 
@@ -20,13 +22,15 @@ Offset_pattern equ 2
 Offset_color equ 3
 
     dseg
+Sprites_:   public Sprites_
 Buffer:
-    defs UnitSize*Sprite_End
+    defs UnitSize * Sprite_End
 FirstIndex:
     defs 1
 FirstAddress:
     defs 2
 
+; void InitSprites();
 cseg
 InitSprites: public InitSprites
     ld hl,SpritePattern
@@ -60,7 +64,7 @@ ShowSprite_: public ShowSprite_
             ld h,0
             add hl,hl   ;*2
             add hl,hl   ;*4
-            ld de,Buffer
+            ld de,Sprites_
             add hl,de
         pop de
         di
@@ -118,7 +122,7 @@ ret
 
 UpdateSprites_: public UpdateSprites_
     push af | push hl | push de | push bc
-        di
+        call DisableNmi
             ld hl,VRAM_SpriteAttribute
             call SetVdpAddressHL
             ld a,(FirstIndex)
@@ -129,11 +133,11 @@ UpdateSprites_: public UpdateSprites_
                     ld a,(hl) | inc hl
                     cp 192
                     if c
-                        out (VdpPort),a
+                        ld (VdpAddress),a
                         ld b,UnitSize-1
                         do
                             ld e,(hl) | inc hl
-                            ld a,e | out (VdpPort),a
+                            ld a,e | ld (VdpAddress),a
                         dwnz
                     else
                         inc hl | inc hl | inc hl
@@ -147,9 +151,9 @@ UpdateSprites_: public UpdateSprites_
                 endif
                 dec d
             while nz | wend
-        ei
+        call EnableNmi
         ex af,af'
-            ld a,0d0h | out (VdpPort),a
+            ld a,0d0h | ld (VdpAddress),a
         ex af,af'
         inc hl
         inc hl
