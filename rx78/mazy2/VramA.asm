@@ -49,6 +49,12 @@ ClearScreen_: public ClearScreen_
         ld bc,VVramWidth*VVramHeight-1
         ld (hl),0
         ldir
+
+        ld hl,VVram_
+        ld de,VVram_+1
+        ld bc,VVramWidth*VVramHeight-1
+        ld (hl),0
+        ldir
     pop bc | pop de | pop hl | pop af
 ret
 
