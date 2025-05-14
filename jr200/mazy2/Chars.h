@@ -1,0 +1,59 @@
+
+constexpr byte Char_Knife = 0x0;
+constexpr byte Char_Knife_Left = 0x0;
+constexpr byte Char_Knife_Right = 0x1;
+constexpr byte Char_Knife_Up = 0x2;
+constexpr byte Char_Knife_Down = 0x3;
+constexpr byte Char_Chaser = 0x4;
+constexpr byte Char_Disturber = 0x8;
+constexpr byte Char_Point = 0xC;
+constexpr byte Char_Goal = 0x1C;
+constexpr byte Char_End0 = 0x20;
+
+
+constexpr byte Char_Stair = 0x80;
+constexpr byte Char_StairUp = 0x80;
+constexpr byte Char_StairDown = 0x84;
+constexpr byte Char_Remain = 0x88;
+constexpr byte Char_Man = 0x8C;
+constexpr byte Char_End1 = 0x90;
+
+constexpr byte Char_Space = 0x20;
+constexpr byte Char_Wall = 0x7F;
+
+constexpr byte Pattern_Knife = 0x0;
+constexpr byte Pattern_Knife_Left = 0x0;
+constexpr byte Pattern_Knife_Right = 0x1;
+constexpr byte Pattern_Knife_Up = 0x2;
+constexpr byte Pattern_Knife_Down = 0x3;
+constexpr byte Pattern_Chaser = 0x4;
+constexpr byte Pattern_Disturber = 0x8;
+constexpr byte Pattern_Point = 0xC;
+constexpr byte Pattern_Goal = 0x1C;
+constexpr byte Pattern_Stair = 0x20;
+constexpr byte Pattern_StairUp = 0x20;
+constexpr byte Pattern_StairDown = 0x24;
+constexpr byte Pattern_Man = 0x28;
+constexpr byte Pattern_Man_Left = 0x28;
+constexpr byte Pattern_Man_Left_Stop = 0x28;
+constexpr byte Pattern_Man_Left0 = 0x2C;
+constexpr byte Pattern_Man_Left1 = 0x30;
+constexpr byte Pattern_Man_Left2 = 0x34;
+constexpr byte Pattern_Man_Right = 0x38;
+constexpr byte Pattern_Man_Right_Stop = 0x38;
+constexpr byte Pattern_Man_Right0 = 0x3C;
+constexpr byte Pattern_Man_Right1 = 0x40;
+constexpr byte Pattern_Man_Right2 = 0x44;
+constexpr byte Pattern_Man_Up = 0x48;
+constexpr byte Pattern_Man_Up_Stop = 0x48;
+constexpr byte Pattern_Man_Up0 = 0x4C;
+constexpr byte Pattern_Man_Up1 = 0x50;
+constexpr byte Pattern_Man_Up2 = 0x54;
+constexpr byte Pattern_Man_Down = 0x58;
+constexpr byte Pattern_Man_Down_Stop = 0x58;
+constexpr byte Pattern_Man_Down0 = 0x5C;
+constexpr byte Pattern_Man_Down1 = 0x60;
+constexpr byte Pattern_Man_Down2 = 0x64;
+constexpr byte Pattern_Man_Loose2 = 0x68;
+constexpr byte Pattern_Man_Loose3 = 0x6C;
+constexpr byte Pattern_End = 0x70;

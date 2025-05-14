@@ -1,0 +1,59 @@
+
+Char_Knife equ 0
+Char_Knife_Left equ 0
+Char_Knife_Right equ 1
+Char_Knife_Up equ 2
+Char_Knife_Down equ 3
+Char_Chaser equ 4
+Char_Disturber equ 8
+Char_Point equ 12
+Char_Goal equ 28
+Char_End0 equ 32
+
+
+Char_Stair equ 128
+Char_StairUp equ 128
+Char_StairDown equ 132
+Char_Remain equ 136
+Char_Man equ 140
+Char_End1 equ 144
+
+Char_Space equ 32
+Char_Wall equ 127
+
+Pattern_Knife equ 0
+Pattern_Knife_Left equ 0
+Pattern_Knife_Right equ 1
+Pattern_Knife_Up equ 2
+Pattern_Knife_Down equ 3
+Pattern_Chaser equ 4
+Pattern_Disturber equ 8
+Pattern_Point equ 12
+Pattern_Goal equ 28
+Pattern_Stair equ 32
+Pattern_StairUp equ 32
+Pattern_StairDown equ 36
+Pattern_Man equ 40
+Pattern_Man_Left equ 40
+Pattern_Man_Left_Stop equ 40
+Pattern_Man_Left0 equ 44
+Pattern_Man_Left1 equ 48
+Pattern_Man_Left2 equ 52
+Pattern_Man_Right equ 56
+Pattern_Man_Right_Stop equ 56
+Pattern_Man_Right0 equ 60
+Pattern_Man_Right1 equ 64
+Pattern_Man_Right2 equ 68
+Pattern_Man_Up equ 72
+Pattern_Man_Up_Stop equ 72
+Pattern_Man_Up0 equ 76
+Pattern_Man_Up1 equ 80
+Pattern_Man_Up2 equ 84
+Pattern_Man_Down equ 88
+Pattern_Man_Down_Stop equ 88
+Pattern_Man_Down0 equ 92
+Pattern_Man_Down1 equ 96
+Pattern_Man_Down2 equ 100
+Pattern_Man_Loose2 equ 104
+Pattern_Man_Loose3 equ 108
+Pattern_End equ 112
