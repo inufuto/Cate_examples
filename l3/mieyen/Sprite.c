@@ -3,6 +3,8 @@
 #include "VVram.h"
 #include "Vram.h"
 
+extern void _deb();
+
 constexpr byte InvalidPattern = 0xff;
 struct Sprite {
     byte x, y;
@@ -21,7 +23,8 @@ void HideAllSprites()
 
 void ShowSprite(ptr<Movable> pMovable, byte pattern)
 {
-    ptr<Sprite> p = Sprites + pMovable->sprite;
+    ptr<Sprite> p;
+    p = Sprites + pMovable->sprite;
     p->x = pMovable->x;
     p->y = pMovable->y;
     p->pattern = pattern;
@@ -30,7 +33,8 @@ void ShowSprite(ptr<Movable> pMovable, byte pattern)
 
 void HideSprite(byte index) 
 {
-    ptr<Sprite> p = Sprites + index;
+    ptr<Sprite> p;
+    p = Sprites + index;
     p->pattern = InvalidPattern;
 }
 
@@ -40,20 +44,30 @@ void DrawSprites()
     ptr<Sprite> p;
     for (p : Sprites) {
         if (p->pattern != InvalidPattern) {
-            ptr<byte> pVVram = VVramFront + VVramOffset(p->x, p->y);
-            byte c = p->pattern;
-            if (c >= Char_Knife && c < Char_Man) {
-                *pVVram = c;
-            }
-            else {
-                repeat (2) {
+            ptr<byte> pVVram;
+            byte x, y, c;
+            x = p->x;
+            y = p->y;
+            pVVram = VVramFront + VVramOffset(x, y);
+            c = p->pattern;
+            repeat (2) {
+                if (y < VVramHeight) {
                     repeat (2) {
-                        *pVVram = c;
+                        if (x < VVramWidth) {
+                            *pVVram = c;
+                        }
                         ++pVVram;
                         ++c;
+                        ++x;
                     }
-                    pVVram += VVramWidth - 2;
+                    x -= 2;
+                    pVVram -= 2;
                 }
+                else {
+                    c += 2;
+                }
+                pVVram += VVramWidth;
+                ++y;
             }
         }
     }

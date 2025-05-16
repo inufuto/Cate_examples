@@ -2,59 +2,69 @@
 #include "Sprite.h"
 #include "Main.h"
 #include "Chars.h"
+#include "VVram.h"
 
-constexpr byte MaxCount = Sprite_End - Sprite_Point; 
+extern void _deb();
+
+constexpr byte SpriteColor = 14;
+constexpr byte MaxCount = 4; 
 constexpr byte MaxTime = 6;
 static const word[] Values = { 10, 20, 40, 80 };
+static const byte[] Chars = { '1', '2', '4', '8' };
 
-Movable[MaxCount] Points;
-byte PointRate;
+struct Point {
+    byte x, y;
+    byte c;
+    byte time;
+};
+Point[MaxCount] Points;
+
 
 void InitPoints()
 {
-    byte sprite = Sprite_Point;
-    ptr<Movable> pPoint;
+    ptr<Point> pPoint;
     for (pPoint: Points) {
-        pPoint->status = 0;
-        pPoint->sprite = sprite;
-        HideSprite(sprite);
-        ++sprite;
+        pPoint->time = 0;
     }
 }
 
 
-void StartPoint(byte x, byte y)
+void StartPoint(byte x, byte y, byte rate)
 {
-    AddScore(Values[PointRate]);
-    ptr<Movable> pPoint;
+    AddScore(Values[rate]);
+    ptr<Point> pPoint;
     for (pPoint: Points) {
-        if ((pPoint->status & Movable_Live) != 0) continue;
-        pPoint->status = Movable_Live | MaxTime << CoordShift;
-        pPoint->x = x;
-        pPoint->y = y;
-        ShowSprite(pPoint, Char_Point + (PointRate << 2));
-        if (PointRate < 4 - 1) {
-            ++PointRate;
+        if (pPoint->time == 0) {
+            pPoint->time = MaxTime << CoordShift;
+            pPoint->x = x;
+            pPoint->y = y - 1;
+            pPoint->c = Chars[rate];
+            return;
         }
-        return;
     }
 }
 
 
 void UpdatePoints()
 {
-    ptr<Movable> pPoint;
+    ptr<Point> pPoint;
     for (pPoint: Points) {
-        byte status = pPoint->status;
-        if ((status & Movable_Live) == 0) continue;
-        byte time = status & ~Movable_Live;
-        if (time == 0) {
-            pPoint->status = 0;
-            HideSprite(pPoint->sprite);
+        if (pPoint->time != 0) {
+            --pPoint->time;
         }
-        else {
-            --time;
-            pPoint->status = Movable_Live | time;
+    }
+}
+
+
+void DrawPoints()
+{
+    ptr<Point> pPoint;
+    for (pPoint: Points) {
+        if (pPoint->time != 0) {
+            ptr<byte> pVVram = VVramFront + VVramOffset(pPoint->x, pPoint->y);
+            pVVram = VPut(pVVram, pPoint->c - 0x20);
+            pVVram = VPut(pVVram, 0x10);
+            VPut(pVVram, 0x10);
         }
     }
 }

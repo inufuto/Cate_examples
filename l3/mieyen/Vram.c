@@ -1,5 +1,7 @@
 #include "Vram.h"
 
+extern void _deb();
+
 ptr<byte> PrintC(ptr<byte> pVram, byte c)
 {
     return Put(pVram, c - ' ');

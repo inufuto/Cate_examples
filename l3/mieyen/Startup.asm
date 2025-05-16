@@ -1,19 +1,15 @@
 ext Direct
 ext InitVram
 ext InitSound
-ext KeyHandler
 ext Main_
 
 dseg
-TimerCount:  public TimerCount
-    defb 0
-DpBackup:
-    defb 0
-OldHandler:
-    defw 0
+TimerCount: defb 0 public TimerCount
+DpBackup: defb 0
 
 cseg
-    lda #$40 | sta $FFE0
+    ; lda #$08 | sta $FFE0
+    clr $FFE0
 
     tfr dp,a
     sta DpBackup
@@ -23,14 +19,9 @@ cseg
     clr TimerCount
 
     orcc #$60
-        ldd $10c+1
-        std OldHandler
-        ldd #Handler
-        std $10c+1
-
         ldd $0110
-        std FHandler_end+1
-        ldd #FHandler
+        std Handler_end+1
+        ldd #Handler
         std $0110
     andcc #not $60
 
@@ -38,13 +29,8 @@ cseg
     jsr InitSound
     jsr Main_
 
-    orcc #$60
-        ldd FHandler_end+1
-        std $0110
-
-        ldd OldHandler
-        std $10c+1
-    andcc #not $60
+    ldd Handler_end+1
+    std $0110
     
     lda DpBackup
     tfr a,dp
@@ -57,13 +43,9 @@ cseg
 rts
 
 
-Handler: public Handler
-    jsr KeyHandler
-rti
-
-FHandler:
+Handler:
     inc TimerCount
-FHandler_end:
+Handler_end:
 jmp $e131
 
 

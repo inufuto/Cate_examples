@@ -1,5 +1,18 @@
 #include "Movable.h"
 #include "Stage.h"
+#include "Sprite.h"
+
+extern void _deb();
+
+constexpr byte HitRange = (CoordRate * 4 / 3);
+
+const Direction[] Directions = {
+    { -1, 0, Direction_Left * 2 },
+    { 1, 0, Direction_Right * 2 },
+    { 0, -1, Direction_Up * 2 },
+    { 0, 1, Direction_Down * 2 },
+};
+
 
 void LocateMovable(ptr<Movable> pMovable, byte b)
 {
@@ -10,10 +23,20 @@ void LocateMovable(ptr<Movable> pMovable, byte b)
 }
 
 
-void MoveMovable(ptr<Movable> pMovable)
+void ShowMovable(ptr<Movable> pMovable, byte pattern)
 {
-    pMovable->x += pMovable->dx;
-    pMovable->y += pMovable->dy;
+    byte seq = ((pMovable->x + pMovable->y) >> CoordShift) & 1;
+    seq += pMovable->status & Movable_Pattern;
+    pattern += seq << 2;
+    ShowSprite(pMovable, pattern);
+}
+
+
+void SetDirection(ptr<Movable> pMovable, ptr<Direction> pDirection)
+{
+    pMovable->dx = pDirection->dx;
+    pMovable->dy = pDirection->dy;
+    pMovable->status = (pMovable->status & ~Movable_Pattern) | pDirection->pattern;
 }
 
 
@@ -32,7 +55,7 @@ bool CanMove(ptr<Movable> pMovable, sbyte dx, sbyte dy)
                     return false;
                 }
                 byte row = ToGrid(y);
-                if ((*CellMapPtr(column, row) & Cell_LeftWall) != 0) {
+                if ((GetCell(column - 1, row) & Cell_RightWall) != 0) {
                     return false;
                 }
             }
@@ -45,7 +68,7 @@ bool CanMove(ptr<Movable> pMovable, sbyte dx, sbyte dy)
                     return false;
                 }
                 byte row = ToGrid(y);
-                if ((*CellMapPtr(column, row) & Cell_RightWall) != 0) {
+                if ((GetCell(column, row) & Cell_RightWall) != 0) {
                     return false;
                 }
             }
@@ -63,7 +86,7 @@ bool CanMove(ptr<Movable> pMovable, sbyte dx, sbyte dy)
                     return false;
                 }
                 byte column = ToGrid(x);
-                if ((*CellMapPtr(column, row) & Cell_TopWall) != 0) {
+                if ((GetCell(column, row - 1) & Cell_BottomWall) != 0) {
                     return false;
                 }
             }
@@ -76,11 +99,35 @@ bool CanMove(ptr<Movable> pMovable, sbyte dx, sbyte dy)
                     return false;
                 }
                 byte column = ToGrid(x);
-                if ((*CellMapPtr(column, row) & Cell_BottomWall) != 0) {
+                if ((GetCell(column, row) & Cell_BottomWall) != 0) {
                     return false;
                 }
             }
             return true;
         }
     }
+}
+
+
+void MoveMovable(ptr<Movable> pMovable)
+{
+    pMovable->x += pMovable->dx;
+    pMovable->y += pMovable->dy;
+}
+
+
+bool IsOnGrid(ptr<Movable> pMovable)
+{
+    if (((pMovable->x | pMovable->y) & CoordMask) != 0) return false;
+    if (CoordMod(pMovable->x) != 0) return false;
+    if (CoordMod(pMovable->y) != 0) return false;
+    return true;
+}
+
+
+bool IsNear(ptr<Movable> p1, ptr<Movable> p2)
+{
+    return
+        p1->x + HitRange >= p2->x && p2->x + HitRange >= p1->x &&
+        p1->y + HitRange >= p2->y && p2->y + HitRange >= p1->y;
 }

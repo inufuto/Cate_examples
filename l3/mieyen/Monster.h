@@ -1,11 +1,13 @@
 #include "Movable.h"
 
 struct Monster : Movable {
+    byte targetX, targetY;
 };
 
 extern Monster[] Monsters;
+extern byte MonsterCount;
 
 extern void InitMonsters();
-extern void ShowMonsters();
+extern void StartMonsters();
 extern void MoveMonsters();
-extern bool HitMonsters(ptr<Movable> pKnife);
+extern ptr<Monster> HitMonster(ptr<Movable> pMovable);

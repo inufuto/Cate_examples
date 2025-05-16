@@ -40,16 +40,16 @@ Abs_: public Abs_
 rts
 
 
-; sbyte Sign(byte from, byte to);
-cseg
-Sign_: public Sign_
-    stb <temp
-    suba <temp
-    if ne
-        if lt
-            lda #1
-        else
-            lda #-1
-        endif
-    endif
-rts
+; ; sbyte Sign(byte from, byte to);
+; cseg
+; Sign_: public Sign_
+;     stb <temp
+;     suba <temp
+;     if ne
+;         if lt
+;             lda #1
+;         else
+;             lda #-1
+;         endif
+;     endif
+; rts

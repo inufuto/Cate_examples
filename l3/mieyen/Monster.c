@@ -1,198 +1,318 @@
 #include "Monster.h"
+#include "Stage.h"
 #include "Stages.h"
 #include "Sprite.h"
 #include "Chars.h"
 #include "Math.h"
-#include "Man.h"
-#include "Knife.h"
+#include "Status.h"
+#include "Main.h"
 #include "Sound.h"
-#include "Point.h"
+#include "Man.h"
 
 extern void _deb();
 
-constexpr byte Visible = 0x08;
-constexpr byte FloorMask = 0x70;
-constexpr byte TypeMask = 0x03;
-constexpr byte FloorShift = 4;
-
-constexpr byte Type_Horizontal = 0x00;
-constexpr byte Type_Vertical = 0x01;
-constexpr byte Type_Chaser = 0x02;
+// constexpr byte SpriteColor = 13;
+constexpr byte Monster_Visible = 0x40;
 
 Monster[MaxMonsterCount] Monsters;
+byte MonsterCount;
+
 
 void InitMonsters()
 {
     ptr<Monster> pMonster = Monsters;
-    byte totalCount = MaxMonsterCount;
-    byte floor = 0;
-    ptr<Floor> pFloor = pStage->pFloors;
-    byte floorCount = pStage->floorCount;
-    do {
-        byte sprite = Sprite_Monster;
-        byte count = pFloor->monsterCount;
-        ptr<byte> pSource = pFloor->pMonsters;
-        do {
-            pMonster->sprite = sprite; ++sprite;
-            byte position = *pSource; ++pSource;
-            LocateMovable(pMonster, position);
-            byte type = *pSource; ++pSource;
-            pMonster->status = Movable_Live | type | (floor << FloorShift);
-            ++pMonster;
-            --totalCount;
-        } while (--count != 0);
-        ++floor;
-        ++pFloor;
-    } while (--floorCount != 0);
-    while (totalCount != 0) {
-        pMonster->status = 0;
+    byte count = pStage->enemyCount;
+    byte i = 0;
+    byte sprite = Sprite_Monster;
+    while (i < count) {
+        pMonster->status = Movable_Live | Monster_Visible;
+        pMonster->sprite = sprite;
+        ++sprite;
         ++pMonster;
-        --totalCount;
+        ++i;
+    }
+    while (i < MaxMonsterCount) {
+        pMonster->status = 0;
+        pMonster->sprite = sprite;
+        HideSprite(sprite);
+        ++sprite;
+        ++pMonster;
+        ++i;
     }
 }
 
-static void UpdateVisiblity(ptr<Monster> pMonster)
+
+void UpdateMonsterTargets()
 {
-    byte cell = *CellMapPtr(ToGrid(pMonster->x), ToGrid(pMonster->y));
-    if ((cell & Cell_Visible) != 0) {
-        pMonster->status |= Visible;
-    }
-    else {
-        pMonster->status &= ~Visible;
+    if (FoodCount == 0) return;
+    ptr<byte> pCell = CellMap;
+    byte cell = *pCell;
+    byte column = 0;
+    byte row = 0;
+    ptr<Monster> pMonster;
+    for (pMonster : Monsters) {
+        byte status = pMonster->status;
+        if ((status & Movable_Live) != 0 && (status & Movable_Loose) == 0) {
+            bool done = false;
+            do {
+                if ((cell & Cell_Food) != 0) {
+                    pMonster->targetX = ToCoord(column) << CoordShift;
+                    pMonster->targetY = ToCoord(row) << CoordShift;
+                    done = true;
+                }
+                ++column;
+                if (column >= ColumnCount) {
+                    column = 0;
+                    ++pCell;
+                    ++row;
+                    if (row >= RowCount) {
+                        row = 0;
+                        pCell = CellMap;
+                    }
+                    cell = *pCell;
+                }
+                else if ((column & 1) == 0) {
+                    ++pCell;
+                    cell = *pCell;
+                }
+                else {
+                    cell >>= 4;
+                }
+            } while (!done);
+        }
     }
 }
+
 
 static void Show(ptr<Monster> pMonster)
 {
-    byte status = pMonster->status;
-    if ((status & Visible) != 0) {
-        byte pattern;
-        if ((status & TypeMask) == Type_Chaser) {
-            pattern = Char_Chaser;
-        }
-        else {
-            pattern = Char_Disturber;
-        }
-        ShowSprite(pMonster, pattern);
+    if ((pMonster->status & Monster_Visible) != 0) {
+        ShowMovable(pMonster, Char_Monster);
     }
     else {
+        // ShowMovable(pMonster, Char_Monster, 1);
         HideSprite(pMonster->sprite);
     }
 }
 
-
-void ShowMonsters()
+static void DecideDirection(ptr<Monster> pMonster)
 {
-    byte sprite = Sprite_Monster;
-    repeat (MaxMonsterCountOfFloor) {
-        HideSprite(sprite);
-        ++sprite;
-    }
-    byte floorFilter = (CurrentFloor << FloorShift) | Movable_Live;
-    ptr<Monster> pMonster;
-    for (pMonster: Monsters) {
-        if ((pMonster->status & (Movable_Live | FloorMask)) == floorFilter) {
-            UpdateVisiblity(pMonster);
-            Show(pMonster);
-        }
-    }
-}
+    static ptr<Direction>[4] directionPtrs;
 
-
-static bool IsNearNext(ptr<Monster> pMonster, sbyte dx, sbyte dy) 
-{
-    byte x = pMonster->x + dx;
-    byte y = pMonster->y + dy;
-    byte floorFilter = (CurrentFloor << FloorShift) | Movable_Live | Visible;
-    ptr<Monster> pOther;
-    for (pOther: Monsters) {
-        if (
-            pOther != pMonster &&
-            (pOther->status & (Movable_Live | Visible | FloorMask)) == floorFilter
-        ) {
-            byte ox = pOther->x;
-            byte oy = pOther->y;
-            if (
-                x + CoordRate * 2 - 1 >= ox && ox + CoordRate * 2 - 1 >= x &&
-                y + CoordRate * 2 - 1 >= oy && oy + CoordRate * 2 - 1 >= y
-            ) {
-                return true;
+    if (Abs(pMonster->targetX, pMonster->x) > Abs(pMonster->targetY, pMonster->y)) {
+        ptr<ptr<Direction> > p1, p2;
+        if (pMonster->targetX < pMonster->x) {
+            sbyte dx = pMonster->dx;
+            if (dx == 0) {
+                directionPtrs[0] = Directions + Direction_Left;
+                p1 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Right;
+                p2 = directionPtrs + 3;
+            }
+            else if (dx < 0) {
+                directionPtrs[0] = Directions + Direction_Left;
+                p1 = directionPtrs + 1;
+                p2 = directionPtrs + 2;
+                directionPtrs[3] = Directions + Direction_Right;
+            }
+            else {
+                p1 = directionPtrs + 0;
+                p2 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Right;
+                directionPtrs[3] = Directions + Direction_Left;
             }
         }
+        else {
+            sbyte dx = pMonster->dx;
+            if (dx == 0) {
+                directionPtrs[0] = Directions + Direction_Right;
+                p1 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Left;
+                p2 = directionPtrs + 3;
+            }
+            else if (dx < 0) {
+                p1 = directionPtrs + 0;
+                p2 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Left;
+                directionPtrs[3] = Directions + Direction_Right;
+            }
+            else {
+                directionPtrs[0] = Directions + Direction_Right;
+                p1 = directionPtrs + 1;
+                p2 = directionPtrs + 2;
+                directionPtrs[3] = Directions + Direction_Left;
+            }
+        }
+        if (pMonster->targetY <= pMonster->y && pMonster->dy <= 0) {
+            *p1 = Directions + Direction_Up;
+            *p2 = Directions + Direction_Down;
+        }
+        else {
+            *p1 = Directions + Direction_Down;
+            *p2 = Directions + Direction_Up;
+        }
     }
-    return false;
+    else {
+        ptr<ptr<Direction> > p1, p2;
+        if (pMonster->targetY < pMonster->y) {
+            sbyte dy = pMonster->dy;
+            if (dy == 0) {
+                directionPtrs[0] = Directions + Direction_Up;
+                p1 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Down;
+                p2 = directionPtrs + 3;
+            }
+            else if (dy < 0) {
+                directionPtrs[0] = Directions + Direction_Up;
+                p1 = directionPtrs + 1;
+                p2 = directionPtrs + 2;
+                directionPtrs[3] = Directions + Direction_Down;
+            }
+            else {
+                p1 = directionPtrs + 0;
+                p2 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Down;
+                directionPtrs[3] = Directions + Direction_Up;
+            }
+        }
+        else {
+            sbyte dy = pMonster->dy;
+            if (dy == 0) {
+                directionPtrs[0] = Directions + Direction_Down;
+                p1 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Up;
+                p2 = directionPtrs + 3;
+            }
+            else if (dy < 0) {
+                p1 = directionPtrs + 0;
+                p2 = directionPtrs + 1;
+                directionPtrs[2] = Directions + Direction_Up;
+                directionPtrs[3] = Directions + Direction_Down;
+            }
+            else {
+                directionPtrs[0] = Directions + Direction_Down;
+                p1 = directionPtrs + 1;
+                p2 = directionPtrs + 2;
+                directionPtrs[3] = Directions + Direction_Up;
+            }
+        }
+        if (pMonster->targetX <= pMonster->y && pMonster->dx <= 0) {
+            *p1 = Directions + Direction_Left;
+            *p2 = Directions + Direction_Right;
+        }
+        else {
+            *p1 = Directions + Direction_Right;
+            *p2 = Directions + Direction_Left;
+        }
+    }
+    {
+        byte i = 0;
+        ptr<ptr<Direction> > pp;
+        for (pp: directionPtrs) {
+            ptr<Direction> pDirection = *pp;
+            sbyte dx = pDirection->dx;
+            sbyte dy = pDirection->dy;
+            if (CanMove(pMonster, pDirection->dx, pDirection->dy)) {
+                SetDirection(pMonster, pDirection);
+                return;
+            }
+            ++i;
+        }
+    }
+    pMonster->dx = 0;
+    pMonster->dy = 0;
 }
+
+void StartMonsters()
+{
+    UpdateMonsterTargets();
+    MonsterCount = 0;
+    ptr<byte> pByte = pStage->pEnemies;
+    ptr<Monster> pMonster;
+    for (pMonster : Monsters) {
+        byte status = pMonster->status;
+        if ((status & Movable_Live) != 0) {
+            pMonster->status = status | Monster_Visible;
+            pMonster->dx = 0;
+            pMonster->dy = 0;
+            LocateMovable(pMonster, *pByte);
+            DecideDirection(pMonster);
+            Show(pMonster);
+            ++MonsterCount;
+        }
+        ++pByte;
+    }
+}
+
 
 void MoveMonsters()
 {
     static byte clock;
-    byte floorFilter = (CurrentFloor << FloorShift) | Movable_Live | Visible;
     ptr<Monster> pMonster;
-    for (pMonster: Monsters) {
+    for (pMonster : Monsters) {
         byte status = pMonster->status;
-        if ((status & (Movable_Live | Visible | FloorMask)) == floorFilter) {
-            if (((pMonster->x | pMonster->y) & CoordMask) == 0) {
-                sbyte dx = 0;
-                sbyte dy = 0;
-                switch (status & TypeMask)
-                {
-                case Type_Horizontal:
-                    dx = Sign(pMonster->x, Man.x);
-                    break;
-                case Type_Vertical:
-                    dy = Sign(pMonster->y, Man.y);
-                    break;
-                default:
-                    dx = Sign(pMonster->x, Man.x);
-                    if (dx == 0 || !CanMove(pMonster, dx, dy)) {
-                        dx = 0;
-                        dy = Sign(pMonster->y, Man.y);
-                    }
-                    break;
-                }
-                if (!CanMove(pMonster, dx, dy) || IsNearNext(pMonster, dx, dy)) {
-                    dx = 0;
-                    dy = 0;
-                }
-                pMonster->dx = dx;
-                pMonster->dy = dy;
-            }
-            if ((clock & 1) == 0 || (status & TypeMask) != Type_Chaser) {
+        if ((status & Movable_Live) != 0) {
+            if ((status & Movable_Loose) == 0) {
                 MoveMovable(pMonster);
-                Show(pMonster);
-                byte x = pMonster->x;
-                byte y = pMonster->y;
-                if (
-                    ((x | y) & CoordMask) == 0 &&
-                    Man.x + HitRange >= pMonster->x && pMonster->x + HitRange >= Man.x &&
-                    Man.y + HitRange >= pMonster->y && pMonster->y + HitRange >= Man.y
-                ) {
+                if (IsOnGrid(pMonster)) {
+                    pMonster->status &= ~Monster_Visible;
+                    byte column = ToGrid(pMonster->x);
+                    byte row = ToGrid(pMonster->y);
+                    byte cell = GetCell(column, row);
+                    if ((cell & Cell_Dot) != 0) {
+                        SetCell(column, row, cell & ~Cell_Dot);
+                    }
+                    else if ((cell & Cell_Food) != 0) {
+                        pMonster->status |= Monster_Visible;
+                        SetCell(column, row, cell & ~Cell_Food);
+                        --FoodCount;
+                        PrintFoodCount();
+                        Sound_Stole();
+                        UpdateMonsterTargets();
+                    }
+                    DecideDirection(pMonster);
+                }
+                if ((Man.status & Movable_Loose) == 0 && IsNear(pMonster, &Man)) {
+                    // FreezeMan();
                     Man.status &= ~Movable_Live;
+                    pMonster->status |= Monster_Visible;
                 }
             }
+            else {
+                if ((clock & CoordMask) == 0) {
+                    status += 2;
+                    if ((status & Movable_Pattern) == 0) {
+                        pMonster->status = status & ~Movable_Live;
+                        HideSprite(pMonster->sprite);
+                        --MonsterCount;
+                        goto next;
+                    }
+                    pMonster->status = status;
+                }
+            }
+            Show(pMonster);
+            next:;
         }
     }
     ++clock;
 }
 
 
-bool HitMonsters(ptr<Knife> pKnife)
+ptr<Monster> HitMonster(ptr<Movable> pMovable)
 {
-    byte floorFilter = (CurrentFloor << FloorShift) | Movable_Live | Visible;
     ptr<Monster> pMonster;
-    for (pMonster: Monsters) {
-        if ((pMonster->status & (Movable_Live | Visible | FloorMask)) == floorFilter) {
-            if (
-                pKnife->x + HitRange / 2 >= pMonster->x && pMonster->x + HitRange >= pKnife->x &&
-                pKnife->y + HitRange / 2 >= pMonster->y && pMonster->y + HitRange >= pKnife->y
-            ) {
-                Sound_Hit();
-                pMonster->status &= ~Movable_Live;
-                StartPoint(pMonster->x, pMonster->y);
-                HideSprite(pMonster->sprite);
-                return true;
+    for (pMonster : Monsters) {
+        byte status = pMonster->status;
+        if ((status & Movable_Live) != 0 && (status & Movable_Loose) == 0) {
+            if (IsNear(pMovable, pMonster)) {
+                pMonster->status =
+                    (status & Movable_Pattern) |
+                    (Movable_Live | Monster_Visible | Movable_Loose);
+                Show(pMonster);
+                UpdateMonsterTargets();
+                return pMonster;
             }
         }
     }
-    return false;
+    return nullptr;
 }

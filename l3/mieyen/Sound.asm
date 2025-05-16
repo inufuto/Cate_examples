@@ -1,7 +1,7 @@
 ; include 'Temp6809.inc'
     cseg
 
-Tempo equ 220*2
+Tempo equ 180*2
 
 zseg 
 Dp.Word0:
@@ -120,21 +120,13 @@ Melody:
 rts
 
 
-beep_notes:
-    defb 1,A4, 1,0, 0
-Sound_Beep_: public Sound_Beep_
+loose_notes:
+    defb 2,C4, 2,0, 0
+Sound_Loose_: public Sound_Loose_
     pshs a,b,x,y
-        ldx #beep_notes
+        ldx #loose_notes
         bsr Melody
     puls a,b,x,y
-rts
-
-
-Sound_Get_: public Sound_Get_
-    pshs x
-        ldx #Sound_Beep_
-        stx SoundProc
-    puls x
 rts
 
 
@@ -155,18 +147,55 @@ Sound_Hit_:  public Sound_Hit_
 rts
 
 
-loose_notes:
-    defb 2,C4, 2,0, 0
-Sound_Loose_: public Sound_Loose_
+stole_notes:
+    defb 1,F5, 1,E5, 1,D5, 1,C5, 1,B4, 1,A4, 1,G4, 1,F4, 0
+    defb 0 
+Sound_Stole:
+    pshs x
+        ldx #stole_notes
+        bsr Melody
+    puls x
+rts
+Sound_Stole_:  public Sound_Stole_
+    pshs x
+        ldx #Sound_Stole
+        stx SoundProc
+    puls x
+rts
+
+
+beep_notes:
+    defb 1,A4, 1,0, 0
+Sound_Beep_: public Sound_Beep_
     pshs a,b,x,y
-        ldx #loose_notes
+        ldx #beep_notes
+        bsr Melody
+    puls a,b,x,y
+rts
+Sound_Fire_: public Sound_Fire_
+    pshs x
+        ldx #Sound_Beep_
+        stx SoundProc
+    puls x
+rts
+
+
+bonus_notes:
+    defb 1,C4, 1, C4S, 1,D4, 1,F4, 1,A4, 1,C5, 0
+Sound_Bonus_: public Sound_Bonus_
+    pshs a,b,x,y
+        ldx #bonus_notes
         bsr Melody
     puls a,b,x,y
 rts
 
 
 start_notes: 
-	defb 5,C4,1,0, 5,G4,1,0, 5,E4,1,0, 5,G4,1,0, 23,C5,1,0
+	defb 11,C4,1,0, 11,E4,1,0
+	defb 5,G4,1,0, 11,E4,1,0, 11,F4,1,0
+	defb 5,F4,1,0, 11,A4,1,0, 5,C5,1,0
+	defb 17,A4,1,0, 31,C5,5,0
+	defb 12,0
     defb 0
 Sound_Start_: 
     public Sound_Start_
@@ -178,8 +207,11 @@ rts
 
 
 clear_notes: 
-	defb 5,C4,1,0, 5,E4,1,0, 5,G4,1,0, 5,D4,1,0, 5,F4,1,0, 5,A4,1,0, 5,E4,1,0, 5,G4,1,0
-	defb 5,B4,1,0, 17,C5,1,0
+	defb 5,A4,1,0, 5,A4,1,0, 5,G4,1,0, 5,F4,1,0
+	defb 5,G4,1,0, 11,A4,1,0, 11,B4,1,0
+	defb 5,B4,1,0, 5,A4,1,0, 5,G4,1,0, 5,A4,1,0
+	defb 11,B4,1,0, 29,C5,1,0
+	defb 24,0
     defb 0
 Sound_Clear_:
     public Sound_Clear_
@@ -191,8 +223,10 @@ rts
 
 
 over_notes: 
-	defb 5,C5,1,0, 5,G4,1,0, 5,E4,1,0, 5,C5,1,0, 5,B4,1,0, 5,G4,1,0, 5,E4,1,0, 5,B4,1,0
-	defb 11,A4,1,0, 11,B4,1,0, 23,C5,1,0
+	defb 5,C5,1,0, 5,F4,1,0, 5,A4,1,0, 5,E4,1,0
+	defb 5,G4,1,0, 5,A4,1,0, 5,B4,1,0, 5,C5,1,0
+	defb 31,C5,5,0
+	defb 12,0
     defb 0
 Sound_GameOver_: public Sound_GameOver_
     pshs a,b,x,y
