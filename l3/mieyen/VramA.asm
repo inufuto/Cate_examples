@@ -35,13 +35,13 @@ cseg
 ColorTable:
 defb 64,7 ; Ascii
 defb 16,5 ; Logo
-defb 16,1 ; Wall
-defb 32,7 ; Man
-defb 32,3 ; Monster
-defb 4,2 ; FireBullet
-defb 4,2 ; Fire
-defb 4,6 ; Dot
-defb 4,6 ; Food
+defb 4,7 ; Knife
+defb 72,7 ; Man
+defb 4,3 ; Chaser
+defb 4,2 ; Disturber
+defb 16,7 ; Point
+defb 8,7 ; Stair
+defb 4,6 ; Goal
 defb 0
 InitVram: public InitVram
     ldx #ColorTable

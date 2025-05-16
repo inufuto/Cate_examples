@@ -1,26 +1,36 @@
 #include "Man.h"
 #include "Sprite.h"
-#include "Chars.h"
 #include "Stage.h"
+#include "Chars.h"
 #include "ScanKeys.h"
+#include "Knife.h"
 #include "Sound.h"
-#include "Fire.h"
-#include "Main.h"
 #include "VVram.h"
 
 extern void _deb();
 
-// constexpr byte SpriteColor = 15;
+constexpr byte PatternMask = 0x0f;
 
-static const byte[] Keys = { Keys_Left, Keys_Right, Keys_Up, Keys_Down };
+const ManDirection[] Directions = {
+    { -1, 0, 0, Keys_Left },
+    { 1, 0, 4, Keys_Right },
+    { 0, -1, 8, Keys_Up },
+    { 0, 1, 12, Keys_Down },
+};
 
 Man Man;
-ptr<Direction> pManDirection;
-
 
 static void Show()
 {
-    ShowMovable(&Man, Char_Man);
+    byte pattern = Man.status & PatternMask;
+    if (Man.dx != 0 || Man.dy != 0) {
+        byte seq = ((Man.x + Man.y) >> CoordShift) & 3;
+        if (seq == 3) {
+            seq = 1;
+        }
+        pattern += seq + 1;
+    }
+    ShowSprite(&Man, Char_Man + (pattern << 2));
 }
 
 void InitMan()
@@ -29,7 +39,7 @@ void InitMan()
     Man.status = Movable_Live;
     Man.dx = 0;
     Man.dy = 0;
-    pManDirection = Directions + Direction_Left;
+    Man.pDirection = Directions + Direction_Left;
     LocateMovable(&Man, pStage->start);
     Show();
 }
@@ -37,85 +47,88 @@ void InitMan()
 
 void MoveMan()
 {
-    static byte clock;
-    constexpr byte FireInterval = CoordRate * 4 - 1;
-    static byte keyCount;
-    // if ((Man.status & Movable_Loose) == 0) {
-        if (((Man.x | Man.y) & CoordMask) == 0) {
-            byte key = ScanKeys();
-            if ((key & Keys_Dir) != 0) {
-                ptr<Direction> pDirection = Directions;
-                ptr<byte> pKey = Keys;
-                repeat (4) {
-                    if ((key & *pKey) != 0) {
-                        if (CanMove(&Man, pDirection->dx, pDirection->dy)) {
-                            pManDirection = pDirection;
-                            goto move;
-                        }
-                        else if (CanMove(&Man, pManDirection->dx, pManDirection->dy)) {
+    static bool keyOn;
+    if (((Man.x | Man.y) & CoordMask) == 0) {
+        byte key = ScanKeys();
+        if ((key & Keys_Dir) != 0) {
+            ptr<ManDirection> pDirection = Directions;
+            repeat (4) {
+                if ((key & pDirection->key ) != 0) {
+                    if (CanMove(&Man, pDirection->dx, pDirection->dy)) {
+                        Man.pDirection = pDirection;
+                        goto move;
+                    }
+                    else {
+                        ptr<ManDirection> pOldDirection = Man.pDirection;
+                        if (CanMove(&Man, pOldDirection->dx, pOldDirection->dy)) {
+                            Man.pDirection = pOldDirection;
                             goto move;
                         }
                     }
-                    ++pDirection;
-                    ++pKey;
                 }
-            }
-            Man.dx = 0;
-            Man.dy = 0;
-            goto button;
-            move:;
-            SetDirection(&Man, pManDirection);
-            button:
-            if ((key & Keys_Button0) != 0) {
-                if (keyCount == 0) {
-                    StartFire();
-                    keyCount = FireInterval;
-                }
-                else {
-                    --keyCount;
-                }
-            }
-            else {
-                keyCount = 0;
+                ++pDirection;
             }
         }
-        MoveMovable(&Man);
-        if (IsOnGrid(&Man)) {
-            byte column = ToGrid(Man.x);
-            byte row = ToGrid(Man.y);
-            byte cell = GetCell(column, row);
-            if ((cell & (Cell_Dot | Cell_Food)) == 0) {
-                SetCell(column, row, cell | Cell_Dot);
-                AddScore(1);
+        Man.dx = 0;
+        Man.dy = 0;
+        goto button;
+        
+        move:
+        {
+            ptr<ManDirection> pDirection = Man.pDirection;
+            Man.dx = pDirection->dx;
+            Man.dy = pDirection->dy;
+            Man.status = (Man.status & ~PatternMask) | pDirection->pattern;
+        }
+        button:
+        if ((key & Keys_Button0) != 0) {
+            if (!keyOn) {
+                StartKnife();
+                keyOn = true;
             }
         }
-    // }
-    // else {
-    //     if ((clock & CoordMask) == 0) {
-    //         Man.status += 2;
-    //         if ((Man.status & Movable_Pattern) == 0) {
-    //             Man.status = Man.status & ~Movable_Loose;
-    //         }
-    //     }
-    // }
+        else {
+            keyOn = false;
+        }
+    }
+    MoveMovable(&Man);
     Show();
-    ++clock;
+    if (((Man.x | Man.y) & CoordMask) == 0) {
+        PickupKnife();
+        if (
+            (Man.dx != 0 || Man.dy != 0) &&
+            CoordMod(Man.x) == 0 &&
+            CoordMod(Man.y) == 0
+        ) {
+            byte cellType = *CellMapPtr(ToGrid(Man.x), ToGrid(Man.y)) & Cell_TypeMask;
+            switch (cellType) {
+            case Cell_DownStair:
+                ChangeFloor(CurrentFloor + 1);
+                break;
+            case Cell_UpStair:
+                ChangeFloor(CurrentFloor - 1);
+                break;
+            case Cell_Goal:
+                Reached = true;
+                break;
+            }
+        }
+    }
 }
-
-
-// void FreezeMan()
-// {
-//     Man.status = (Man.status & ~Movable_Pattern) | (Movable_Loose | Movable_Live);
-//     Sound_Stole();
-// }
 
 
 void LooseMan()
 {
+    static const byte[] patterns = {
+        Char_Man_Left,
+        Char_Man_Down,
+        Char_Man_Loose2,
+        Char_Man_Loose3,
+    };
     byte i;
     i = 0;
     do {
-        ShowSprite(&Man, Char_Man + ((i & 3) << 3));
+        ShowSprite(&Man, patterns[i & 3]);
         DrawAll();
         Sound_Loose();
         ++i;

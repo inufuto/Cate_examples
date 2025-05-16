@@ -8,5 +8,3 @@ extern void VVramBackToFront();
 extern ptr<byte> VPut(ptr<byte> pVVram, byte c);
 
 extern void DrawAll();
-extern ptr<byte> VPut2C(ptr<byte> pVVram, byte c);
-extern ptr<byte> VErase2(ptr<byte> pVVram);

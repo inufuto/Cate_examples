@@ -7,12 +7,19 @@ Keys_Button0 equ $10
 Keys_Button1 equ $20
 
 dseg
-PrevKey_: public PrevKey_
+KeyCode:
     defb 0
-; PrevDir:
-;     defb 0
 
 cseg
+KeyHandler: public KeyHandler
+    pshs a
+        lda $FFE0
+        if mi
+            sta KeyCode
+        endif
+    puls a
+rts
+
 KeyTable:
     defb $80,Keys_Button0 
     defb $81,Keys_Up
@@ -34,9 +41,9 @@ KeyTable:
 
 ScanKeys_: public ScanKeys_
     pshs b,x
-        ldb $FFE0
-        bitb #$80
-        if ne
+        ; ldb $FFE0
+        ldb KeyCode
+        if mi
             ldx #KeyTable
             do
                 lda ,x
@@ -44,29 +51,12 @@ ScanKeys_: public ScanKeys_
                 cmpb ,x
                 if eq
                     lda 1,x
-                    ; bita #Keys_Dir
-                    ; if eq
-                    ;     ora PrevDir
-                    ; else
-                    ;     tfr a,b
-                    ;     andb #Keys_Dir
-                    ;     stb PrevDir
-                    ; endif
                     bra ScanKeys_exit
                 endif
                 leax 2,x
             wend
-            clra
-            sta PrevKey_
-            ; sta PrevDir
-        else
-            lda PrevKey_
         endif
-        ; ldb $FFC8
-        ; bitb #$80
-        ; if ne
-        ;     ora Keys_Button0
-        ; endif
+        clra
 ScanKeys_exit:
     puls b,x
 rts

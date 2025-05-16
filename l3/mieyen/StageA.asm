@@ -5,10 +5,9 @@ ext @Temp@Word
 ; ptr<byte> CellMapPtr(byte column, byte floor);
 cseg
 CellMapPtr_: public CellMapPtr_
-    lsra
     sta <@Temp@Word+1
     clr <@Temp@Word
-    lda #5
+    lda #10
     mul
     addd <@Temp@Word
     addd #CellMap_

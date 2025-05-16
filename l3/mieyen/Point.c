@@ -2,69 +2,59 @@
 #include "Sprite.h"
 #include "Main.h"
 #include "Chars.h"
-#include "VVram.h"
 
-extern void _deb();
-
-constexpr byte SpriteColor = 14;
-constexpr byte MaxCount = 4; 
+constexpr byte MaxCount = Sprite_End - Sprite_Point; 
 constexpr byte MaxTime = 6;
 static const word[] Values = { 10, 20, 40, 80 };
-static const byte[] Chars = { '1', '2', '4', '8' };
 
-struct Point {
-    byte x, y;
-    byte c;
-    byte time;
-};
-Point[MaxCount] Points;
-
+Movable[MaxCount] Points;
+byte PointRate;
 
 void InitPoints()
 {
-    ptr<Point> pPoint;
+    byte sprite = Sprite_Point;
+    ptr<Movable> pPoint;
     for (pPoint: Points) {
-        pPoint->time = 0;
+        pPoint->status = 0;
+        pPoint->sprite = sprite;
+        HideSprite(sprite);
+        ++sprite;
     }
 }
 
 
-void StartPoint(byte x, byte y, byte rate)
+void StartPoint(byte x, byte y)
 {
-    AddScore(Values[rate]);
-    ptr<Point> pPoint;
+    AddScore(Values[PointRate]);
+    ptr<Movable> pPoint;
     for (pPoint: Points) {
-        if (pPoint->time == 0) {
-            pPoint->time = MaxTime << CoordShift;
-            pPoint->x = x;
-            pPoint->y = y - 1;
-            pPoint->c = Chars[rate];
-            return;
+        if ((pPoint->status & Movable_Live) != 0) continue;
+        pPoint->status = Movable_Live | MaxTime << CoordShift;
+        pPoint->x = x;
+        pPoint->y = y;
+        ShowSprite(pPoint, Char_Point + (PointRate << 2));
+        if (PointRate < 4 - 1) {
+            ++PointRate;
         }
+        return;
     }
 }
 
 
 void UpdatePoints()
 {
-    ptr<Point> pPoint;
+    ptr<Movable> pPoint;
     for (pPoint: Points) {
-        if (pPoint->time != 0) {
-            --pPoint->time;
+        byte status = pPoint->status;
+        if ((status & Movable_Live) == 0) continue;
+        byte time = status & ~Movable_Live;
+        if (time == 0) {
+            pPoint->status = 0;
+            HideSprite(pPoint->sprite);
         }
-    }
-}
-
-
-void DrawPoints()
-{
-    ptr<Point> pPoint;
-    for (pPoint: Points) {
-        if (pPoint->time != 0) {
-            ptr<byte> pVVram = VVramFront + VVramOffset(pPoint->x, pPoint->y);
-            pVVram = VPut(pVVram, pPoint->c - 0x20);
-            pVVram = VPut(pVVram, 0x10);
-            VPut(pVVram, 0x10);
+        else {
+            --time;
+            pPoint->status = Movable_Live | time;
         }
     }
 }
