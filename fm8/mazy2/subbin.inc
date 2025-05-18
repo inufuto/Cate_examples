@@ -1,0 +1,8 @@
+subbin_start	equ	0C000h
+subbin_size	equ	249
+CLEARVRAM	equ	0C03Dh
+DEFCHAR	equ	0C0B2h
+PUT	equ	0C055h
+SETWALL	equ	0C0D2h
+SUBCHARS	equ	0C0FFh
+SUBMAIN	equ	0C000h
