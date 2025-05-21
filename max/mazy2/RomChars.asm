@@ -1,0 +1,70 @@
+cseg
+
+CharPattern: public CharPattern
+; ascii 29
+	; " -0123456789ABCEFGHIMNOPRSTUV"
+	defb $00,$00,$00,$00,$00,$00,$00,$00
+	defb $00,$00,$00,$fc,$00,$00,$00,$00
+	defb $30,$cc,$cc,$cc,$cc,$cc,$30,$00
+	defb $30,$30,$30,$30,$30,$30,$30,$00
+	defb $30,$cc,$0c,$0c,$30,$c0,$fc,$00
+	defb $30,$cc,$0c,$30,$0c,$cc,$30,$00
+	defb $0c,$cc,$cc,$fc,$0c,$0c,$0c,$00
+	defb $fc,$c0,$c0,$f0,$0c,$0c,$f0,$00
+	defb $30,$cc,$c0,$f0,$cc,$cc,$30,$00
+	defb $fc,$cc,$0c,$0c,$30,$30,$30,$00
+	defb $30,$cc,$cc,$30,$cc,$cc,$30,$00
+	defb $30,$cc,$cc,$3c,$0c,$cc,$30,$00
+	defb $30,$cc,$cc,$cc,$fc,$cc,$cc,$00
+	defb $f0,$cc,$cc,$f0,$cc,$cc,$f0,$00
+	defb $30,$cc,$c0,$c0,$c0,$cc,$30,$00
+	defb $fc,$c0,$c0,$f0,$c0,$c0,$fc,$00
+	defb $fc,$c0,$c0,$f0,$c0,$c0,$c0,$00
+	defb $3c,$c0,$c0,$cc,$cc,$cc,$30,$00
+	defb $cc,$cc,$cc,$fc,$cc,$cc,$cc,$00
+	defb $fc,$30,$30,$30,$30,$30,$fc,$00
+	defb $cc,$fc,$fc,$fc,$cc,$cc,$cc,$00
+	defb $f0,$cc,$cc,$cc,$cc,$cc,$cc,$00
+	defb $30,$cc,$cc,$cc,$cc,$cc,$30,$00
+	defb $f0,$cc,$cc,$cc,$f0,$c0,$c0,$00
+	defb $f0,$cc,$cc,$cc,$f0,$cc,$cc,$00
+	defb $30,$cc,$c0,$30,$0c,$cc,$30,$00
+	defb $fc,$30,$30,$30,$30,$30,$30,$00
+	defb $cc,$cc,$cc,$cc,$cc,$cc,$fc,$00
+	defb $cc,$cc,$cc,$cc,$cc,$30,$30,$00
+; logo
+	defb $00,$00,$00,$00,$00,$00,$00,$00
+	defb $f0,$f0,$f0,$f0,$00,$00,$00,$00
+	defb $00,$00,$00,$00,$f0,$f0,$f0,$f0
+	defb $f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0
+	defb $0f,$0f,$0f,$0f,$00,$00,$00,$00
+	defb $ff,$ff,$ff,$ff,$00,$00,$00,$00
+	defb $0f,$0f,$0f,$0f,$f0,$f0,$f0,$f0
+	defb $ff,$ff,$ff,$ff,$f0,$f0,$f0,$f0
+	defb $00,$00,$00,$00,$0f,$0f,$0f,$0f
+	defb $f0,$f0,$f0,$f0,$0f,$0f,$0f,$0f
+	defb $00,$00,$00,$00,$ff,$ff,$ff,$ff
+	defb $f0,$f0,$f0,$f0,$ff,$ff,$ff,$ff
+	defb $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	defb $ff,$ff,$ff,$ff,$0f,$0f,$0f,$0f
+	defb $0f,$0f,$0f,$0f,$ff,$ff,$ff,$ff
+	defb $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+; color8
+	defb $30,$30,$30,$30,$a8,$a8,$20,$20
+; color16
+	defb $ff,$c0,$c0,$c0,$c0,$c0,$c0,$c0
+	defb $ff,$03,$03,$03,$03,$03,$2b,$2b
+	defb $c0,$ca,$ca,$ca,$ca,$ca,$ca,$ff
+	defb $2b,$2b,$2b,$2b,$2b,$2b,$2b,$ff
+	defb $00,$00,$00,$00,$02,$02,$02,$a2
+	defb $00,$0a,$0a,$0a,$8a,$8a,$8a,$80
+	defb $a2,$a2,$a0,$a2,$a2,$02,$aa,$00
+	defb $8a,$8a,$0a,$aa,$aa,$aa,$aa,$00
+	defb $3f,$3f,$3f,$3f,$3f,$3f,$3f,$3f
+	defb $fc,$fc,$fc,$fc,$fc,$fc,$fc,$dc
+	defb $3f,$3f,$3f,$3f,$3f,$3f,$3f,$3f
+	defb $dc,$fc,$fc,$fc,$fc,$fc,$fc,$fc
+	defb $2a,$2a,$08,$08,$2a,$2a,$3f,$3f
+	defb $80,$80,$80,$80,$80,$80,$f0,$f0
+	defb $cf,$cf,$05,$05,$04,$04,$04,$04
+	defb $cc,$cc,$40,$40,$40,$40,$40,$40
