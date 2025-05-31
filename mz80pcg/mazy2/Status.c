@@ -4,7 +4,9 @@
 #include "Main.h"
 #include "Sprite.h"
 #include "Print.h"
-#include "Man.h"
+#include "Chars.h"
+
+constexpr byte Char_Remain = Char_Man_Left_Stop;
 
 static ptr<byte> PrintS(ptr<byte> pVram, ptr<byte> p)
 {
@@ -31,7 +33,8 @@ void PrintStatus()
             byte i;
             i = RemainCount - 1;
             if (i > 2) {
-                pVram = Put2S(pVram, ManChars);
+                Put2C(pVram, Char_Remain);
+                pVram += 2 * VramStep;
                 pVram = Put(pVram, Char_Space);
                 pVram = Put(pVram, Char_Space);
                 pVram += VramRowSize - 2 * VramStep;
@@ -40,7 +43,8 @@ void PrintStatus()
             }
             else {
                 do {
-                    pVram = Put2S(pVram, ManChars);
+                    Put2C(pVram, Char_Remain);
+                    pVram += 2 * VramStep;
                     --i;
                 } while (i > 0);
             }
@@ -73,7 +77,7 @@ void PrintHeldKnives()
     pVram = Vram + VramRowSize * 19 + 32 * VramStep;
     byte i = HeldKnifeCount;
     while (i != 0) {
-        pVram = Put(pVram, 0xc4) + 1;
+        pVram = Put(pVram, Char_Knife) + 1;
         --i;
     }
     Put(pVram, Char_Space);
@@ -97,30 +101,30 @@ void Title()
     {
         static const byte[] TitleBytes = {
             //	M
-            0xfa, 0xf7, 0xf7, 0xfd, 
-            0xfa, 0xf5, 0xf5, 0xff, 
-            0xfa, 0xf5, 0xf5, 0xff, 
-            0xf2, 0xf1, 0xf1, 0xf3, 
+            0x8c, 0x87, 0x87, 0x8b, 
+            0x8c, 0x83, 0x83, 0x8f, 
+            0x8c, 0x83, 0x83, 0x8f, 
+            0x84, 0x81, 0x81, 0x85, 
             //	A
-            0xf0, 0xfe, 0xfb, 0xf4, 
-            0xfa, 0xf5, 0xf0, 0xff, 
-            0xfa, 0xf7, 0xf3, 0xff, 
-            0xf2, 0xf1, 0xf0, 0xf3, 
+            0x80, 0x8e, 0x8d, 0x82, 
+            0x8c, 0x83, 0x80, 0x8f, 
+            0x8c, 0x87, 0x85, 0x8f, 
+            0x84, 0x81, 0x80, 0x85, 
             //	Z
-            0xf2, 0xf3, 0xfb, 0xf7, 
-            0xf0, 0xf8, 0xf7, 0xf0, 
-            0xf8, 0xf7, 0xf0, 0xf0, 
-            0xf2, 0xf3, 0xf3, 0xf3, 
+            0x84, 0x85, 0x8d, 0x87, 
+            0x80, 0x88, 0x87, 0x80, 
+            0x88, 0x87, 0x80, 0x80, 
+            0x84, 0x85, 0x85, 0x85, 
             //	Y
-            0xfa, 0xf5, 0xfa, 0xf5, 
-            0xf2, 0xfd, 0xfe, 0xf1, 
-            0xf0, 0xfa, 0xf5, 0xf0, 
-            0xf0, 0xf2, 0xf1, 0xf0, 
+            0x8c, 0x83, 0x8c, 0x83, 
+            0x84, 0x8b, 0x8e, 0x81, 
+            0x80, 0x8c, 0x83, 0x80, 
+            0x80, 0x84, 0x81, 0x80, 
             //	2
-            0xf8, 0xf7, 0xf3, 0xfd, 
-            0xf0, 0xf8, 0xfe, 0xf7, 
-            0xf8, 0xff, 0xf3, 0xf0, 
-            0xf2, 0xf3, 0xf3, 0xf3, 
+            0x88, 0x87, 0x85, 0x8b, 
+            0x80, 0x88, 0x8e, 0x87, 
+            0x88, 0x8f, 0x85, 0x80, 
+            0x84, 0x85, 0x85, 0x85, 
         };
         constexpr byte LogoLength = 5;
         ptr<byte> p;
@@ -142,7 +146,7 @@ void Title()
     PrintS(Vram + VramRowSize * 21 + 9 * VramStep, "OR CR KEY");
     PrintS(Vram + VramRowSize * 23 + 20 * VramStep, "INUFUTO 2025");
     // {
-    //     ptr<byte> pVram = Vram;
+    //     ptr<byte> ppVram = Vram;
     //     byte c = 0;
     //     repeat (Char_End) {
     //         pVram = Put(pVram, c);
