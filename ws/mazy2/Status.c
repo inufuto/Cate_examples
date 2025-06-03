@@ -116,13 +116,13 @@ void Title()
     PrintS(VramFront + VramRowSize * 13 + 3 * VramStep, "PUSH START BUTTON");
     PrintS(VramFront + VramRowSize * 15 + 12 * VramStep, "INUFUTO 2025");
     // {
-    //     ptr<byte> pVram = Vram;
+    //     ptr<byte> pVram = VramFront;
     //     byte c = 0;
-    //     repeat (0) {
-    //         vram = Put(pVram, c);
+    //     repeat (Char_End) {
+    //         pVram = Put(pVram, c);
     //         ++c;
     //         if ((c & 15) == 0) {
-    //             vram += VramRowSize - 16 * VramStep;
+    //             pVram += VramRowSize - 16 * VramStep;
     //         }
     //     }
     // }

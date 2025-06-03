@@ -1,6 +1,8 @@
-include "wsc.inc"
+include "ws.inc"
 include "Vram.inc"
 include "Chars.inc"
+
+ext CharPalettes
 
 Sprite_End equ 15
 _y equ 0
@@ -8,12 +10,13 @@ _x equ 1
 _pattern equ 2
 unitSize equ 3
 InvalidPattern equ 0ffh
-Left equ VramX*8-1
+Left equ VramX*8-2
 Top equ VramY*8+CharHeight*2
+PaletteBits equ 4
 
 dseg
 Sprites: public Sprites
-    defs unitSize*Sprite_End
+    defs unitSize * Sprite_End
 FirstIndex:
     defs 1
 FirstAddress:
@@ -95,7 +98,6 @@ next:
 ret
 UpdateSprites: public UpdateSprites
     push ax | push bx | push cx | push dx | push si | push di
-        mov ah,30h
         mov di,0e00h
         mov si,[FirstAddress]
         mov ch,[FirstIndex]
@@ -104,6 +106,11 @@ UpdateSprites: public UpdateSprites
             mov al,[si+_pattern]
             cmp al,InvalidPattern
             if ne
+                mov bx,CharPalettes
+                xor ah,ah
+                add bx,ax
+                mov ah,[bx]
+                or ah,30h
                 cmp al,Char_Knife+4
                 if c
                     mov bx,[si+_y]
@@ -133,9 +140,9 @@ UpdateSprites: public UpdateSprites
             dec cl
         while nz | wend
         
-        mov bx,200
+        mov bx,144
         do
-            cmp di,0e00h+4*4*Sprite_End
+            cmp di,$e00+4*4*Sprite_End
         while nz
             mov [di+2],bx
             add di,4
