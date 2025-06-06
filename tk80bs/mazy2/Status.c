@@ -111,6 +111,7 @@ void Title()
             }
             pVram += 4 * VramStep - VramRowSize * 4;
         }
+        PrintS(Vram + VramRowSize * 7 + 18, "MINI");
     }
     PrintS(Vram + VramRowSize * 12 + 5, "PUSH SPACE KEY");
     PrintS(Vram + VramRowSize * 13 + 5, "OR 'Z' KEY");
