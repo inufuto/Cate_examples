@@ -2,7 +2,7 @@ name=mazy2
 
 filename=$(name)
 
-all: $(filename) $(name).wav $(name).rom
+all: $(filename) $(name).wav $(name).rom $(name).d88 $(name).dsk
 
 .c.asm:
 	Cate80.exe $*.c
@@ -33,6 +33,7 @@ Status.asm: Status.c Status.h Vram.h Main.h Print.h Chars.h \
 Vram.asm: Vram.c Vram.h Chars.h 
 Chars.obj: Chars.asm 
 chead.obj: chead.asm 
+Loader.obj: Loader.asm BIOS.inc BinSize.inc
 Math.obj: Math.asm 
 Print.obj: Print.asm 
 ScanKeys.obj: ScanKeys.asm BIOS.inc 
@@ -49,9 +50,8 @@ objects = Startup.obj \
 	..\..\cate\cate80.lib
 
 $(name).rom: chead.obj $(objects) makefile 
-	LinkLE.exe $(name).bin 4000 e000 chead.obj $(objects)
+	LinkLE.exe $(name).rom 4000 e000 chead.obj $(objects)
 	copy $(name).symbols.txt $(name).rom.symbols.txt /y
-	copy $(name).bin $(name).rom /y
 
 $(name).hex: $(objects) makefile
 	LinkLE.exe $(name).hex 8200 8000 $(objects)
@@ -66,3 +66,16 @@ $(name).cas: $(objects) makefile
 
 $(name).wav: $(name).cas
 	cas2wav $(name).cas $(name).wav
+
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) 
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin 8200 8000 $(objects)
+
+Loader.bin: Loader.obj
+	LinkLE Loader.bin c000 c100 Loader.obj
+
+$(name).d88 $(name).dsk: $(name).bin Loader.bin Disk.csx
+	dotnet script Disk.csx $(name)
