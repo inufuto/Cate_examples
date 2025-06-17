@@ -26,8 +26,7 @@ void PrintStatus()
         if (RemainCount > 1) {
             byte i = RemainCount - 1;
             if (i > 2) {
-                Put2C(vram, Char_Remain);
-                vram += 2;
+                vram = Put2C(vram, Char_Remain);
                 vram = Put(vram, Char_Space);
                 vram = Put(vram, Char_Space);
                 vram += VramRowSize - 2;
@@ -36,8 +35,7 @@ void PrintStatus()
             }
             else {
                 do {
-                    Put2C(vram, Char_Remain);
-                    vram += 2;
+                    vram = Put2C(vram, Char_Remain);
                     --i;
                 } while (i > 0);
             }
