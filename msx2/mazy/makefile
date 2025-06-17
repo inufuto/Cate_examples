@@ -2,10 +2,10 @@ name=mazy
 
 filename=$(name)
 
-all: $(filename)
+all: $(filename) $(name).d88 $(name).dsk
 
-cseg=8000
-dseg=b400
+cseg=8900
+dseg=8000
 
 .c.asm:
 	Cate80.exe $*.c
@@ -29,6 +29,7 @@ Vram.asm: Vram.c Vram.h Chars.h
 VVram.asm: VVram.c VVram.h Vram.h Chars.h Map.h 
 Chars.obj: Chars.asm 
 CopyMemory.obj: CopyMemory.asm 
+Loader.obj: Loader.asm BIOS.inc BinSize.inc
 Math.obj: Math.asm 
 Print.obj: Print.asm 
 ScanKeys.obj: ScanKeys.asm BIOS.inc 
@@ -52,3 +53,16 @@ $(name).hex: $(objects) makefile
 
 $(filename): $(name).hex
 	ihx2bin $(name).hex $(filename)
+
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg)
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+Loader.bin: Loader.obj
+	LinkLE Loader.bin c000 c100 Loader.obj
+
+$(name).d88 $(name).dsk: $(name).bin Loader.bin Disk.csx
+	dotnet script Disk.csx $(name)

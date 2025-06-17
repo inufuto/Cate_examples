@@ -181,7 +181,7 @@ ClearScreen_: public ClearScreen_
         call FILVRM
 
         ld hl,Backup
-        ld bc,VVramWidth*VVramHeight*2
+        ld bc,VVramWidth*VVramHeight
         call Clear
     pop bc | pop hl | pop af
 ret
