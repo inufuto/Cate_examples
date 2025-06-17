@@ -19,7 +19,7 @@ TempoValue: public TempoValue
 
 cseg
 Startup:
-    ld sp,DsegTop
+    ld sp,Startup
 
     xor a
     ld (CLIKSW),a

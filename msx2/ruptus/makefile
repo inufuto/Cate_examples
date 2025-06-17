@@ -2,10 +2,10 @@ name=ruptus
 
 filename=$(name)
 
-all: $(filename)
+all: $(filename) $(name).d88 $(name).dsk
 
-cseg=8000
-dseg=d600
+cseg=8200
+dseg=8000-80ff,d803
 
 .c.asm:
 	Cate80.exe $*.c
@@ -52,8 +52,9 @@ Vram.asm: Vram.c Vram.h Chars.h Sprite.h CopyMemory.h
 VVram.asm: VVram.c VVram.h Chars.h 
 Chars.obj: Chars.asm 
 CopyMemory.obj: CopyMemory.asm 
+Loader.obj: Loader.asm BIOS.inc BinSize.inc
 Print.obj: Print.asm 
-RaderA.obj: RaderA.asm Vram.inc Chars.inc 
+RaderA.obj: RaderA.asm BIOS.inc Vram.inc VVram.inc Chars.inc 
 ScanKeys.obj: ScanKeys.asm BIOS.inc 
 Sound.obj: Sound.asm 
 SoundOpll.obj: SoundOpll.asm BIOS.inc 
@@ -76,3 +77,16 @@ $(name).hex: $(objects) makefile
 
 $(filename): $(name).hex
 	ihx2bin $(name).hex $(filename)
+
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg) $(dseg)
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+Loader.bin: Loader.obj
+	LinkLE Loader.bin c000 c100 Loader.obj
+
+$(name).d88 $(name).dsk: $(name).bin Loader.bin Disk.csx
+	dotnet script Disk.csx $(name)
