@@ -46,7 +46,9 @@ InitVram: public InitVram
     do
         ld a,(hl) | inc hl
         ld e,(hl) | inc hl
-        ld ix,SETPLT | call EXTROM
+        push hl | push de | push bc
+            ld ix,SETPLT | call EXTROM
+        pop bc | pop de | pop hl
         inc d
     dwnz
 
@@ -54,7 +56,7 @@ InitVram: public InitVram
     xor a
     ld de,MonoPattern
     ld hl,ColorTable
-    do
+    do  
         ld b,(hl)
         inc b | dec b
     while nz
@@ -68,7 +70,6 @@ InitVram: public InitVram
         add a,b
     wend
 
-                                _deb: public _deb
     ld de,ColorPattern
     do
         call MakePatternColor

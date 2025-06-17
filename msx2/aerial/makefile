@@ -2,10 +2,10 @@ name=aerial
 
 filename=$(name)
 
-all: $(filename)
+all: $(filename) $(name).d88 $(name).dsk
 
-cseg=8000
-dseg=c680
+cseg=8100
+dseg=8000-80ff,c700
 
 .c.asm:
 	Cate80.exe $*.c
@@ -58,6 +58,7 @@ Vram.asm: Vram.c Vram.h VVram.h Chars.h Sprite.h Movable.h \
 	Fort.h 
 Chars.obj: Chars.asm 
 CopyMemory.obj: CopyMemory.asm 
+Loader.obj: Loader.asm BIOS.inc BinSize.inc 
 Math.obj: Math.asm 
 ScanKeys.obj: ScanKeys.asm BIOS.inc 
 Sound.obj: Sound.asm 
@@ -81,3 +82,16 @@ $(name).hex: $(objects) makefile
 
 $(filename): $(name).hex
 	ihx2bin $(name).hex $(filename)
+
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg) $(dseg)
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+Loader.bin: Loader.obj
+	LinkLE Loader.bin c000 c100 Loader.obj
+
+$(name).d88 $(name).dsk: $(name).bin Loader.bin Disk.csx
+	dotnet script Disk.csx $(name)
