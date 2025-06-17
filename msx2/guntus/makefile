@@ -2,10 +2,10 @@ name=guntus
 
 filename=$(name)
 
-all: $(filename)
+all: $(filename) $(name).d88 $(name).dsk
 
-cseg=8000
-dseg=ca00
+cseg=8200
+dseg=8000-80ff,cb00
 
 .c.asm:
 	Cate80.exe $*.c
@@ -48,10 +48,11 @@ Status.asm: Status.c Status.h Vram.h Print.h Chars.h Sprite.h \
 	ScanKeys.h 
 Team.asm: Team.c Team.h Stage.h MovingEnemy.h Direction.h Sprite.h \
 	Coord.h Enemy.h 
-Vram.asm: Vram.c Vram.h Chars.h Sprite.h CopyMemory.h Sound.h \
-	VVram.h Star.h EnemyRow.h 
+Vram.asm: Vram.c Vram.h Chars.h Sprite.h CopyMemory.h VVram.h \
+	Star.h EnemyRow.h 
 VVram.asm: VVram.c VVram.h Chars.h 
 Chars.obj: Chars.asm 
+Loader.obj: Loader.asm BIOS.inc BinSize.inc
 Math.obj: Math.asm 
 ScanKeys.obj: ScanKeys.asm BIOS.inc 
 Sound.obj: Sound.asm 
@@ -75,3 +76,16 @@ $(name).hex: $(objects) makefile
 
 $(filename): $(name).hex
 	ihx2bin $(name).hex $(filename)
+
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg) $(dseg)
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+Loader.bin: Loader.obj
+	LinkLE Loader.bin c000 c100 Loader.obj
+
+$(name).d88 $(name).dsk: $(name).bin Loader.bin Disk.csx
+	dotnet script Disk.csx $(name)
