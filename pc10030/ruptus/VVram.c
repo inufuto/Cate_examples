@@ -1,0 +1,65 @@
+#include "VVram.h"
+#include "Chars.h"
+
+byte[VVramWidth * VVramHeight] VVram;
+bool VVramChanged;
+
+void VPut1(sbyte x, sbyte y, byte c) 
+{
+    ptr<byte> p;
+    if (x < 0) return;
+    if (x >= VVramWidth) return;
+    if (y < 0) return;
+    if (y >= VVramHeight) return;
+    *VVramPtr(x, y) = c;
+}
+
+void VPut6(sbyte x, sbyte y, byte c) 
+{
+    constexpr byte Size = 6;
+    byte width, height;
+    ptr<byte> pRow;
+
+    if (x <= -Size) return;
+    if (x >= VVramWidth) return;
+    if (y <= -Size) return;
+    if (y >= VVramHeight) return;
+
+    width = Size;
+    if (x >= VVramWidth - Size) {
+        width = VVramWidth - x;
+    }
+    else if (x < 0) {
+        width += x;
+        c -= x;
+        x = 0;
+    }
+
+    height = Size;
+    if (y >= VVramHeight - Size) {
+        height = VVramHeight - y;
+    }
+    else while (y < 0) {
+        --height;
+        ++y;
+        c += Size;
+    }
+
+    pRow = VVramPtr(x, y);
+    do {
+        ptr<byte> p;
+        byte xc, count;
+        p = pRow;
+        count = width;
+        xc = c;
+        do {
+            *p = xc;
+            ++p;
+            ++xc;
+            --count;
+        } while (count != 0);
+        pRow += VVramWidth;
+        c += Size;
+        --height;
+    } while (height != 0);
+}
