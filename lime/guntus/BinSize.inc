@@ -1,3 +1,3 @@
-﻿BinSize equ 13437
+﻿BinSize equ 13433
 BinTop equ $4000
-AllSize equ 18716
+AllSize equ 18712
