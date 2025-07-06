@@ -140,8 +140,8 @@ void Title()
             vram += 4 * VramStep - VramRowSize * 4;
         }
     }
-    PrintS(Vram + VramRowSize * 20 + 9 * VramStep, "PUSH SPACE KEY");
-    PrintS(Vram + VramRowSize * 21 + 9 * VramStep, "OR SHIFT KEY");
+    PrintS(Vram + VramRowSize * 20 + 11 * VramStep, "Z:START");
+    PrintS(Vram + VramRowSize * 21 + 11 * VramStep, "X:CONTINUE");
     PrintS(Vram + VramRowSize * 23 + 20 * VramStep, "INUFUTO 2025");
     // {
     //     word vram = Vram;

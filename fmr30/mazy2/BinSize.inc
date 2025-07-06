@@ -1,1 +1,1 @@
-﻿BinSize equ 11055
+﻿BinSize equ 11045
