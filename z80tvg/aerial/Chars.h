@@ -1,0 +1,21 @@
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Ascii = 0x0;
+constexpr byte Char_Logo = 0x40;
+constexpr byte Char_Ground = 0x50;
+constexpr byte Char_GroundFlat = 0x50;
+constexpr byte Char_GroundUp = 0x51;
+constexpr byte Char_GroundDown = 0x52;
+constexpr byte Char_Bulet = 0x53;
+constexpr byte Char_Fighter = 0x57;
+constexpr byte Char_Fighter_Right = 0x57;
+constexpr byte Char_Fighter_RightDown = 0x5B;
+constexpr byte Char_Fighter_RightUp = 0x5F;
+constexpr byte Char_Fighter_Left = 0x63;
+constexpr byte Char_Track = 0x67;
+constexpr byte Char_Rocket = 0x6B;
+constexpr byte Char_SmallBang = 0x6F;
+constexpr byte Char_LargeBang = 0x73;
+constexpr byte Char_Item = 0x83;
+constexpr byte Char_Fort = 0x87;
+constexpr byte Char_End = 0xA3;
