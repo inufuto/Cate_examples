@@ -1,0 +1,10 @@
+FixedCode_start	equ	0EF00h
+FixedCode_size	equ	288
+CLEARVRAM	equ	0EF00h
+TCLEAR8	equ	0EF9Ch
+TCLEARPUT	equ	0EFBCh
+TPRINTC	equ	0F005h
+TPUT	equ	0EF8Ch
+TPUT8	equ	0EFACh
+TPUTCLEAR	equ	0EFCFh
+TPUTPUT	equ	0EFE6h
