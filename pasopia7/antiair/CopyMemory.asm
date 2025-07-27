@@ -1,11 +1,11 @@
-; void CopyMemory(ptr<byte> pDestination, ptr<byte> pSource, word length);
-cseg
-CopyMemory_: public CopyMemory_
-    push hl | push de | push bc
-        ex de,hl
-        ldir
-    pop bc | pop de | pop hl
-ret
+; ; void CopyMemory(ptr<byte> pDestination, ptr<byte> pSource, word length);
+; cseg
+; CopyMemory_: public CopyMemory_
+;     push hl | push de | push bc
+;         ex de,hl
+;         ldir
+;     pop bc | pop de | pop hl
+; ret
 
 
 ; void FillMemory(ptr<byte> pDestination, word length, byte b);

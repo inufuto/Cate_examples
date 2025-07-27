@@ -2,25 +2,16 @@
 #include "Chars.h"
 #include "Sprite.h"
 #include "Vram.h"
-#include "Fort.h"
+#include "Ufo.h"
 
-bool VVramChanged;
+byte[VVramWidth * VVramHeight] VVram;
 
-
-void DrawAll()
-{
-    if (VVramChanged) {
-        VVramBackToFront();
-        DrawForts();
+void DrawAll() {    
+    // if (BackgroundChanged) {
+        BackgroundChanged = false;
+        DrawBackground();
+        DrawUfos();
         DrawSprites();
-        VVramToVramAll();
-        VVramChanged = false;
-    }
-    else {
-        EraseForts();
-        EraseSprites();
-        DrawForts();
-        DrawSprites();
-        VVramToVramChanged();
-    }
+        VVramToVram();
+    // }
 }

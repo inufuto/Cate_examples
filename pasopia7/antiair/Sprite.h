@@ -1,27 +1,17 @@
 #include "Movable.h"
 
-// constexpr byte StepMask = 7;
+constexpr byte Sprite_Cannon = 0;
+constexpr byte Sprite_Bullet = 1;
+constexpr byte Sprite_FallingBlock = 3;
+constexpr byte Sprite_Bang = 11;
+constexpr byte Sprite_End = 23;
 
-constexpr byte Sprite_MyFighter = 0;
-constexpr byte Sprite_EnemyFighter = 1;
-constexpr byte Sprite_GroundEnemy = 5;
-constexpr byte Sprite_MyBullet = 11;
-constexpr byte Sprite_EnemyBullet = 14;
-constexpr byte Sprite_Bang = 18;
-constexpr byte Sprite_Item = 24;
-constexpr byte SpriteCount = 25;
+constexpr byte MaxCannonCount = 1;
+constexpr byte MaxBulletCount = 2;
+constexpr byte MaxFallingBlockCount = 8;
+constexpr byte MaxBangCount = 12;
 
-
-struct Sprite {
-    byte x, y;
-    byte code;
-    byte oldX, oldY;
-    byte oldCode;
-};
-
-extern void InitSprites();
 extern void HideAllSprites();
-extern void ShowSprite(ptr<Movable> pMovable, byte code);
+extern void ShowSprite(ptr<Movable> pMovable, byte pattern);
 extern void HideSprite(byte index);
-extern void EraseSprites();
 extern void DrawSprites();

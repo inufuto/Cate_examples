@@ -1,2 +1,2 @@
-VVramWidth equ 32
-VVramHeight equ 22
+VVramWidth    equ 32
+VVramHeight    equ 24-2

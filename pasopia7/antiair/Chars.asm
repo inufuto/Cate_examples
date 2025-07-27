@@ -1,6 +1,6 @@
 cseg
 
-AsciiPattern_: public AsciiPattern_
+MonoPattern: public MonoPattern
 	defb 000H,000H,000H,000H,000H,000H,000H,000H
 	defb 018H,018H,018H,018H,018H,000H,018H,000H
 	defb 036H,036H,036H,000H,000H,000H,000H,000H
@@ -65,8 +65,6 @@ AsciiPattern_: public AsciiPattern_
 	defb 03cH,004H,004H,004H,004H,004H,03cH,000H
 	defb 008H,014H,022H,000H,000H,000H,000H,000H
 	defb 000H,000H,000H,000H,000H,000H,07eH,000H
-
-MonoPattern_: public MonoPattern_
 ;	logo
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	0f0h, 0f0h, 0f0h, 0f0h, 00h, 00h, 00h, 00h
@@ -84,105 +82,83 @@ MonoPattern_: public MonoPattern_
 	defb	0ffh, 0ffh, 0ffh, 0ffh, 0fh, 0fh, 0fh, 0fh
 	defb	0fh, 0fh, 0fh, 0fh, 0ffh, 0ffh, 0ffh, 0ffh
 	defb	0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh
-;	8dot
-	defb	0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh
-	defb	01h, 03h, 03h, 07h, 0fh, 1fh, 3fh, 0ffh
-	defb	00h, 80h, 0e0h, 0f0h, 0f8h, 0fch, 0fch, 0feh
+;	mono8
+	defb	0ffh, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 
-BulletPattern_: public BulletPattern_
-;	bullet
-	defb	60h, 0f0h, 0f0h, 60h, 00h, 00h, 00h, 00h
-	defb	06h, 0fh, 0fh, 06h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 60h, 0f0h, 0f0h, 60h
-	defb	00h, 00h, 00h, 00h, 06h, 0fh, 0fh, 06h
-
-
-ColorPattern_: public ColorPattern_
-;	16dot
-	defb	00h, 00h, 00h, 00h, 61h, 63h, 77h, 7fh
-	defb	00h, 00h, 00h, 00h, 61h, 63h, 75h, 7fh
-	defb	00h, 00h, 00h, 00h, 61h, 63h, 77h, 7fh
-	defb	00h, 00h, 00h, 00h, 0c0h, 0e0h, 0e0h, 0f8h
-	defb	00h, 00h, 00h, 00h, 0c0h, 20h, 22h, 0fah
-	defb	00h, 00h, 00h, 00h, 0c0h, 0e0h, 0e2h, 0fah
-	defb	7fh, 3fh, 0fh, 03h, 01h, 00h, 00h, 00h
-	defb	7fh, 3ch, 0bh, 03h, 01h, 00h, 00h, 00h
-	defb	7fh, 3ch, 0bh, 03h, 01h, 00h, 00h, 00h
-	defb	0fch, 0fch, 0f8h, 0c0h, 80h, 00h, 00h, 00h
-	defb	0fbh, 3bh, 0dah, 0c2h, 80h, 00h, 00h, 00h
-	defb	0fbh, 3bh, 0dah, 0c2h, 80h, 00h, 00h, 00h
-	defb	04h, 0eh, 1ch, 3ch, 3dh, 1fh, 1fh, 0fh
-	defb	04h, 0eh, 1ch, 3ch, 3dh, 1eh, 1fh, 03h
-	defb	04h, 0eh, 1ch, 3ch, 3dh, 1fh, 1fh, 03h
-	defb	00h, 00h, 00h, 00h, 0c0h, 0e0h, 0f0h, 0f0h
-	defb	00h, 00h, 00h, 00h, 0c0h, 0e0h, 90h, 90h
-	defb	00h, 00h, 00h, 00h, 0c0h, 0e0h, 0f0h, 0f0h
-	defb	0fh, 0fh, 0fh, 07h, 00h, 00h, 00h, 00h
-	defb	0dh, 0eh, 0eh, 06h, 00h, 00h, 00h, 00h
-	defb	0dh, 0eh, 0eh, 06h, 00h, 00h, 00h, 00h
-	defb	0e0h, 0e0h, 0f0h, 0f0h, 60h, 00h, 00h, 00h
-	defb	0e0h, 0e0h, 0f0h, 0ech, 58h, 38h, 20h, 00h
-	defb	0e0h, 0e0h, 0f0h, 0ech, 58h, 38h, 20h, 00h
-	defb	00h, 00h, 00h, 00h, 03h, 07h, 0fh, 0fh
-	defb	00h, 00h, 00h, 00h, 03h, 04h, 0ch, 0fh
-	defb	00h, 00h, 00h, 00h, 03h, 07h, 0fh, 0fh
-	defb	00h, 00h, 00h, 00h, 30h, 0f8h, 0f8h, 0f0h
-	defb	00h, 00h, 10h, 1ch, 2ch, 0f6h, 0f8h, 0f0h
-	defb	00h, 00h, 10h, 1ch, 2ch, 0f6h, 0f8h, 0f0h
-	defb	0fh, 47h, 0ffh, 7fh, 3eh, 18h, 00h, 00h
-	defb	0bh, 47h, 0feh, 7eh, 3eh, 18h, 00h, 00h
-	defb	0fh, 47h, 0feh, 7eh, 3eh, 18h, 00h, 00h
-	defb	0f0h, 0f0h, 0f0h, 0e0h, 00h, 00h, 00h, 00h
-	defb	80h, 70h, 0f0h, 0e0h, 00h, 00h, 00h, 00h
-	defb	80h, 70h, 0f0h, 0e0h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 03h, 03h, 00h
-	defb	00h, 00h, 00h, 00h, 03h, 04h, 44h, 5fh
-	defb	00h, 00h, 00h, 00h, 00h, 03h, 43h, 40h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 40h, 00h
-	defb	00h, 00h, 00h, 00h, 86h, 0c6h, 0aeh, 0feh
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 40h, 00h
-	defb	20h, 23h, 04h, 00h, 00h, 00h, 00h, 00h
-	defb	0dfh, 0dch, 5bh, 43h, 01h, 00h, 00h, 00h
-	defb	0c0h, 0c0h, 40h, 40h, 00h, 00h, 00h, 00h
-	defb	00h, 0c0h, 20h, 00h, 00h, 00h, 00h, 00h
-	defb	0feh, 3ch, 0d0h, 0c0h, 80h, 00h, 00h, 00h
+ColorPattern: public ColorPattern
+;	color16
+	defb	01h, 03h, 03h, 07h, 07h, 0fh, 0fh, 0fh
+	defb	01h, 03h, 03h, 07h, 07h, 0fh, 0fh, 0fh
+	defb	01h, 03h, 03h, 07h, 07h, 0fh, 0fh, 0fh
+	defb	00h, 80h, 80h, 0c0h, 0c0h, 0e0h, 0e0h, 0e0h
+	defb	00h, 00h, 00h, 80h, 80h, 0c0h, 0c0h, 0e0h
+	defb	00h, 80h, 80h, 0c0h, 0c0h, 0e0h, 0e0h, 0e0h
+	defb	0eh, 0eh, 0eh, 0eh, 0eh, 00h, 0ffh, 7ch
+	defb	3fh, 7fh, 0ffh, 0ffh, 0ffh, 00h, 0ffh, 7ch
+	defb	0eh, 0eh, 0eh, 0eh, 0eh, 00h, 0ffh, 7ch
+	defb	0e0h, 0e0h, 0e0h, 0e0h, 0e0h, 00h, 0feh, 7ch
+	defb	0f8h, 0fch, 0feh, 0feh, 0feh, 00h, 0feh, 7ch
+	defb	0e0h, 0e0h, 0e0h, 0e0h, 0e0h, 00h, 0feh, 7ch
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 61h, 63h, 77h, 7fh
-	defb	00h, 00h, 00h, 00h, 61h, 63h, 75h, 7fh
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 02h, 00h
-	defb	00h, 00h, 00h, 00h, 0c0h, 0e0h, 0e0h, 0f8h
-	defb	00h, 00h, 00h, 00h, 0c0h, 20h, 22h, 0fah
-	defb	00h, 00h, 00h, 00h, 00h, 0c0h, 0c2h, 02h
-	defb	7fh, 3fh, 0fh, 03h, 01h, 00h, 00h, 00h
-	defb	7fh, 3ch, 0bh, 03h, 01h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	0fch, 0fch, 0f8h, 0c0h, 80h, 00h, 00h, 00h
-	defb	0fbh, 3bh, 0dah, 0c2h, 80h, 00h, 00h, 00h
-	defb	03h, 03h, 02h, 02h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 60h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	02h, 07h, 0fh, 1fh, 0fh, 07h, 7bh, 99h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 10h, 20h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 80h, 0c0h, 0e0h, 0f0h, 0e8h, 0dch
-	defb	60h, 00h, 00h, 7fh, 00h, 7fh, 7fh, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	98h, 0f8h, 0feh, 80h, 7fh, 0b0h, 81h, 7fh
-	defb	40h, 00h, 00h, 0fch, 00h, 0feh, 0feh, 00h
-	defb	00h, 18h, 18h, 00h, 00h, 00h, 00h, 00h
-	defb	0bch, 64h, 0e4h, 00h, 0feh, 0dh, 81h, 0feh
-	defb	01h, 03h, 03h, 07h, 07h, 07h, 0fh, 0fh
-	defb	01h, 03h, 03h, 07h, 07h, 07h, 08h, 0fh
-	defb	01h, 03h, 03h, 07h, 07h, 07h, 08h, 0fh
-	defb	80h, 0c0h, 0c0h, 0e0h, 0e0h, 0e0h, 0f0h, 0f0h
-	defb	80h, 80h, 80h, 0c0h, 0c0h, 0c0h, 00h, 0c0h
-	defb	80h, 0c0h, 0c0h, 0e0h, 0e0h, 0e0h, 10h, 0f0h
-	defb	0fh, 0fh, 0fh, 0eh, 0eh, 0eh, 0eh, 06h
-	defb	0fh, 0fh, 0fh, 1fh, 3fh, 7fh, 0ffh, 0e7h
-	defb	0fh, 0fh, 0fh, 0eh, 0eh, 0eh, 0eh, 06h
-	defb	0f0h, 0f0h, 0f0h, 70h, 70h, 70h, 70h, 60h
-	defb	0c0h, 0c0h, 0c0h, 0c8h, 0cch, 0ceh, 0cfh, 0c7h
-	defb	0f0h, 0f0h, 0f0h, 70h, 70h, 70h, 70h, 60h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 0ffh, 7ch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 0ffh, 7ch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 0ffh, 7ch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 0feh, 7ch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 0feh, 7ch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 0feh, 7ch
+	defb	01h, 03h, 03h, 07h, 07h, 0fh, 0fh, 0fh
+	defb	01h, 03h, 03h, 07h, 07h, 0fh, 0fh, 0fh
+	defb	01h, 03h, 03h, 07h, 07h, 0fh, 0fh, 0fh
+	defb	00h, 80h, 80h, 0c0h, 0c0h, 0e0h, 0e0h, 0e0h
+	defb	00h, 00h, 00h, 80h, 80h, 0c0h, 0c0h, 0e0h
+	defb	00h, 80h, 80h, 0c0h, 0c0h, 0e0h, 0e0h, 0e0h
+	defb	0eh, 0eh, 0eh, 0eh, 0eh, 00h, 00h, 00h
+	defb	3fh, 7fh, 0ffh, 0ffh, 0ffh, 07h, 07h, 03h
+	defb	0eh, 0eh, 0eh, 0eh, 0eh, 05h, 02h, 01h
+	defb	0e0h, 0e0h, 0e0h, 0e0h, 0e0h, 00h, 00h, 00h
+	defb	0f8h, 0fch, 0feh, 0feh, 0feh, 0c0h, 0c0h, 80h
+	defb	0e0h, 0e0h, 0e0h, 0e0h, 0e0h, 40h, 80h, 00h
+	defb	00h, 7fh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 7fh, 0c0h, 0bfh, 0bfh, 0bfh, 0bfh, 0bfh
+	defb	00h, 0fch, 0feh, 0feh, 0feh, 0feh, 0feh, 0feh
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 0fch, 06h, 0fah, 0fah, 0fah, 0fah, 0fah
+	defb	0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 7fh
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	0bfh, 0bfh, 0bfh, 0bfh, 0bfh, 0bfh, 0c0h, 7fh
+	defb	0feh, 0feh, 0feh, 0feh, 0feh, 0feh, 0feh, 0fch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	0fah, 0fah, 0fah, 0fah, 0fah, 0fah, 06h, 0fch
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 0e1h, 0f1h, 71h, 31h, 00h, 00h, 00h
+	defb	00h, 00h, 06h, 06h, 0eh, 1fh, 1fh, 3fh
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 0eh, 1eh, 1ch, 18h, 00h, 00h, 00h
+	defb	00h, 00h, 0c0h, 0c0h, 0e0h, 0f0h, 0f0h, 0f8h
+	defb	00h, 15h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	3fh, 2ah, 3fh, 3fh, 1fh, 1fh, 0fh, 03h
+	defb	00h, 50h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	0f8h, 0a8h, 0f8h, 0f8h, 0f0h, 0f0h, 0e0h, 80h
+	defb	00h, 01h, 02h, 02h, 07h, 0fh, 1fh, 3fh
+	defb	00h, 01h, 02h, 02h, 00h, 00h, 00h, 00h
+	defb	00h, 01h, 02h, 02h, 00h, 00h, 00h, 00h
+	defb	00h, 0c0h, 30h, 00h, 00h, 80h, 0c0h, 0e0h
+	defb	00h, 0c0h, 34h, 02h, 08h, 00h, 80h, 40h
+	defb	00h, 0c0h, 30h, 00h, 00h, 00h, 80h, 40h
+	defb	7fh, 7fh, 7fh, 7fh, 7fh, 3fh, 1fh, 0fh
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	0f0h, 0f0h, 0f0h, 0f0h, 0f0h, 0e0h, 0c0h, 80h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	01h, 21h, 33h, 3eh, 24h, 0e1h, 77h, 3bh
 	defb	00h, 00h, 00h, 00h, 00h, 01h, 07h, 03h
@@ -243,100 +219,28 @@ ColorPattern_: public ColorPattern_
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	0c0h, 0c0h, 0e0h, 0e0h, 60h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+;	ufo
+	defb	00h, 01h, 07h, 0fh, 1fh, 0fh, 07h, 00h
+	defb	00h, 01h, 07h, 0fh, 1fh, 03h, 00h, 06h
+	defb	00h, 01h, 07h, 0fh, 1fh, 0fh, 07h, 00h
+	defb	3fh, 0ffh, 0fdh, 0fdh, 0fdh, 0ffh, 0ffh, 00h
+	defb	3fh, 0ffh, 0fdh, 0fdh, 0fdh, 0ffh, 00h, 00h
+	defb	3fh, 0ffh, 0fdh, 0fdh, 0fdh, 0ffh, 0ffh, 00h
+	defb	0f8h, 0ffh, 7fh, 7fh, 7fh, 0ffh, 0ffh, 00h
+	defb	0f8h, 0ffh, 7fh, 7fh, 7fh, 0ffh, 00h, 00h
+	defb	0f8h, 0ffh, 7fh, 7fh, 7fh, 0ffh, 0ffh, 00h
+	defb	00h, 00h, 0c0h, 0e0h, 0f0h, 0e0h, 0c0h, 00h
+	defb	00h, 00h, 0c0h, 0e0h, 0f0h, 80h, 00h, 0c0h
+	defb	00h, 00h, 0c0h, 0e0h, 0f0h, 0e0h, 0c0h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 3fh, 7fh, 0dbh, 9bh, 0dbh
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 0f8h, 0fch, 46h, 5ah, 5ah
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	0dbh, 0dbh, 8ch, 7fh, 3fh, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	46h, 5eh, 0deh, 0fch, 0f8h, 00h, 00h, 00h
-	; fort
-	defb	00h, 01h, 07h, 1fh, 38h, 67h, 9fh, 0ffh
-	defb	00h, 00h, 00h, 00h, 07h, 18h, 60h, 00h
-	defb	00h, 01h, 07h, 1fh, 38h, 67h, 9fh, 0ffh
-	defb	3fh, 0ffh, 0f0h, 0fh, 0ffh, 0ffh, 0ffh, 0ffh
-	defb	00h, 00h, 0fh, 0f0h, 00h, 00h, 00h, 00h
-	defb	3fh, 0efh, 0f0h, 0fh, 0ffh, 0fdh, 0fdh, 0ffh
-	defb	0ffh, 0ffh, 00h, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh
-	defb	00h, 00h, 0ffh, 00h, 00h, 00h, 00h, 00h
-	defb	0ffh, 0ffh, 00h, 0ffh, 0ffh, 0f7h, 0ffh, 0ffh
-	defb	0ffh, 0ffh, 00h, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh
-	defb	00h, 00h, 0ffh, 00h, 00h, 00h, 00h, 00h
-	defb	0ffh, 0ffh, 00h, 0ffh, 0efh, 0efh, 0efh, 0ffh
-	defb	0ffh, 0ffh, 00h, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh
-	defb	00h, 00h, 0ffh, 00h, 00h, 00h, 00h, 00h
-	defb	0ffh, 0ffh, 00h, 0ffh, 0ffh, 0efh, 0ffh, 0ffh
-	defb	0f8h, 0feh, 1fh, 0e3h, 0fch, 0ffh, 0ffh, 0ffh
-	defb	00h, 00h, 0e0h, 1ch, 03h, 00h, 00h, 00h
-	defb	0f8h, 0eeh, 1fh, 0e3h, 7ch, 7fh, 0ffh, 0ffh
-	defb	00h, 00h, 80h, 0e0h, 78h, 9ch, 0e6h, 0feh
-	defb	03h, 0fh, 1fh, 07h, 82h, 60h, 18h, 00h
-	defb	00h, 00h, 80h, 0e0h, 78h, 9ch, 0e6h, 0feh
-	defb	80h, 0ffh, 9fh, 67h, 38h, 1fh, 07h, 01h
-	defb	7fh, 00h, 60h, 18h, 07h, 00h, 00h, 00h
-	defb	80h, 0ffh, 9fh, 67h, 38h, 1fh, 07h, 01h
-	defb	01h, 0ffh, 0ffh, 0ffh, 0ffh, 0fh, 0f0h, 0ffh
-	defb	0feh, 00h, 00h, 00h, 00h, 0f0h, 0fh, 00h
-	defb	01h, 0ffh, 0ffh, 0fdh, 0fdh, 0fh, 0f0h, 0efh
-	defb	00h, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 00h, 0ffh
-	defb	0ffh, 00h, 00h, 00h, 00h, 00h, 0ffh, 00h
-	defb	00h, 0ffh, 0ffh, 0f7h, 0ffh, 0ffh, 00h, 0ffh
-	defb	00h, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 00h, 0ffh
-	defb	0ffh, 00h, 00h, 00h, 00h, 00h, 0ffh, 00h
-	defb	00h, 0ffh, 0efh, 0efh, 0efh, 0ffh, 00h, 0ffh
-	defb	02h, 0ffh, 0ffh, 0ffh, 0ffh, 0ffh, 00h, 0ffh
-	defb	0fdh, 00h, 00h, 00h, 00h, 00h, 0ffh, 00h
-	defb	02h, 0ffh, 0ffh, 0efh, 0ffh, 0ffh, 00h, 0ffh
-	defb	00h, 0ffh, 0ffh, 0ffh, 0fch, 0e3h, 1fh, 0feh
-	defb	0ffh, 00h, 00h, 00h, 03h, 1ch, 0e0h, 00h
-	defb	00h, 0ffh, 0ffh, 7fh, 7ch, 0e3h, 1fh, 0eeh
-	defb	02h, 0feh, 0e6h, 9ch, 78h, 0e0h, 80h, 00h
-	defb	0fch, 00h, 18h, 60h, 82h, 06h, 1fh, 0fh
-	defb	02h, 0feh, 0e6h, 9ch, 78h, 0e0h, 80h, 00h
+	defb	0eh, 0ch, 06h, 06h, 02h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	3fh, 00h, 00h, 00h, 01h, 0fh, 1fh, 1fh
-	defb	00h, 07h, 0fh, 1fh, 3eh, 00h, 1fh, 1fh
-	defb	3fh, 07h, 0fh, 1fh, 3eh, 00h, 1fh, 1fh
-	defb	0ffh, 40h, 80h, 8fh, 00h, 83h, 0c0h, 0c0h
-	defb	00h, 0bfh, 7fh, 70h, 0ffh, 00h, 0c3h, 0c3h
-	defb	0ffh, 0bfh, 7fh, 70h, 0ffh, 00h, 0c3h, 0c3h
-	defb	0ffh, 00h, 00h, 76h, 00h, 0f0h, 00h, 00h
-	defb	00h, 0ffh, 0ffh, 89h, 0ffh, 00h, 0f0h, 0f0h
-	defb	0ffh, 0ffh, 0ffh, 89h, 0ffh, 00h, 0f0h, 0f0h
-	defb	0ffh, 02h, 02h, 31h, 01h, 3eh, 7fh, 7fh
-	defb	00h, 0fdh, 0fdh, 0ceh, 0feh, 00h, 7fh, 7fh
-	defb	0ffh, 0fdh, 0fdh, 0ceh, 0feh, 00h, 7fh, 7fh
-	defb	0f8h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 80h, 0c0h, 0e0h, 0e0h, 00h, 00h, 00h
-	defb	0f8h, 80h, 0c0h, 0e0h, 0e0h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	03h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 01h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 01h, 00h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 01h, 00h, 00h, 00h, 00h
-	defb	1fh, 3fh, 0f0h, 0c0h, 00h, 00h, 00h, 00h
-	defb	0fh, 37h, 0f0h, 0c0h, 00h, 00h, 00h, 00h
-	defb	0fh, 37h, 0f0h, 0c0h, 00h, 00h, 00h, 00h
-	defb	0c0h, 86h, 00h, 03h, 00h, 00h, 00h, 00h
-	defb	0cfh, 81h, 07h, 00h, 03h, 00h, 00h, 00h
-	defb	0cfh, 81h, 07h, 00h, 03h, 00h, 00h, 00h
-	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
-	defb	0f8h, 0f8h, 0f8h, 0f8h, 0f0h, 70h, 70h, 30h
-	defb	0f8h, 0f8h, 0f8h, 0f8h, 0f0h, 00h, 00h, 00h
-	defb	7fh, 3fh, 01h, 00h, 00h, 00h, 00h, 00h
-	defb	7eh, 3dh, 01h, 00h, 00h, 00h, 00h, 00h
-	defb	7eh, 3dh, 01h, 00h, 00h, 00h, 00h, 00h
-	defb	00h, 80h, 0e0h, 70h, 00h, 00h, 00h, 00h
-	defb	00h, 80h, 0e0h, 70h, 00h, 00h, 00h, 00h
-	defb	00h, 80h, 0e0h, 70h, 00h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
+	defb	0e0h, 60h, 0c0h, 0c0h, 80h, 00h, 00h, 00h
 	defb	00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h
