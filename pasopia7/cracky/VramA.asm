@@ -1,0 +1,264 @@
+include "Vram.inc"
+include "VVram.inc"
+include "FixedCode.inc"
+
+VramTop equ Vram
+
+ext VVramFront_, RowFlags_
+
+dseg
+Backup:
+    defs VVramWidth*VVramHeight
+
+
+cseg
+PatternAddress:
+    push de
+        ld l,a
+        ld h,0
+        ld e,l
+        ld d,h
+        add hl,hl ;*2
+        add hl,de ;*3
+        add hl,hl ;*6
+        add hl,hl ;*12
+        add hl,hl ;*24
+        ld de,PatternRam
+        add hl,de
+    pop de
+ret
+
+
+; void MakePatternMono(byte c, ptr<byte> pSource, byte count, byte color);
+dseg
+    MakePatternMono_@Param3: public MakePatternMono_@Param3
+    defb 0
+cseg
+MakePatternMono_: public MakePatternMono_
+    push af | push hl | push de | push bc
+        exx
+            call PatternAddress
+        exx
+        do
+            ld a,(MakePatternMono_@Param3)
+            exx
+                ld d,a
+            exx
+            ld b,3
+            do
+                push de
+                    ld h,8
+                    do
+                        ld a,(de)
+                        exx
+                            ld e,0
+                            bit 0,d
+                            if nz
+                                or e
+                                ld e,a
+                            endif
+                        exx
+                        ld a,(de)
+                        exx
+                            bit 4,d
+                            if nz
+                                cpl
+                                or e
+                                ld e,a
+                            endif
+                            ld (hl),e
+                            inc hl
+                        exx
+                        inc de
+                        dec h
+                    while nz | wend
+                    exx
+                        srl d
+                    exx
+                pop de
+            dwnz    
+            ex de,hl
+                ld de,8
+                add hl,de
+            ex de,hl
+            dec c
+        while nz | wend
+    pop bc | pop de | pop hl | pop af
+ret
+
+
+; void MakePatternColor(byte c, ptr<byte> pSource, byte count);
+cseg
+MakePatternColor_: public MakePatternColor_
+    push af | push hl | push de | push bc
+        exx
+            call PatternAddress
+        exx
+        do
+            ld b,24
+            do
+                ld a,(de)
+                inc de
+                exx
+                    ld (hl),a
+                    inc hl
+                exx
+            dwnz
+            dec c
+        while nz | wend
+    pop bc | pop de | pop hl | pop af
+ret
+
+
+cseg
+ClearRowFlags:
+    xor a
+    ld hl,RowFlags_
+    ld b,4
+    do
+        ld (hl),a
+        inc hl
+    dwnz
+ret
+
+
+; void ClearScreen();
+cseg
+ClearScreen_:   public ClearScreen_
+    push af | push hl | push de | push bc
+        call ClearVRam
+
+        ld hl,Backup
+        ld bc,VVramWidth * VVramHeight
+        do
+            ld (hl),0
+            inc hl
+            dec bc
+            ld a,c
+            or b
+        while nz | wend
+        call ClearRowFlags
+    pop bc | pop de | pop hl | pop af
+ret
+
+
+; word Put(word vram, byte c);
+cseg
+Put_: public Put_
+    push af | push de | push bc
+        ld a,e
+        ex de,hl
+            call PatternAddress
+        ex de,hl
+        call TransPattern
+        ld bc,CharHeight
+        add hl,bc
+    pop bc | pop de | pop af
+ret
+
+
+VVramToVramRow:
+    ld b,VVramWidth
+    do 
+        push bc 
+            ld a,(de)
+            inc de
+            cp (hl)
+            if nz
+                ld (hl),a
+                exx
+                    push de
+                        ld e,a
+                        call Put_
+                    pop de
+                exx
+            else
+                exx
+                    push bc
+                        ld bc,CharHeight
+                        add hl,bc
+                    pop bc
+                exx
+            endif
+            inc hl
+        pop bc
+    dwnz
+    exx
+        push bc
+            ld bc,VramRowSize-VVramWidth*CharHeight
+            add hl,bc
+        pop bc
+    exx
+ret
+
+
+; void VVramToVramAll();
+VVramToVramAll_: public VVramToVramAll_
+    push af | push hl | push de | push bc
+        ld de,VVramFront_
+        ld hl,Backup
+        exx
+            ld hl,Vram
+        exx
+        ld c, VVramHeight
+        do
+            call VVramToVramRow
+            dec c
+        while nz | wend
+        call ClearRowFlags
+    pop bc | pop de | pop hl | pop af
+ret
+
+
+; void VVramToVramChanged();
+VVramToVramChanged_: public VVramToVramChanged_
+    push af | push hl | push de | push bc
+        ld de,VVramFront_
+        ld hl,Backup
+        exx
+            ld hl,Vram
+            ld de,RowFlags_
+            ex de,hl
+                ld c,1
+                ld b,(hl)
+                inc hl
+            ex de,hl
+        exx
+        ld c, VVramHeight ; vertical count    
+        do
+            exx
+                ld a,b
+                and c
+            exx
+            if nz
+                call VVramToVramRow            
+            else
+                push bc
+                    ld bc,VVramWidth
+                    add hl,bc
+                    ex de,hl
+                        add hl,bc
+                    ex de,hl
+                pop bc
+                exx
+                    push bc
+                        ld bc,VramRowSize
+                        add hl,bc
+                    pop bc
+                exx
+            endif
+            exx
+                sla c
+                if z
+                    ex de,hl
+                        ld c,1
+                        ld b,(hl)
+                        inc hl
+                    ex de,hl
+                endif
+            exx
+            dec c
+        while nz | wend
+        call ClearRowFlags
+    pop bc | pop de | pop hl | pop af
+ret
