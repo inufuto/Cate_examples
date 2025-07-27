@@ -1,98 +1,46 @@
 #include "Bullet.h"
 #include "Sprite.h"
-#include "Chars.h"
-#include "VVram.h"
-#include "Sound.h"
-#include "Cannon.h"
-#include "Ufo.h"
-#include "Block.h"
+#include "Stage.h"
 
 constexpr byte InvalidY = 0xff;
-constexpr byte Interval = 9 * CoordRate;
-constexpr byte Range = WindowHeight * CoordRate;
+constexpr byte RangeX = (StageWidth - 1) * BulletRate;
+constexpr byte RangeY = (StageHeight - 1) * BulletRate;
 
-Movable[MaxBulletCount] Bullets;
-static byte IntervalCount;
-static byte BulletCount;
 
-void InitBullets()
+void EndBullet(ptr<Bullet> pBullet)
 {
-    byte sprite;
-    ptr<Movable> pBullet;
-    sprite = Sprite_Bullet;
-    for (pBullet : Bullets) {
-        pBullet->sprite = sprite;
-        pBullet->y = InvalidY;
-        HideSprite(sprite);
-        ++sprite;
-    }
-    IntervalCount = 0;
-    BulletCount = 0;
-}
-
-static void Show(ptr<Movable> pBullet)
-{
-    ShowSprite(pBullet, Char_Bullet);
-}
-
-static void End(ptr<Movable> pBullet)
-{
-    pBullet->y = InvalidY;
-    HideSprite(pBullet->sprite);
-    --BulletCount;
-}
-
-bool CanFire()
-{
-    return IntervalCount == 0 && BulletCount < MaxBulletCount;
-}
-
-void StartBullet()
-{
-    ptr<Movable> pBullet;
-    if (IntervalCount != 0) return;
-    for (pBullet : Bullets) {
-        if (pBullet->y < Range) continue;
-        Sound_Fire();
-        pBullet->x = Cannon.x;
-        pBullet->y = Cannon.y;
-        Show(pBullet);
-        IntervalCount = Interval;
-        ++BulletCount;
-        return;
-    }
-}
-
-static bool Hit(ptr<Movable> pBullet)
-{
-    if (HitUfo(pBullet->x, pBullet->y)) {
-        return true;
-    }
-    if (HitBlock(pBullet->x, pBullet->y)) {
-        return true;
-    }
-    return false;
+    pBullet->_.y = InvalidY;
+    HideSprite(pBullet->_.sprite);
 }
 
 
-void MoveBullets()
+void StartBullet(ptr<Bullet> pBullet, byte x, byte y)
 {
-    ptr<Movable> pBullet;
-    for (pBullet : Bullets) {
-        if (pBullet->y >= Range) continue;
-        --pBullet->y;
-        if (
-            pBullet->y >= Range || 
-            ((pBullet->y & CoordMask) == 0 && Hit(pBullet))
-        ) {
-            End(pBullet);
-        }
-        else {
-            Show(pBullet);
-        }
+    pBullet->_.x = x;
+    pBullet->_.y = y;
+    pBullet->_.clock = 0;
+    pBullet->denominatorX = 0;
+    pBullet->denominatorY = 0;
+}
+
+
+bool MoveBullet(ptr<Bullet> pBullet)
+{
+    pBullet->denominatorX -= pBullet->numeratorX;
+    while (pBullet->denominatorX < 0) {
+        pBullet->_.x += pBullet->dx;
+        pBullet->denominatorX += HiVelocity;
     }
-    if (IntervalCount != 0) {
-        --IntervalCount;
-        return;
+    pBullet->denominatorY -= pBullet->numeratorY;
+    while (pBullet->denominatorY < 0) {
+        pBullet->_.y += pBullet->dy;
+        pBullet->denominatorY += HiVelocity;
     }
+    if (
+        pBullet->_.x >= RangeX || 
+        pBullet->_.y  >> BulletShift >= GroundY(pBullet->_.x >> BulletShift)
+    ) {
+        return false;
+    }
+    return true;
 }

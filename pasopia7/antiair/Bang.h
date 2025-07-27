@@ -3,7 +3,6 @@
 struct Bang {
     Movable _;
     byte pattern;
-    byte clock;
 };
 
 extern Bang[] Bangs;

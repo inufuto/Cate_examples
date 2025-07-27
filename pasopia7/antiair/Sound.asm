@@ -16,7 +16,7 @@ MinVolume equ 63
 HighNoiseValue equ 0e4h
 LowNoiseValue equ 0e5h
 
-tempo equ 200
+tempo equ 150
 
 count equ 3
 Channel_Ptr equ 0
@@ -80,11 +80,12 @@ N4P equ N4*3/2
 N2 equ N4*2
 N2P equ N2*3/2
 N1 equ N2*2
+N16 equ N8/2
 
 
 cseg
 
-InitSound: public InitSound
+InitSound_: public InitSound_
     di
         ld ix,Channels
         ld b,count
@@ -325,20 +326,19 @@ Sound_LargeBang_: public Sound_LargeBang_
 ret
 
 
-; up_notes:
-;     defb 1,C4, 1, C4S, 1,D4, 1,F4, 1,A4, 1,C5, 0
-; Sound_Up_: public Sound_Up_
-;     push af | push hl
-;         ld hl,up_notes
-;         call Melody
-;     pop hl | pop af
-; ret
+up_notes:
+    defb 1,C4, 1, C4S, 1,D4, 1,F4, 1,A4, 1,C5, 0
+Sound_Up_: public Sound_Up_
+    push af | push hl
+        ld hl,up_notes
+        call Melody
+    pop hl | pop af
+ret
 
 
 start_notes: 
-    defb N8,A4, N4,B4, N4,C5, N4,C5, N8,A4
-    defb N4,D5, N4,D5, N8,C5, N4P,D5
-    defb N2P,E5, N4,0
+    defb N4,G4, N8,G4, N8,C5, N8,E5, N4,D5, N8,C5
+    defb N8P,D5, N16,D5, N8,D5, N8,E5, N4,D5, N4,0
     defb 0
 Sound_Start_: public Sound_Start_
     push af | push hl
@@ -348,21 +348,9 @@ Sound_Start_: public Sound_Start_
 ret
 
 
-; clear_notes: 
-;     defb N8,A4, N8,0, N8,A4, N8,G4, N8,A4, N4,C5, N8,D5, N8,0, N8,C5, N8,0, N4P,A4, N2,0
-;     defb 0
-; Sound_Clear_: 
-;     public Sound_Clear_
-;     push af | push hl
-;         ld hl,clear_notes
-;         call MelodyWait
-;     pop hl | pop af
-; ret
-
-
 over_notes: 
-    defb N4,A4,  N8,E4, N8,A4, N8,G4, N8,F4, N8,E4, N8,D4
-    defb N2P,E4, N4,0
+    defb N8,F5, N8,F5, N8,E5, N8,E5, N8,D5, N8,D5, N8,C5, N8,C5
+    defb N8,B4, N8,G4, N8,A4, N8,B4, N2,C5
     defb 0
 Sound_GameOver_: 
     public Sound_GameOver_
@@ -374,40 +362,48 @@ ret
 
 
 BGM_B: 
-    defb N4P,A4, N4P,B4, N2,C5, N4,C5, N4,B4, N4,C5
-    defb N4P,B4, N4P,G4, N2,G4, N2P,0
-    defb N4P,A4, N4P,B4, N2,C5, N4,C5, N4,B4, N4,C5
-    defb N4P,G5, N4P,D5, N2,D5, N2P,0
-    defb N4P,F5, N4P,E5, N2,F5, N4,F5, N4,E5, N4,F5
-    defb N4P,E5, N4P,C5, N2,C5, N2P,0
-    
-    defb N8,A4, N8,A4, N8,B4, N4,C5, N4,C5, N8,C5
-    defb N8,B4, N8,B4, N8,C5, N4,D5, N4,D5, N8,D5
-    defb N8,C5, N8,C5, N8,D5, N4,E5, N4,E5, N8,E5
-    defb N8,F5, N4,F5, N4P,E5, N4,0
+    defb N4,G4, N8,G4, N8,C5, N8,E5, N4,D5, N8,C5
+    defb N8P,D5, N16,D5, N8,D5, N8,E5, N4,D5, N4,0
+    defb N4,G4, N8,G4, N8,C5, N8,E5, N4,D5, N8,C5
+    defb N2,D5, N2,0
+
+    defb N4,G4, N8,G4, N8,C5, N8,E5, N4,D5, N8,C5
+    defb N8P,D5, N16,D5, N8,D5, N8,E5, N4,D5, N4,0
+    defb N4,G4, N8,G4, N8,C5, N8,E5, N4,F5, N8,E5
+    defb N2,D5, N4,0, N8,D5, N8,E5
+
+    defb N8P,F5, N16,F5, N8,F5, N8,E5, N4,F5, N4,0
+    defb N8P,E5, N16,E5, N8,E5, N8,D5, N4,E5, N4,0
+    defb N8P,D5, N16,D5, N8,D5, N8,C5, N4,D5, N8,C5, N8,D5
+    defb N2,E5, N2,0
+
+    defb N8P,F5, N16,F5, N8,F5, N8,E5, N4,F5, N4,0
+    defb N8P,E5, N16,E5, N8,E5, N8,D5, N4,E5, N4,0
+    defb N8P,D5, N16,D5, N8,D5, N8,E5, N8,F5, N4,E5, N8,D5
+    defb N2,C5, N2,0
 
     defb 0ffh
 
 BGM_C:
-    defb N4,A2, N8,0, N8,A2, N8,0, N8,A2, N8,0, N8,C3S ;3
-    defb N4,D3, N8,0, N8,D3, N8,0, N8,D3, N8,0, N8,D3 ;4
-    defb N4,E2, N8,0, N8,E2, N8,0, N8,E2, N8,0, N8,G2S ;5
-    defb N4,A2, N8,0, N8,A2, N8,0, N8,A2, N8,0, N8,A2 ;6
+    defb N8,C3, N8,C3, N8,G3, N8,C3,  N8,A2, N8,A2, N8,C3, N8,E3
+    defb N8,D3, N8,D3, N8,A3, N8,D3,  N8,G2, N8,G2, N8,B2, N8,D3
+    defb N8,C3, N8,C3, N8,E3, N8,G3,  N8,A2, N8,A2, N8,E3, N8,A2
+    defb N8,D3, N8,D3, N8,A3, N8,A3,  N8,G3, N8,G3, N8,D4, N8,D3
 
-    defb N4,A2, N8,0, N8,A2, N8,0, N8,A2, N8,0, N8,E2 ;7
-    defb N4,F2, N8,0, N8,F2, N8,0, N8,F2, N8,0, N8,F2S ;8
-    defb N4,G2, N8,0, N8,G2, N8,0, N8,G2, N8,0, N8,G2 ;9
-    defb N4,E2, N8,0, N8,E2, N8,0, N8,E2, N8,0, N8,E2 ;10
+    defb N8,C3, N8,C3, N8,G3, N8,C3,  N8,A2, N8,A2, N8,E3, N8,C3
+    defb N8,D3, N8,D3, N8,F3, N8,A3,  N8,G3, N8,G3, N8,B2, N8,D3
+    defb N8,C3, N8,C3, N8,E3, N8,G3,  N8,F2, N8,F2, N8,C3, N8,F2
+    defb N8,E2, N8,E2, N8,G2, N8,B2,  N8,A2, N8,A2, N8,E3, N8,A2
 
-    defb N4,D3, N8,0, N8,D3, N8,0, N8,D3, N8,0, N8,A2S ;11
-    defb N4,G2, N8,0, N8,G2, N8,0, N8,G2, N8,0, N8,G2 ;12
-    defb N4,C3, N8,0, N8,C3, N8,0, N8,C3, N8,0, N8,C3 ;13
-    defb N4,C3, N8,0, N8,C3, N8,0, N8,C3, N8,0, N8,C3 ;14
-    
-    defb N8,A2, N8,A2, N8,0, N8,A2, N8,0, N8,A2, N8,0, N8,C3S ;15
-    defb N8,D3, N8,D3, N8,0, N8,D3, N8,0, N8,D3, N8,0, N8,G2S ;16
-    defb N8,A2, N8,A2, N8,0, N8,A2, N8,0, N8,A2, N8,0, N8,A2 ;17
-    defb N8,F2, N8,F2, N8,0, N4P,E2, N4,0 ;18
+    defb N8,D3, N8,D3, N8,F3, N8,A3,  N8,G3, N8,G3, N8,B2, N8,D3
+    defb N8,C3, N8,C3, N8,E3, N8,E3, N8,G3, N8,G3, N8,C3, N8,C3
+    defb N8,D3, N8,D3, N8,F3, N8,F3, N8,A3, N8,A3, N8,D3, N8,D3
+    defb N8,A2, N8,A2, N8,C3, N8,C3, N8,E3, N8,E3, N8,C3, N8,E3
+
+    defb N8,D3, N8,D3, N8,A3, N8,D3,  N8,G3, N8,G3, N8,D3, N8,B2
+    defb N8,C3, N8,C3, N8,E3, N8,E3, N8,G3, N8,G3, N8,C3, N8,C3
+    defb N8,D3, N8,D3, N8,F3, N8,A3,  N8,G3, N8,G3, N8,B2, N8,D3
+    defb N8,C3, N8,C3, N8,E3, N8,E3, N8,G3, N8,G3, N8,A3, N8,G3
 
     defb 0ffh
 

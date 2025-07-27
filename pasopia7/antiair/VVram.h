@@ -1,13 +1,20 @@
+#include "Vram.h"
+
 constexpr byte VVramWidth = 32;
-constexpr byte VVramHeight = 24 - 2;
+constexpr byte VVramHeight = 22;
 
-constexpr byte WindowWidth = VVramWidth;
-constexpr byte WindowHeight = VVramHeight;
+extern byte[] VVramBack;
+extern byte[] VVramFront;
 
-extern byte[] VVram;
-extern bool BackgroundChanged;
+extern bool VVramChanged;
+extern byte[] RowFlags;
 
-extern ptr<byte> VVramPtr(byte x, byte y);
-extern void DrawBackground();
+
+
+extern void ClearVVram();
+extern void VVramBackToFront();
+extern word VVramOffset(byte x, byte y);
+extern void SetRowFlags(byte y, byte b);
+extern void GroundToVVram();
 
 extern void DrawAll();

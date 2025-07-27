@@ -28,10 +28,10 @@ TransPattern:    public TransPattern
 ;   de:source
     di
         in a,(22h)
-        and 3
-        or 4
-        out (3ch),a
         push af
+            ld a,06h
+            out (3ch),a
+
             ld a,11h
             do
                 out (0ch),a
@@ -49,7 +49,7 @@ TransPattern:    public TransPattern
                 add a,a
             while p | wend
         pop af
-        and not 4
+        and not 06h
         out (3ch),a
     ei
 ret

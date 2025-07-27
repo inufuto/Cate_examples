@@ -4,13 +4,15 @@
 #include "Stage.h"
 #include "Chars.h"
 
-constexpr byte Size = 1 * CoordRate;
+constexpr byte Count = SpriteCount - Sprite_Bang;
+constexpr byte Size = 1;
 constexpr byte InvalidY = 0xff;
-constexpr byte Time = 8;
+constexpr byte Time = 2;
 
-constexpr byte RangeX = WindowWidth * CoordRate - 1;
+constexpr byte RangeX = VVramWidth - 1;
+// constexpr byte RangeY = VVramHeight;
 
-Bang[MaxBangCount] Bangs;
+Bang[Count] Bangs;
 
 void InitBangs()
 {
@@ -21,7 +23,6 @@ void InitBangs()
         ptr<byte> pSprite;
         pBang->_.y = InvalidY;
         pBang->_.sprite = sprite;
-        HideSprite(sprite);
         ++sprite;
     }
 }
@@ -42,7 +43,7 @@ static void Start(byte x, byte y, byte pattern)
         if (pBang->_.y != InvalidY) continue;
         pBang->_.x = x;
         pBang->_.y = y;
-        pBang->clock = 0;
+        pBang->_.clock = 0;
         pBang->pattern = pattern;
         Show(pBang);
         return;
@@ -58,10 +59,10 @@ void StartSmallBang(byte x, byte y)
 
 void StartLargeBang(byte x, byte y)
 {
-    Start(x - Size * 2, y - Size * 2, Char_LargeBang + 0 * 4);
-    Start(x, y - Size * 2, Char_LargeBang + 1 * 4);
-    Start(x - Size * 2, y, Char_LargeBang + 2 * 4);
-    Start(x, y, Char_LargeBang + 3 * 4);
+    Start(x - Size * 2, y - Size * 2, Char_LargeBang);
+    Start(x, y - Size * 2, Char_LargeBang + 4);
+    Start(x - Size * 2, y, Char_LargeBang + 8);
+    Start(x, y, Char_LargeBang + 12);
 }
 
 
@@ -70,8 +71,8 @@ void UpdateBangs()
     ptr<Bang> pBang;
     for (pBang : Bangs) {
         if (pBang->_.y == InvalidY) continue;
-        ++pBang->clock;
-        if (pBang->clock >= Time) {
+        ++pBang->_.clock;
+        if (pBang->_.clock >= Time) {
             HideSprite(pBang->_.sprite);
             pBang->_.y = InvalidY;
         }

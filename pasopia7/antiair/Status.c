@@ -1,11 +1,11 @@
 #include "Status.h"
 #include "Vram.h"
-#include "VVram.h"
+#include "Stage.h"
+#include "Main.h"
+#include "Sprite.h"
 #include "Print.h"
 #include "Chars.h"
-#include "Sprite.h"
 
-constexpr byte Char_Remain = Char_Cannon;
 
 static word PrintS(word vram, ptr<byte> p)
 {
@@ -17,29 +17,55 @@ static word PrintS(word vram, ptr<byte> p)
     return vram;
 }
 
-void PrintStatus()
+
+static void PrintRemain(word vram)
 {
-    PrintS(Vram + VramRowSize * 1 + WindowWidth * VramStep, "SCORE");
-    PrintS(Vram + VramRowSize * 4 + WindowWidth * VramStep, "HIGH");
-    PrintS(Vram + VramRowSize * 5 + WindowWidth * VramStep, "SCORE");
-    PrintS(Vram + VramRowSize * 8 + WindowWidth * VramStep, "STAGE");
+    byte c;
+    c = Char_MyFighter;
+    repeat (2) {
+        repeat (2) {
+            VPut(vram, c);
+            vram += VramStep;
+            ++c;
+        }
+        vram += VramRowSize - VramStep * 2;
+    }
+}
+
+void PrintStatus() 
+{
+    PrintS(Vram + VramRowSize * 0 + VramStep * 32, "SCORE");
+    PrintS(Vram + VramRowSize * 4 + VramStep * 32, "HI-SCORE");
+    PrintS(Vram + VramRowSize * 8 + VramStep * 32, "STAGE");
     {
         word vram;
-        vram = Vram + VramRowSize * 21 + (WindowWidth + 1) * VramStep;
+        vram = Vram + VramRowSize * 20 + VramStep * 33;
         if (RemainCount > 1) {
             byte i;
             i = RemainCount - 1;
             if (i > 2) {
-                vram = Put2C(vram, Char_Remain);
-                Erase2(vram);
-                vram = Put(vram + VramRowSize, i + 0x10);
+                PrintRemain(vram);
+                vram += VramStep * 3;
+                VPut(vram, Char_Space);
+                PrintC(vram + VramRowSize, i + '0');
+                vram += VramStep;
             }
             else {
                 do {
-                    vram = Put2C(vram, Char_Remain);
+                    PrintRemain(vram);
+                    vram += VramStep * 3;
                     --i;
                 } while (i > 0);
             }
+        }
+        if (RemainCount != 3) {
+            repeat (2) {
+                repeat (2) {
+                    VPut(vram, Char_Space);
+                    vram += VramStep;
+                }
+                vram += VramRowSize - VramStep * 2;
+            }                
         }
     }
     PrintScore();
@@ -50,109 +76,78 @@ void PrintScore()
 {
     word vram;
     
-    vram = PrintNumber5(Vram + VramRowSize * 2 + (WindowWidth + 2) * VramStep, Score);
+    vram = PrintNumber5(Vram + VramRowSize * 1 + VramStep * 34, Score);
     PrintC(vram, '0');
 
-    vram = PrintNumber5(Vram + VramRowSize * 6 + (WindowWidth + 2) * VramStep, HiScore);
+    vram = PrintNumber5(Vram + VramRowSize * 5 + VramStep * 34, HiScore);
     PrintC(vram, '0');
 }
 
 void PrintStage()
 {
-    PrintByteNumber2(Vram + VramRowSize * 8 + (WindowWidth + 6) * VramStep, CurrentStage + 1);
+    PrintByteNumber3(Vram + VramRowSize * 8 + VramStep * 37, CurrentStage + 1);
 }
-
 
 void PrintGameOver()
 {
-    constexpr byte Left = (WindowWidth - 8) / 2;
-    PrintS(Vram + VramRowSize * (VramHeight / 2) + Left * VramStep, "GAME OVER");
+    PrintS(Vram + VramRowSize * 11 + VramStep * 12, "GAME OVER");
 }
 
 void Title()
 {
+    static const byte[] TitleBytes = {
+        //	A
+        0x40, 0x4e, 0x4d, 0x42, 
+        0x4c, 0x43, 0x40, 0x4f, 
+        0x4c, 0x47, 0x45, 0x4f, 
+        0x44, 0x41, 0x40, 0x45, 
+        //	E
+        0x4c, 0x47, 0x45, 0x41, 
+        0x4c, 0x4b, 0x4a, 0x42, 
+        0x4c, 0x43, 0x40, 0x40, 
+        0x44, 0x45, 0x45, 0x41, 
+        //	R
+        0x4c, 0x47, 0x45, 0x4b, 
+        0x4c, 0x43, 0x48, 0x4f, 
+        0x4c, 0x47, 0x4f, 0x42, 
+        0x44, 0x41, 0x44, 0x45, 
+        //	I
+        0x44, 0x4d, 0x47, 0x41, 
+        0x40, 0x4c, 0x43, 0x40, 
+        0x40, 0x4c, 0x43, 0x40, 
+        0x44, 0x45, 0x45, 0x41, 
+        //	A
+        0x40, 0x4e, 0x4d, 0x42, 
+        0x4c, 0x43, 0x40, 0x4f, 
+        0x4c, 0x47, 0x45, 0x4f, 
+        0x44, 0x41, 0x40, 0x45, 
+        //	L
+        0x4c, 0x43, 0x40, 0x40, 
+        0x4c, 0x43, 0x40, 0x40, 
+        0x4c, 0x43, 0x40, 0x40, 
+        0x44, 0x45, 0x45, 0x41, 
+    };
     ClearScreen(); 
     HideAllSprites();
-    // UpdateSprites();
     PrintStatus();
     {
-        static const byte[] TitleBytes = {
-            0x4e, 0x45, 0x4b, 0x4c, 
-            0x4f, 0x40, 0x4f, 0x4c, 
-            0x4f, 0x45, 0x4f, 0x44, 
-            0x45, 0x40, 0x45, 0x40, 
-            
-            0x4b, 0x4c, 0x43, 0x45, 
-            0x47, 0x4f, 0x43, 0x40, 
-            0x41, 0x44, 0x41, 0x40, 
-            0x40, 0x40, 0x40, 0x40, 
-            
-            0x4f, 0x45, 0x4c, 0x43, 
-            0x4f, 0x40, 0x4c, 0x43, 
-            0x45, 0x40, 0x44, 0x41, 
-            0x40, 0x40, 0x40, 0x40, 
-            
-            0x48, 0x47, 0x4d, 0x42, 
-            0x4c, 0x43, 0x4c, 0x43, 
-            0x4c, 0x47, 0x4d, 0x43, 
-            0x44, 0x41, 0x44, 0x41, 
-            
-            0x40, 0x40, 0x40, 0x40, 
-            0x4f, 0x4c, 0x47, 0x4b, 
-            0x4f, 0x4c, 0x4b, 0x47, 
-            0x45, 0x44, 0x41, 0x45, 
-        };
-        constexpr byte LogoLength = 5;
-        constexpr byte LogoX = (WindowWidth - LogoLength * 4)  * VramStep / 2;
         ptr<byte> p;
         word vram;
-        vram = Vram + VramRowSize * 7 + LogoX;
+        vram = Vram + VramRowSize * 7 + VramStep * 4;
         p = TitleBytes;
-        repeat (LogoLength) {
+        repeat (6) {
             repeat (4) {
                 repeat (4) {
-                    vram = Put(vram, *p);
+                    VPut(vram, *p);
+                    vram += VramStep;
                     ++p;
                 }
-                vram += VramRowSize - 4 * VramStep;
+                vram += VramRowSize - VramStep * 4;
             }
-            vram += 4 * VramStep - VramRowSize * 4;
+            vram += VramStep * 4 - VramRowSize * 4;
         }
     }
-    PrintS(Vram + VramRowSize * 19 + (WindowWidth - 14) * VramStep / 2, "PUSH SPACE KEY");
-    PrintS(Vram + VramRowSize * 20 + (WindowWidth - 14) * VramStep / 2, "OR GRPH KEY");
-    PrintS(Vram + VramRowSize * 22 + (WindowWidth - 12) * VramStep, "INUFUTO 2024");
-    // {
-    //     byte c;
-    //     word vram;
-    //     vram = Vram;
-    //     c = 0;
-    //     repeat (0) {
-    //         vram = Put(vram, c);
-    //         ++c;
-    //         if ((c & 15) == 0) {
-    //             vram += VramRowSize - 16 * VramStep;
-    //         }
-    //     }
-    // }
-}
-
-
-void AddScore(word pts)
-{
-    Score += pts;
-    if (Score > HiScore) {
-        HiScore = Score;
-    }
-    PrintScore();
-}
-
-
-void DrawGround()
-{
-    word vram;
-    vram = Vram + VramRowSize * 23;
-    repeat (WindowWidth) {
-        vram = Put(vram, Char_Fence);
-    }
+    PrintS(Vram + VramRowSize * 19 + VramStep * 9, "PUSH SPACE KEY");
+    PrintS(Vram + VramRowSize * 20 + VramStep * 9, "OR GRPH KEY");
+    PrintS(Vram + VramRowSize * 23 + 27 * VramStep, "INUFUTO 2021");
 }

@@ -1,4 +1,8 @@
+extern void InitSound();
+// extern void CallSound();
 extern void Sound_Fire();
+extern void Sound_Hit();
+extern void Sound_Loose();
 extern void Sound_SmallBang();
 extern void Sound_LargeBang();
 extern void Sound_Up();

@@ -1,18 +1,19 @@
-#include "Status.h"
-#include "ScanKeys.h"
-#include "Sound.h"
+#include "Main.h"
+#include "Init.h"
 #include "Stage.h"
-#include "Cannon.h"
+#include "ScanKeys.h"
 #include "Sprite.h"
-#include "Bullet.h"
-#include "Vram.h"
-#include "VVram.h"
-#include "Ufo.h"
-#include "Bang.h"
-#include "Block.h"
 #include "Status.h"
-
-extern void WaitTimer(byte t);
+#include "Sound.h"
+#include "MyFighter.h"
+#include "MyBullet.h"
+#include "EnemyFighter.h"
+#include "EnemyBullet.h"
+#include "GroundEnemy.h"
+#include "Fort.h"
+#include "Bang.h"
+#include "Item.h"
+#include "VVram.h"
 
 word Score;
 word HiScore;
@@ -20,10 +21,14 @@ byte RemainCount;
 byte CurrentStage;
 static byte Clock;
 
+extern void _deb();
+
 void Main()
 {
-    byte key, linger;
-
+    byte key;
+    
+    Init();
+    InitSprites();
     HiScore = 0;
     Score = 0;
     CurrentStage = 0;
@@ -32,65 +37,91 @@ void Main()
     title:
     Title();
     do {
-        // if (ScanStop()) return;
+        // if (ScanStop()) goto exit;
         key = ScanKeys();
     } while ((key & (Keys_Button0 | Keys_Button1)) == 0);
-    
+
     play:
-    Clock = 0;
     Score = 0;
     if ((key & Keys_Button1) == 0) {
         CurrentStage = 0;
+                            // CurrentStage = 8;
     }
     RemainCount = 3;
-    InitStage();
-    try:
-    linger = 0;
-    InitPlaying();
+
+    ClearScreen();
+    InitGame();
+    PrintStatus();
+    GroundToVVram();
+    VVramChanged = true;
+    _deb();
     DrawAll();
-    DrawGround();
     Sound_Start();
     StartBGM();
-
-    loop:
-    // if (ScanStop()) return;
+    Clock = 0;
+loop:
+    // if (ScanStop()) goto exit;
+    MoveMyBullets();
+    //PollVSync();
     if ((Clock & 0x01) == 0) {
-        MoveFighter();
-        MoveBlocks();
+        MoveMyFighter();
+        //PollVSync();
+        MoveEnemyFighters();
+        //PollVSync();
+        MoveEnemyBullets();
+        //PollVSync();
     }
-    MoveBullets();
+    if ((Clock & 0x03) == 0) {
+        MoveGroundEnemies();
+        //PollVSync();
+    }
     if ((Clock & 0x07) == 0) {
-        MoveUfos();
+        UpdateBangs();
+        //PollVSync();
+        MoveItem();
+        //PollVSync();
     }
-    UpdateBlocks();
-    UpdateBangs();
-    DrawAll();
-    WaitTimer(4);
-    ++Clock;
+    if ((Clock & 0x0f) == 0) {
+        MoveForts();
+        //PollVSync();
+        ScrollBackground();
+        //PollVSync();
+        if (GroundChanged) {
+            GroundToVVram();
+            //PollVSync();
+            GroundChanged = false;
+            VVramChanged = true;
+        }
+    }
+    if ((Clock & 0x01) == 0) {
+        WaitTimer(4);
+        DrawAll();
+        //PollVSync();
+        // CallSound();
+    }
+    if (RemainCount == 0) {
+        StopBGM();
+        PrintGameOver();
+        Sound_GameOver();
+        goto title;
+    }
     // UpdateSprites();
-    if (UfoCount == 0) {
-        ++linger;
-        if (linger > 250 * CoordRate / 8) {
-            ++CurrentStage;
-            PrintStage();
-            InitStage();
-            linger = 0;
-        }
-    }
-    if (!CannonLive) {
-        ++linger;
-        if (linger > 200 * CoordRate / 8) {
-            StopBGM();
-            --RemainCount;
-            if (RemainCount != 0) {
-                goto try;
-            }
-            PrintGameOver();
-            Sound_GameOver();
-            goto title;
-        }
-    }
+    ++Clock;
     goto loop;
+// exit:
+//     Fin();
 }
+
+
+void AddScore(word pts)
+{
+    Score += pts;
+    if (Score > HiScore) {
+        HiScore = Score;
+    }
+    PrintScore();
+    // StatusToVVram();
+}
+
 
 void _deb(){}
