@@ -16,9 +16,11 @@ Keys_Bit_Button1 equ 5
 PortABits equ 90h
 PortA equ 0e8h
 PortC equ 0eah
-JoyPort equ 1ah
 
-    cseg
+cseg
+JoyTable:
+    defb Keys_Up, Keys_Up or Keys_Right, Keys_Right, Keys_Right or Keys_Down
+    defb Keys_Down, Keys_Down or Keys_Left, Keys_Left, Keys_Left or Keys_Up
 ScanKeys_: public ScanKeys_
     push bc
         ld c,0
@@ -113,29 +115,28 @@ ScanKeys_: public ScanKeys_
                 set Keys_Bit_Down,c
             endif
         ei
-
-        in a,(JoyPort)
-        bit 0,a
-        if z
-            set Keys_Bit_Up,c
+        push bc
+            ld bc,151h
+            call 5
+        pop bc
+        or a
+        if nz
+            push hl
+                add a,low(JoyTable-1) | ld l,a
+                ld a,0 | adc a,high(JoyTable-1) | ld h,a
+                ld a,c
+                or (hl)
+                ld c,a
+            pop hl
         endif
-        bit 1,a
-        if z
-            set Keys_Bit_Down,c
-        endif
-        bit 2,a
-        if z
-            set Keys_Bit_Left,c
-        endif
-        bit 3,a
-        if z
-            set Keys_Bit_Right,c
-        endif
-        bit 4,a
-        if z
+        push bc
+            ld bc,152h
+            call 5
+        pop bc
+        or a
+        if nz
             set Keys_Bit_Button0,c
         endif
-
         ld a,c
     pop bc
 ret
