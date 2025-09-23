@@ -1,0 +1,17 @@
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Logo = 0x0;
+constexpr byte Char_FighterBullet = 0x10;
+constexpr byte Char_EnemyBullet = 0x11;
+constexpr byte Char_Barrier = 0x12;
+constexpr byte Char_BarrierHead = 0x13;
+constexpr byte Char_Fighter = 0x14;
+constexpr byte Char_SkyEnemy = 0x18;
+constexpr byte Char_SkyEnemyA = 0x18;
+constexpr byte Char_SkyEnemyB = 0x1C;
+constexpr byte Char_SkyEnemyC = 0x3C;
+constexpr byte Char_GroundEnemy = 0x40;
+constexpr byte Char_Bang = 0x48;
+constexpr byte Char_Item = 0x5C;
+constexpr byte Char_Fort = 0x60;
+constexpr byte Char_Terrain = 0x84;
+constexpr byte Char_End = 0x8E;
