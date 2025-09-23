@@ -1,0 +1,24 @@
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Logo = 0x0;
+constexpr byte Char_Soil = 0x10;
+constexpr byte Char_Bedrock = 0x14;
+constexpr byte Char_Wall = 0x15;
+constexpr byte Char_Man = 0x1E;
+constexpr byte Char_Ghost = 0x5E;
+constexpr byte Char_Chaser = 0x9E;
+constexpr byte Char_Rock = 0xA2;
+constexpr byte Char_Point = 0xA6;
+constexpr byte Char_Loose = 0xB6;
+constexpr byte Char_Box = 0xBE;
+constexpr byte Char_Scroll = 0xC2;
+constexpr byte Char_End = 0xC4;
+
+constexpr byte Char_Wall_Space = Char_Wall + 0;
+constexpr byte Char_Wall_Left = Char_Wall + 1;
+constexpr byte Char_Wall_Right = Char_Wall + 2;
+constexpr byte Char_Wall_Top = Char_Wall + 3;
+constexpr byte Char_Wall_Bottom = Char_Wall + 4;
+constexpr byte Char_Wall_LeftTop = Char_Wall + 5;
+constexpr byte Char_Wall_RightTop = Char_Wall + 6;
+constexpr byte Char_Wall_LeftBottom = Char_Wall + 7;
+constexpr byte Char_Wall_RightBottom = Char_Wall + 8;
