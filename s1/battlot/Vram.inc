@@ -1,0 +1,9 @@
+GVram equ $0000
+TVram equ $2000
+VramWidth equ 40
+VramHeight equ 25
+CharHeight equ 8
+VramRowSize equ VramWidth
+PlaneCount equ 3
+;PatternSize equ CharHeight*PlaneCount
+CRam equ $3000
