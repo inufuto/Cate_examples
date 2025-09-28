@@ -1,0 +1,111 @@
+include "S1.inc"
+
+Keys_Left equ $01
+Keys_Right equ $02
+Keys_Up equ $04
+Keys_Down equ $08
+Keys_Dir equ $0f
+Keys_Button0 equ $10
+Keys_Button1 equ $20
+
+dseg
+KeyCode:
+    defb 0
+; JoystickAvailable_: public JoystickAvailable_
+;     defb 0
+
+cseg
+InitKeys: public InitKeys
+    lda $FFEB | anda #not $02 | sta $FFEB
+    clr $FE41
+    lda #$40 | sta $FE40
+    lda #$04 | sta $FE41
+    lda $FFEB | ora #$02 | sta $FFEB
+rts
+
+
+cseg
+
+KeyHandler: public KeyHandler
+    pshs a
+        lda KB_R
+        if mi
+            sta KeyCode
+        endif
+    puls a
+rts
+
+
+KeyTable:
+    defb $80,Keys_Button0 ; SPACE
+    defb $81,Keys_Up ; Up
+    defb $83,Keys_Left ; Left
+    defb $84,Keys_Down ; Down
+    defb $85,Keys_Right ; Right
+    defb $87,Keys_Button1 ; SHIFT
+    defb $9d,Keys_Button0 or Keys_Left ; 7
+    defb $8d,Keys_Up ; 8
+    defb $8e,Keys_Button0 or Keys_Right ; 9
+    defb $b7,Keys_Left ; 4
+    defb $be,Keys_Right; 6
+    defb $c7,Keys_Down or Keys_Left ; 1
+    defb $c8,Keys_Button0 or Keys_Left ; Z
+    defb $ca,Keys_Button0 or Keys_Right; X
+    defb $cd,Keys_Down ; 2
+    defb $ce,Keys_Down or Keys_Right ; 3
+    defb 0
+
+ScanKeys_: public ScanKeys_
+    pshs b,x
+        lda $FFEB | anda #not $02 | sta $FFEB
+        clr $FE40
+        ldb $FE40
+        lda $FFEB | ora #$02 | sta $FFEB
+        clra
+        bitb #$01
+        if eq
+            ora #Keys_Up
+        endif
+        bitb #$02
+        if eq
+            ora #Keys_Down
+        endif
+        bitb #$04
+        if eq
+            ora #Keys_Left
+        endif
+        bitb #$08
+        if eq
+            ora #Keys_Right
+        endif
+        bitb #$20
+        if eq
+            ora #Keys_Button0
+        endif
+        cmpa #0
+        ; if ne
+        ;     ldb #1 | stb JoystickAvailable_
+        ; endif
+        
+        ; ldb JoystickAvailable_
+        if eq
+            ldb KeyCode
+            bitb #$80
+            if ne
+                ldx #KeyTable
+                do
+                    lda ,x
+                while ne
+                    cmpb ,x
+                    if eq
+                        lda 1,x
+                        bra ScanKeys_exit
+                    endif
+                    leax 2,x
+                wend
+            endif
+            clra
+            ScanKeys_exit:
+        endif
+    puls b,x
+rts
