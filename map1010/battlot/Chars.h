@@ -1,0 +1,13 @@
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Logo = 0x0;
+constexpr byte Char_Wall = 0x10;
+constexpr byte Char_HardWall = 0x14;
+constexpr byte Char_Meter = 0x15;
+constexpr byte Char_Bullet = 0x17;
+constexpr byte Char_MyFort = 0x19;
+constexpr byte Char_EnemyFort = 0x25;
+constexpr byte Char_MyRobo = 0x31;
+constexpr byte Char_EnemyRobo = 0x51;
+constexpr byte Char_SmallBang = 0x71;
+constexpr byte Char_LargeBang = 0x75;
+constexpr byte Char_End = 0x85;
