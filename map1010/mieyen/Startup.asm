@@ -1,5 +1,6 @@
 ext InitSound, SoundHandler
 ext Main_
+ext InitKeys
 
 dseg
 TimerCount: public TimerCount
@@ -18,6 +19,7 @@ cseg
     xor a
     ld (PrevSync),a
     ld (TimerCount),a
+    call InitKeys
     call InitSound
 jp Main_
 

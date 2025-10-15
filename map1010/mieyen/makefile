@@ -3,7 +3,7 @@ name=mieyen
 all: $(name).wav loader.txt
 
 cseg=8800
-dseg=a800
+dseg=a900
 Loader=8000
 
 .c.asm:
