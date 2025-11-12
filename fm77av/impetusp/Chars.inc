@@ -1,0 +1,27 @@
+
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 31
+Char_Remain equ 46
+Char_Color equ 47
+Char_FighterBullet equ 47
+Char_EnemyBullet equ 48
+Char_Barrier equ 49
+Char_BarrierLeft equ 49
+Char_BarrierCenter equ 51
+Char_BarrierRight equ 53
+Char_Bang equ 55
+Char_SmallBang equ 55
+Char_LargeBang equ 59
+Char_Item equ 75
+Char_Fighter equ 79
+Char_SkyEnemy equ 83
+Char_SkyEnemyA equ 83
+Char_SkyEnemyB equ 87
+Char_SkyEnemyC equ 119
+Char_GroundEnemy equ 123
+Char_GroundEnemyA equ 123
+Char_GroundEnemyB equ 127
+Char_Fort equ 131
+Char_Terrain equ 167
+Char_End equ 180
