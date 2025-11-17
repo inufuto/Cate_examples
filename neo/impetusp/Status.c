@@ -1,0 +1,149 @@
+#include "Status.h"
+#include "Vram.h"
+#include "Stage.h"
+#include "Main.h"
+#include "Sprite.h"
+#include "Print.h"
+#include "Chars.h"
+                        #include "Fort.h"
+
+static word PrintS(word vram, ptr<byte> p)
+{
+    byte c;
+    while ((c = *p) != 0) {
+        vram = PrintC(vram, c);
+        ++p;
+    }
+    return vram;
+}
+
+void PrintStatus() 
+{
+    PrintS(Vram + VramRowSize * 1 + 32 * VramStep, "SCORE");
+    PrintS(Vram + VramRowSize * 5 + 32 * VramStep, "HI-SCORE");
+    PrintS(Vram + VramRowSize * 9 + 32 * VramStep, "STAGE");
+    PrintScore();
+    PrintStage();
+    PrintRemain();
+}
+
+void PrintScore()
+{
+    word vram = PrintNumber5(Vram + VramRowSize * 2 + 34 * VramStep, Score);
+    PrintC(vram, '0');
+
+    vram = PrintNumber5(Vram + VramRowSize * 6 + 34 * VramStep, HiScore);
+    PrintC(vram, '0');
+}
+
+void PrintStage()
+{
+    PrintByteNumber2(Vram + VramRowSize * 9 + 38 * VramStep, CurrentStage + 1);
+}
+
+void PrintRemain()
+{
+    word vram = Vram + VramRowSize * 27 + 33 * VramStep;
+    if (RemainCount > 1) {
+        byte i = RemainCount - 1;
+        if (i > 5) {
+            vram = Put(vram, Char_Remain);
+            vram = Put(vram, i + 0x02);
+            i -= 2;
+            while (i != 0) {
+                vram = Put(vram, Char_Space);
+                --i;
+            }
+        }
+        else {
+            do {
+                vram = Put(vram, Char_Remain);
+                --i;
+            } while (i != 0);
+        }
+    }
+    vram = Put(vram, Char_Space);
+}
+
+void PrintGameOver()
+{
+    PrintS(Vram + VramRowSize * 11 + 12 * VramStep, "GAME OVER");
+}
+
+
+void Title()
+{
+    ClearScreen(); 
+    HideAllSprites();
+    PrintStatus();
+    {
+        static const byte[] TitleBytes = {
+            0x2a, 0x24, 0x00, 0x00, 
+            0x29, 0x20, 0x29, 0x28, 
+            0x29, 0x20, 0x29, 0x24, 
+            0x22, 0x22, 0x21, 0x1e, 
+            0x00, 0x00, 0x00, 0x00, 
+            0x25, 0x2c, 0x29, 0x24, 
+            0x24, 0x2c, 0x29, 0x28, 
+            0x00, 0x22, 0x21, 0x1e, 
+            0x00, 0x00, 0x00, 0x00, 
+            0x28, 0x29, 0x24, 0x22, 
+            0x24, 0x29, 0x24, 0x1e, 
+            0x00, 0x21, 0x22, 0x22, 
+            0x00, 0x00, 0x00, 0x00, 
+            0x21, 0x2c, 0x1e, 0x2c, 
+            0x00, 0x2c, 0x00, 0x2c, 
+            0x00, 0x22, 0x00, 0x21, 
+            0x00, 0x00, 0x00, 0x00, 
+            0x29, 0x20, 0x2b, 0x22, 
+            0x29, 0x20, 0x22, 0x2a, 
+            0x22, 0x00, 0x22, 0x22, 
+            0x00, 0x00, 0x20, 0x00, 
+            0x1e, 0x22, 0x24, 0x1e, 
+            0x1f, 0x00, 0x1e, 0x00, 
+            0x00, 0x00, 0x00, 0x00, 
+        };
+        ptr<byte> p;
+        word vram = Vram + VramRowSize * 9 + (32 - 4 * 6) / 2;
+        p = TitleBytes;
+        repeat (6) {
+            repeat (4) {
+                repeat (4) {
+                    vram = Put(vram, *p);
+                    ++p;
+                }
+                vram += VramRowSize - 4 * VramStep;
+            }
+            vram += 4 * VramStep - VramRowSize * 4;
+        }
+    }
+    PrintS(Vram + VramRowSize * 25 + 13 * VramStep, "Z:START");
+    PrintS(Vram + VramRowSize * 26 + 13 * VramStep, "X:CONTINUE");
+    PrintS(Vram + VramRowSize * 28 + 20 * VramStep, "INUFUTO 2025");
+    // {
+    //     FortDotOffset = 0;
+    //     UpdateFortChars();
+    //     word vram = Vram;
+    //     byte c = 0;
+    //     repeat (Char_FortEnd) {
+    //         vram = Put(vram, c);
+    //         ++c;
+    //         if ((c & 0x0f) == 0) {
+    //             vram += VramRowSize - 16 * VramStep;
+    //         }
+    //     }
+    // }
+    // {
+    //     FortDotOffset = 0;
+    //     UpdateFortChars();
+    //     word vram = Vram + VramRowSize * 2 + 16 * VramStep;
+    //     byte c = Char_Fort;
+    //     repeat (7) {
+    //         repeat (6) {
+    //             vram = Put(vram, c);
+    //             ++c;
+    //         }
+    //         vram += VramRowSize - 6 * VramStep;
+    //     }
+    // }
+}
