@@ -27,14 +27,14 @@ KeyTable:
     defb $84,Keys_Down
     defb $85,Keys_Right
     defb $87,Keys_Button1
-    defb $9d,Keys_Button0 or Keys_Left
+    defb $9d,Keys_Up or Keys_Left
     defb $8d,Keys_Up
-    defb $8e,Keys_Button0 or Keys_Right
+    defb $8e,Keys_Up or Keys_Right
     defb $b7,Keys_Left
     defb $be,Keys_Right
     defb $c7,Keys_Down or Keys_Left
-    defb $c8,Keys_Button0 or Keys_Left
-    defb $ca,Keys_Button0 or Keys_Right
+    ; defb $c8,Keys_Up or Keys_Left
+    ; defb $ca,Keys_Up or Keys_Right
     defb $cd,Keys_Down
     defb $ce,Keys_Down or Keys_Right
     defb 0
