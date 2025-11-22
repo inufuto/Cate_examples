@@ -1,0 +1,144 @@
+#include "Status.h"
+#include "Vram.h"
+#include "Main.h"
+#include "Sprite.h"
+#include "Print.h"
+#include "Chars.h"
+
+constexpr word AsciiRowHeight = VramWidth * AsciiHeight;
+
+static word PrintS(word vram, ptr<byte> p)
+{
+    byte c;
+    while ((c = *p) != 0) {
+        vram = PrintC(vram, c);
+        ++p;
+    }
+    return vram;
+}
+
+
+void PrintStatus() 
+{
+    PrintS(Vram + 1 * VramStep, "SCORE");
+    PrintS(Vram + 8 * VramStep, "HI-SCORE");
+    PrintS(Vram + 18 * VramStep, "STAGE");
+
+    PrintScore();
+    PrintStage();
+    PrintRemain();
+}
+
+void PrintScore()
+{
+    word vram;
+    
+    vram = PrintNumber5(Vram + AsciiRowHeight, Score);
+    PrintC(vram, '0');
+
+    vram = PrintNumber5(Vram + AsciiRowHeight + 9 * VramStep, HiScore);
+    PrintC(vram, '0');
+}
+
+void PrintStage()
+{
+    PrintByteNumber2(Vram + AsciiRowHeight + 20 * VramStep, CurrentStage + 1);
+}
+
+void PrintRemain()
+{
+    word vram = Vram + 26 * VramStep;
+    if (RemainCount > 1) {
+        byte i = RemainCount - 1;
+        if (i > 5) {
+            vram = PrintC(vram, '@');
+            vram = PrintC(vram, i + '0');
+            i -= 2;
+            while (i != 0) {
+                vram = PrintC(vram, ' ');
+                --i;
+            }
+        }
+        else {
+            do {
+                vram = PrintC(vram, '@');
+                --i;
+            } while (i != 0);
+        }
+    }
+    vram = PrintC(vram, ' ');
+}
+
+void PrintGameOver()
+{
+    PrintS(Vram + VramRowSize * 14 + 11 * VramStep, "GAME OVER");
+    DrawAll();
+}
+
+void Title()
+{
+    static const byte[] TitleBytes = {
+		0x0d, 0x07, 0x00, 0x00, 
+		0x0c, 0x03, 0x0c, 0x0b, 
+		0x0c, 0x03, 0x0c, 0x07, 
+		0x05, 0x05, 0x04, 0x01, 
+		0x00, 0x00, 0x00, 0x00, 
+		0x08, 0x0f, 0x0c, 0x07, 
+		0x07, 0x0f, 0x0c, 0x0b, 
+		0x00, 0x05, 0x04, 0x01, 
+		0x00, 0x00, 0x00, 0x00, 
+		0x0b, 0x0c, 0x07, 0x05, 
+		0x07, 0x0c, 0x07, 0x01, 
+		0x00, 0x04, 0x05, 0x05, 
+		0x00, 0x00, 0x00, 0x00, 
+		0x04, 0x0f, 0x01, 0x0f, 
+		0x00, 0x0f, 0x00, 0x0f, 
+		0x00, 0x05, 0x00, 0x04, 
+		0x00, 0x00, 0x00, 0x00, 
+		0x0c, 0x03, 0x0e, 0x05, 
+		0x0c, 0x03, 0x05, 0x0d, 
+		0x05, 0x00, 0x05, 0x05, 
+		0x00, 0x00, 0x03, 0x00, 
+		0x01, 0x05, 0x07, 0x01, 
+		0x02, 0x00, 0x01, 0x00, 
+		0x00, 0x00, 0x00, 0x00, 
+    };
+
+    ScrollY = -AsciiHeight * 2;
+    ClearScreen();
+    HideAllSprites();
+    PrintStatus();
+    {
+        ptr<byte> p;
+        word vram;
+        vram = Vram + VramRowSize * 10 + (32 - 4 * 6) / 2 * VramStep;
+        p = TitleBytes;
+        repeat (6) {
+            repeat (4) {
+                repeat (4) {
+                    vram = Put(vram, *p);
+                    ++p;
+                }
+                vram += VramRowSize - 4 * VramStep;
+            }
+            vram += 4 * VramStep - VramRowSize * 4;
+        }
+    }
+    PrintS(Vram + AsciiRowHeight * 14 + 11 * VramStep, "S:START");
+    PrintS(Vram + AsciiRowHeight * 15 + 11 * VramStep, "C:CONTINUE");
+    PrintS(Vram + AsciiRowHeight * 17 + 20 * VramStep, "INUFUTO 2025");
+    // {
+    //     word vram = Vram + VramRowSize * 3;
+    //     byte c = 0;
+    //     repeat (Char_End) {
+    //         vram = Put(vram, c);
+    //         ++c;
+    //         if ((c & 15) == 0) {
+    //             vram += VramRowSize - CharWidth * 16;
+    //         }
+    //     }
+    // }
+    PresentBackground();
+    PresentForeground();
+    SwitchPage();
+}
