@@ -1,0 +1,325 @@
+TimerPort equ 40h
+BPort equ 61h
+OnValue equ 03h
+
+Tempo equ 180
+
+Count equ 2
+Channel_Ptr equ 0
+Channel_Start equ Channel_Ptr+2
+Channel_Tone equ Channel_Start+2
+Channel_Len equ Channel_Tone+2
+UnitSize equ Channel_Len+1
+
+dseg
+ChannelsBeep: public ChannelsBeep
+Channel0:
+    defs UnitSize
+Channel1:
+    defs UnitSize
+Time:
+    defw 0
+
+cseg
+InitSoundBeep: public InitSoundBeep
+    push ax | push bx | push cx
+        xor ax,ax
+        mov [Time],ax
+        
+        mov bx,ChannelsBeep
+        mov cl,Count
+        do
+            mov [bx+Channel_Ptr],ax
+            mov [bx+Channel_Tone],ax
+            add bx,UnitSize
+            dec cl
+        while nz | wend
+        call ToneOff
+    pop cx | pop bx | pop ax
+ret
+
+
+ToneOn:
+;   ax : cycle
+    out TimerPort+2,al
+    mov al,ah
+    out TimerPort+2,al
+    in al,BPort
+    or al,OnValue
+    out BPort,al
+ret
+
+ToneOff:
+    in al,BPort
+    and al,not OnValue
+    out BPort,al
+ret
+
+
+SoundHandlerBeep: public SoundHandlerBeep
+    push ax
+        mov ax,[Time]
+        sub ax,Tempo
+        if c
+            push ax | push bx | push cx | push si
+                mov si,ChannelsBeep
+                mov cl,Count
+                do
+                    mov bx,[si+Channel_Ptr]
+                    or bx,bx
+                    if nz
+                        dec byte ptr[si+Channel_Len]
+                        if z
+                            continue:
+                            mov al,[bx]
+                            or al,al
+                            if z
+                                ; end
+                                mov word ptr [si+Channel_Ptr],0
+                                offch:
+                                mov word ptr [si+Channel_Tone],0
+                                cmp cl,2
+                                if z
+                                    ; Channel0 end
+                                    mov ax,[Channel1+Channel_Tone]
+                                    or ax,ax
+                                    if nz
+                                        call ToneOn
+                                        jmp next
+                                    endif
+                                endif
+                                call ToneOff
+                                jmp next
+                            endif
+                            cmp al,0ffh
+                            if z
+                                ; repeat
+                                mov bx,[si+Channel_Start]
+                                jmp continue
+                            endif
+                            mov [si+Channel_Len],al
+                            inc bx
+                            mov al,[bx]
+                            inc bx
+                            mov [si+Channel_Ptr],bx
+                            or al,al
+                            jz offch
+                            mov bl,al
+                            dec bl
+                            xor bh,bh
+                            add bx,bx
+                            add bx,cycles
+                            mov ax,[bx]
+                            mov [si+Channel_Tone],ax
+                            cmp cl,1
+                            if z
+                                ; Channel1
+                                cmp word ptr[Channel0+Channel_Tone],0
+                                jnz next
+                            endif
+                            call ToneOn
+                        endif
+                    endif
+                    next:
+                    add si,UnitSize
+                    dec cl
+                while nz | wend
+            pop si | pop cx | pop bx | pop ax
+            add ax,600/2
+        endif
+        mov [Time],ax
+    pop ax
+ret
+
+
+Melody:
+    cli
+        mov [Channel0+Channel_Ptr],ax
+        mov byte ptr[Channel0+Channel_Len],1
+    sti
+ret
+
+MelodyWait:
+    call Melody
+    do
+        mov ax,[Channel0+Channel_Ptr]
+        or ax,ax
+    while nz | wend
+ret 
+
+
+fire_notes:
+    defb 1,F5, 1,D5S, 1,C5S, 1,B4, 1,A4, 1,G5
+    defb 0
+Sound_FireBeep: public Sound_FireBeep
+    cmp word ptr[Channel0+Channel_Ptr],0
+    if z
+        push ax
+            mov ax,fire_notes
+            call Melody
+        pop ax
+    endif
+ret
+
+hit_notes:
+    defb 1,F4, 1,G4, 1,A4, 1,B4, 1,C5, 1,D5, 1,E5, 1,F5
+    defb 0 
+Sound_HitBeep: public Sound_HitBeep
+    push ax
+        mov ax,hit_notes
+        call Melody
+    pop ax
+ret
+
+loose_notes:
+    defb 1,F5, 1,E5, 1,D5, 1,C5, 1,B4, 1,A4, 1,G4, 1,F4
+    defb 0
+Sound_LooseBeep: public Sound_LooseBeep
+    push ax
+        mov ax,loose_notes
+        call Melody
+    pop ax
+ret
+
+up_notes:
+    defb 1,C4, 1, C4S, 1,D4, 1,F4, 1,A4, 1,C5, 0
+Sound_UpBeep: public Sound_UpBeep
+    push ax
+        mov ax,up_notes
+        call Melody
+    pop ax
+ret
+
+
+start_notes: 
+	defb 5,E4,1,0, 11,F4S,1,0, 11,G4,1,0
+	defb 11,G4,1,0, 5,E4,1,0, 11,A4,1,0
+	defb 11,A4,1,0, 5,G4,1,0, 17,A4,1,0
+	defb 35,B4,1,0
+	defb 12,0
+    defb 0
+Sound_StartBeep: public Sound_StartBeep
+    push ax
+        mov ax,start_notes
+        call MelodyWait
+    pop ax
+ret
+
+
+over_notes: 
+	defb 11,E4,1,0, 5,B3,1,0, 5,E4,1,0
+	defb 5,D4,1,0, 5,C4,1,0, 5,B3,1,0, 5,A3,1,0
+	defb 35,B3,1,0
+	defb 12,0
+    defb 0
+Sound_GameOverBeep: public Sound_GameOverBeep
+    push ax
+        mov ax,over_notes
+        call MelodyWait
+    pop ax
+ret
+
+
+BGM_B:
+	defb 17,E4,1,0, 17,F4S,1,0
+	defb 23,G4,1,0
+	defb 11,G4,1,0, 11,F4S,1,0
+	defb 11,G4,1,0, 17,F4S,1,0
+	defb 17,D4,1,0, 35,D4,1,0
+	defb 24,0
+	defb 17,E4,1,0, 17,F4S,1,0
+	defb 23,G4,1,0
+	defb 11,G4,1,0, 11,F4S,1,0
+	defb 11,G4,1,0, 17,D5,1,0
+	defb 17,A4,1,0, 35,A4,1,0
+	defb 24,0
+	defb 17,C5,1,0, 17,B4,1,0
+	defb 23,C5,1,0
+	defb 11,C5,1,0, 11,B4,1,0
+	defb 11,C5,1,0, 17,B4,1,0
+	defb 17,G4,1,0, 35,G4,1,0
+	defb 24,0
+	defb 5,E4,1,0, 5,E4,1,0, 5,F4S,1,0, 11,G4,1,0
+	defb 11,G4,1,0, 5,G4,1,0, 5,F4S,1,0
+	defb 5,F4S,1,0, 5,G4,1,0, 11,A4,1,0
+	defb 11,A4,1,0, 5,A4,1,0, 5,G4,1,0
+	defb 5,G4,1,0, 5,A4,1,0, 11,B4,1,0
+	defb 11,B4,1,0, 5,B4,1,0, 5,C5,1,0
+	defb 11,C5,1,0, 17,B4,1,0
+	defb 12,0
+    defb 0ffh
+
+StartBGMBeep: public StartBGMBeep
+    push ax
+        mov ax,BGM_B
+        mov [Channel1+Channel_Start],ax
+        mov [Channel1+Channel_Ptr],ax
+        mov byte ptr[Channel1+Channel_Len],1
+    pop ax
+ret
+
+
+StopBGMBeep: public StopBGMBeep
+    push ax
+        cli
+            xor ax,ax
+            mov [Channel1+Channel_Ptr],ax
+            mov [Channel1+Channel_Tone],ax
+            call ToneOff
+        sti
+    pop ax
+ret
+
+
+G3 equ 1
+G3S equ 2
+A3 equ 3
+A3S equ 4
+B3 equ 5
+C4 equ 6
+C4S equ 7
+D4 equ 8
+D4S equ 9
+E4 equ 10
+F4 equ 11
+F4S equ 12
+G4 equ 13
+G4S equ 14
+A4 equ 15
+A4S equ 16
+B4 equ 17
+C5 equ 18
+C5S equ 19
+D5 equ 20
+D5S equ 21
+E5 equ 22
+F5 equ 23
+F5S equ 24
+G5 equ 25
+
+cycles:
+defw 6084 ; G3
+defw 5742 ; G#3
+defw 5420 ; A3
+defw 5116 ; A#3
+defw 4829 ; B3
+defw 4558 ; C4
+defw 4302 ; C#4
+defw 4060 ; D4
+defw 3832 ; D#4
+defw 3617 ; E4
+defw 3414 ; F4
+defw 3223 ; F#4
+defw 3042 ; G4
+defw 2871 ; G#4
+defw 2710 ; A4
+defw 2558 ; A#4
+defw 2414 ; B4
+defw 2279 ; C5
+defw 2151 ; C#5
+defw 2030 ; D5
+defw 1916 ; D#5
+defw 1808 ; E5
+defw 1707 ; F5
+defw 1611 ; F#5
+defw 1521 ; G5
