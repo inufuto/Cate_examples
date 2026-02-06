@@ -4,13 +4,15 @@ constexpr byte Char_Ascii = 0x0;
 constexpr byte Char_Logo = 0x40;
 constexpr byte Char_Wall = 0x4F;
 constexpr byte Char_Knife = 0x50;
-constexpr byte Char_Stair = 0x51;
-constexpr byte Char_StairUp = 0x51;
-constexpr byte Char_StairDown = 0x55;
-constexpr byte Char_Goal = 0x59;
-constexpr byte Char_Remain = 0x5D;
-constexpr byte Char_Color = 0x61;
-constexpr byte Char_End = 0x61;
+
+constexpr byte Char_Stair = 0x58;
+constexpr byte Char_StairUp = 0x58;
+constexpr byte Char_StairDown = 0x5C;
+constexpr byte Char_Goal = 0x60;
+
+constexpr byte Char_Remain = 0x68;
+
+constexpr byte Char_End = 0x70;
 
 constexpr byte Pattern_Man = 0;
 constexpr byte Pattern_Man_Left = 0;

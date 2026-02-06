@@ -10,7 +10,7 @@ zseg=0000
 	Cate65.exe -v2 $*.c
 
 .asm.obj:
-	Asm65.exe $*.asm
+	Asm65.exe -v2 $*.asm
 
 Knife.asm: Knife.c Knife.h Movable.h Stages.h Stage.h Sprite.h \
 	Movable.h Chars.h Man.h Movable.h Main.h Status.h \

@@ -4,13 +4,15 @@ Char_Ascii equ 0
 Char_Logo equ 64
 Char_Wall equ 79
 Char_Knife equ 80
-Char_Stair equ 81
-Char_StairUp equ 81
-Char_StairDown equ 85
-Char_Goal equ 89
-Char_Remain equ 93
-Char_Color equ 97
-Char_End equ 97
+
+Char_Stair equ 88
+Char_StairUp equ 88
+Char_StairDown equ 92
+Char_Goal equ 96
+
+Char_Remain equ 104
+
+Char_End equ 112
 
 Pattern_Man equ 0
 Pattern_Man_Left equ 0
