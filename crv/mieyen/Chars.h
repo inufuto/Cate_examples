@@ -4,9 +4,12 @@ constexpr byte Char_Ascii = 0x0;
 constexpr byte Char_Logo = 0x40;
 constexpr byte Char_Wall = 0x50;
 constexpr byte Char_Dot = 0x60;
-constexpr byte Char_Food = 0x64;
-constexpr byte Char_Remain = 0x68;
-constexpr byte Char_End = 0x6C;
+
+constexpr byte Char_Food = 0x68;
+
+constexpr byte Char_Remain = 0x70;
+
+constexpr byte Char_End = 0x78;
 
 constexpr byte Pattern_Man = 0;
 constexpr byte Pattern_Man_Left = 0;

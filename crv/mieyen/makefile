@@ -10,7 +10,7 @@ zseg=0000
 	Cate65.exe -v2 $*.c
 
 .asm.obj:
-	Asm65.exe $*.asm
+	Asm65.exe -v2 $*.asm
 
 Fire.asm: Fire.c Fire.h Movable.h Sprite.h Movable.h Sound.h \
 	Chars.h Man.h Movable.h Monster.h Movable.h Point.h \
@@ -35,23 +35,23 @@ Status.asm: Status.c Status.h Vram.h Main.h Print.h Chars.h \
 	Sprite.h Movable.h 
 Vram.asm: Vram.c Vram.h Chars.h 
 Chars.obj: Chars.asm 
-CopyMemory.obj: CopyMemory.asm 
+CopyMemory.obj: CopyMemory.asm ZeroPage.inc 
 Math.obj: Math.asm 
 Print.obj: Print.asm 
-ScanKeys.obj: ScanKeys.asm 
-Sound.obj: Sound.asm 
-Sprite.obj: Sprite.asm  Vram.inc Chars.inc 
-StageA.obj: StageA.asm 
-Startup.obj: Startup.asm  
-Vdp.obj: Vdp.asm  Vram.inc 
-VramA.obj: VramA.asm  Vram.inc Chars.inc 
+RomTail.obj: RomTail.asm Vram.inc 
+ScanKeys.obj: ScanKeys.asm ZeroPage.inc Port.inc 
+Sound.obj: Sound.asm ZeroPage.inc Port.inc 
+Sprite.obj: Sprite.asm ZeroPage.inc Port.inc Vram.inc Chars.inc 
+StageA.obj: StageA.asm ZeroPage.inc 
+Startup.obj: Startup.asm Port.inc Vram.inc 
+VramA.obj: VramA.asm ZeroPage.inc Port.inc Vram.inc Chars.inc 
+ZeroPage.obj: ZeroPage.asm 
 
 objects = RomTail.obj Startup.obj \
 	Fire.obj Main.obj Man.obj Monster.obj Movable.obj Point.obj \
 	Stage.obj Stages.obj Status.obj Vram.obj Chars.obj CopyMemory.obj \
 	Math.obj Print.obj ScanKeys.obj Sound.obj Sprite.obj StageA.obj \
-	 VramA.obj \
-	ZeroPage.obj \
+	VramA.obj ZeroPage.obj \
 	..\..\cate\cate65.lib
 
 $(name).rom: $(objects) makefile

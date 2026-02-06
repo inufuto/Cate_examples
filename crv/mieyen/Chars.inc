@@ -4,9 +4,12 @@ Char_Ascii equ 0
 Char_Logo equ 64
 Char_Wall equ 80
 Char_Dot equ 96
-Char_Food equ 100
-Char_Remain equ 104
-Char_End equ 108
+
+Char_Food equ 104
+
+Char_Remain equ 112
+
+Char_End equ 120
 
 Pattern_Man equ 0
 Pattern_Man_Left equ 0

@@ -5,73 +5,84 @@ include "Chars.inc"
 
 ext CharPattern
 
+scope
 pSource equ ZW0
-wVram equ ZW1
-count equ ZB0
-VramH equ ZB1
-shift equ ZB1
-charByte equ ZB2
+cCode equ ZB0
+charCount equ ZB1
+colorCount equ ZB2
+color equ ZB3
+vramH equ ZB4
 
 cseg
 ColorSource:
-defb 64, $f4 ; Ascii
-defb 16, $74 ; Logo
-defb 16, $74 ; Wall
-defb 4, $a4 ; Dot
-defb 4, $b4 ; Food
-defb 4, $f4 ; Remain
-defb 0
+defb $0,64, $f0 ; Ascii
+defb $40,16, $70 ; Logo
+defb $50,16, $50 ; Wall
+defb $60,4, $a0 ; Dot
+defb $68,4, $b0 ; Food
+defb $70,4, $f0 ; Remain
+defb $ff
 cseg
 InitVram: public InitVram
     sei
-        lda #0 | sta <VramH
+        lda #low CharPattern | sta pSource
+        lda #high CharPattern | sta pSource+1
+
+        ldx #0
         do
-            lda #low Vram_PatternGenerator | sta VdpWritePort+1
-            lda #$40 or high Vram_PatternGenerator | ora <VramH | sta VdpWritePort+1
-            lda #low CharPattern | sta <pSource
-            lda #high CharPattern | sta <pSource+1
-            ldx #Char_End
+            lda ColorSource,x
+            cmp #$ff
+        while ne
+            inx | sta cCode
+            lda ColorSource,x | inx | sta charCount
+            
+            clc|adc #8-1
+            lsr a | lsr a | lsr a
+            sta colorCount
+
+            lda ColorSource,x | inx | sta color
+            
+            lda #0 | sta vramH
+            lda cCode
+            asl a | rol vramH ;*2
+            asl a | rol vramH ;*4
+            asl a | rol vramH ;*8
+            sta VdpWritePort+1
+            lda vramH | ora #$40 | sta VdpWritePort+1
             do
                 ldy #0
                 do
-                    lda (<pSource),y | iny
+                    lda (pSource),y | iny
                     sta VdpWritePort
                     jsr WaitVdp
-                    cpy #8
+                    cpy #CharHeight
                 while ne | wend
-                lda <pSource | clc|adc #8 | sta <pSource
-                lda <pSource+1 | adc #0 | sta <pSource+1
-                dex
+                lda pSource | clc|adc #CharHeight | sta pSource
+                if cs
+                    inc pSource+1
+                endif
+                dec charCount
             while ne | wend
 
-            lda #low Vram_Color | sta VdpWritePort+1
-            lda #$40 or high Vram_Color | ora <VramH | sta VdpWritePort+1
-            ldx #0
+            lda cCode
+            lsr a | lsr a | lsr a
+            sta VdpWritePort+1
+            lda #high Vram_Color or $40 | sta VdpWritePort+1
+            lda color
+            ldy colorCount
             do
-                lda ColorSource,x
-            while ne
-                sta <count
-                inx
-                lda ColorSource,x | inx
-                do
-                    ldy #8
-                    do
-                        sta VdpWritePort
-                        jsr WaitVdp
-                        dey
-                    while ne | wend
-                    dec <count
-                while ne | wend
-            wend
-            
-            lda <VramH | clc|adc #8 | sta <VramH
-            cmp #8*3
-        while ne | wend
+                sta VdpWritePort
+                jsr WaitVdp
+                dey
+            while ne | wend
+        wend
     cli
 WaitVdp: public WaitVdp
 rts
+endscope
 
 
+scope
 ; void ClearScreen();
 cseg
 ClearScreen_: public ClearScreen_
@@ -93,7 +104,11 @@ ClearScreen_: public ClearScreen_
         cli
     pla
 rts
+endscope
 
+
+scope
+wVram equ ZW1
 
 ; ptr<byte> VramAddress(byte x, byte y)
 dseg
@@ -119,9 +134,12 @@ VramAddress_: public VramAddress_
         txa adc #high Vram | tax
 	pla
 rts
+endscope
 
 
-; ptr<byte> Put(word vram, byte c);
+scope
+wVram equ ZW1
+
 dseg
 Put_@Param1: public Put_@Param1
 Put_c:
@@ -141,6 +159,9 @@ Put:
         stx VdpWritePort
     cli
 rts
+
+; ptr<byte> Put(word vram, byte c);
+cseg
 Put_: public Put_
     pha
         sty <wVram | stx <wVram+1
@@ -150,8 +171,10 @@ Put_: public Put_
         lda <wVram+1 | adc #0 | tax
     pla
 rts
+endscope
 
 
+scope
 ; byte ReadVram(word vram);
 cseg
 ReadVram_: public ReadVram_
@@ -162,3 +185,4 @@ ReadVram_: public ReadVram_
         ldy VdpReadPort
     cli
 rts
+endscope
