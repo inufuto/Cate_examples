@@ -13,7 +13,7 @@ cseg
     defb Vram_PatternGenerator/$800
     defb Vram_SpriteAttribute/$80
     defb Vram_SpriteGenerator/$800
-    defb $00
+    defb $04
     defw 0
     defw 0
     defw $f808

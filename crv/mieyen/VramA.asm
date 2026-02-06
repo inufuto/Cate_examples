@@ -17,7 +17,7 @@ cseg
 ColorSource:
 defb $0,64, $f0 ; Ascii
 defb $40,16, $70 ; Logo
-defb $50,16, $50 ; Wall
+defb $50,16, $70 ; Wall
 defb $60,4, $a0 ; Dot
 defb $68,4, $b0 ; Food
 defb $70,4, $f0 ; Remain
