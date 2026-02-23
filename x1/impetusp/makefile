@@ -1,6 +1,6 @@
 name=impetusp
 
-all: $(name).tap
+all: $(name).tap $(name).d88
 
 cseg=8100
 dseg=d000 
@@ -82,3 +82,6 @@ $(name).wav: $(name).bin
 
 $(name).tap: $(name).wav
 	x1tape -wav2tap $(name).wav $(name).tap
+
+$(name).d88: $(name).bin Disk.csx
+	dotnet script Disk.csx $(name) $(cseg)
