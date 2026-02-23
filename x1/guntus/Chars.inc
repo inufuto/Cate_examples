@@ -1,0 +1,24 @@
+Char_Space equ 0
+Char_Ascii equ 0
+Char_Logo equ 128
+Char_Star equ 132
+Char_Enemy equ 134
+Char_EnemyA equ 134
+Char_EnemyB equ 142
+Char_EnemyC equ 150
+Char_Fighter equ 158
+Char_End equ 166
+
+GChar_Space equ 0
+GChar_Logo equ 0
+GChar_Star equ 4
+GChar_FighterBullet equ 6
+GChar_EnemyBullet equ 7
+GChar_Enemy equ 8
+GChar_EnemyA equ 8
+GChar_EnemyB equ 72
+GChar_EnemyC equ 136
+GChar_Fighter equ 200
+GChar_Bang equ 208
+GChar_Item equ 248
+GChar_End equ 256
