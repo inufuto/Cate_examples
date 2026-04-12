@@ -36,7 +36,7 @@ void HideSprite(byte index)
 
 void DrawSprites()
 {
-    ptr<Sprite> p = Sprites;
+    ptr<Sprite> p = Sprites + Sprite_End;
     repeat (Sprite_End) {
         --p;
         if (p->y <= VVramHeight - 1) {
