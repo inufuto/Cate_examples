@@ -1,0 +1,45 @@
+
+Char_Space equ 0
+Char_White equ 1
+Char_Logo equ 2
+Char_Wall equ 18
+Char_Box equ 22
+Char_Item equ 26
+Char_Sprite equ 30
+Char_End equ 150
+
+
+Pattern_Man equ 0
+Pattern_Man_Left equ 0
+Pattern_Man_Left0 equ 0
+Pattern_Man_Left1 equ 1
+Pattern_Man_LeftAttack equ 2
+Pattern_Man_Right equ 4
+Pattern_Man_Right0 equ 4
+Pattern_Man_Right1 equ 5
+Pattern_Man_RightAttack equ 6
+Pattern_Man_Up equ 8
+Pattern_Man_Up0 equ 8
+Pattern_Man_Up1 equ 9
+Pattern_Man_UpAttack equ 10
+Pattern_Man_Down equ 12
+Pattern_Man_Down0 equ 12
+Pattern_Man_Down1 equ 13
+Pattern_Man_DownAttack equ 14
+Pattern_Monster equ 16
+Pattern_Monster_Left equ 16
+Pattern_Monster_Left0 equ 16
+Pattern_Monster_Left1 equ 17
+Pattern_Monster_Right equ 18
+Pattern_Monster_Right0 equ 18
+Pattern_Monster_Right1 equ 19
+Pattern_Monster_Up equ 20
+Pattern_Monster_Up0 equ 20
+Pattern_Monster_Up1 equ 21
+Pattern_Monster_Down equ 22
+Pattern_Monster_Down0 equ 22
+Pattern_Monster_Down1 equ 23
+Pattern_Ball equ 24
+Pattern_Point equ 25
+Pattern_Oneup equ 29
+Pattern_End equ 30
