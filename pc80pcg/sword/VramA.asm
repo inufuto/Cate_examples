@@ -148,7 +148,7 @@ VVramToVram_: public VVramToVram_
             ld b,(hl)
             ld e,0
         exx
-        ld c,VVramHeight-2
+        ld c,VVramHeight
         do
 			call PollVSync_
             push hl | push de
@@ -211,7 +211,8 @@ VVramToVramChanged_: public VVramToVramChanged_
             ld c,1
             ld b,(hl) | inc hl
         exx
-        ld b,VVramHeight-2
+        ld a,0e8h | ld (rightColor+1),a
+        ld b,VVramHeight
         do
             push bc
                 exx
@@ -266,6 +267,7 @@ VVramToVramChanged_: public VVramToVramChanged_
                     exx
                     inc a
                     ld b,a
+                    rightColor:
                     ld a,0e8h
                     do
                         exx
@@ -300,6 +302,11 @@ VVramToVramChanged_: public VVramToVramChanged_
                 exx
                 call PollVSync_
             pop bc
+            ld a,b
+            cp 2+1
+            if z
+                ld a,0a8h | ld (rightColor+1),a
+            endif
         dwnz
     pop iy | pop ix | pop bc | pop de | pop hl | pop af
 ret

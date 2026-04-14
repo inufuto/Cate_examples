@@ -1,5 +1,5 @@
 constexpr byte VVramWidth = 32;
-constexpr byte VVramHeight = 24;
+constexpr byte VVramHeight = 22;
 
 extern byte[] VVramBack, VVramFront;
 

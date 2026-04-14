@@ -50,7 +50,7 @@ void PrintRemain()
         if (i > 2) {
             pVram = Put2C(pVram, Char_Remain);
             Erase2(pVram);
-            pVram = Put(pVram + VramRowSize, i + 0x10);
+            pVram = Put(pVram + VramRowSize, i + 0x30);
         }
         else {
             do {
