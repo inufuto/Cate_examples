@@ -1,0 +1,171 @@
+include "kh1000.inc"
+include "Vram.inc"
+include "Chars.inc"
+include "Sprite.inc"
+
+ext SpritePattern
+ext WRTVDP, LDIRVM
+
+Top equ 8*StatusHeight-1
+HiddenY equ 192
+SkySpriteRange equ 24
+GroundSpriteRange equ 32-SkySpriteRange
+
+Movable_x equ 0
+Movable_y equ 1
+Movable_sprite equ 2
+
+Sprite_y equ 0
+Sprite_x equ 1
+Sprite_name equ 2
+Sprite_color equ 3
+UnitSize equ 4
+
+dseg
+Sprites: public Sprites
+    defs UnitSize*Sprite_End
+BufferEnd:
+pFirst:
+    defw 0
+
+cseg
+InitSprites: public InitSprites
+    ld bc,0e201h
+    call WRTVDP
+
+    ld hl,SpritePattern
+    ld de,Vram_SpriteGenerator
+    ld bc,CharHeight*Pattern_End*4
+    call LDIRVM
+
+    call HideAllSprites_
+
+    ld hl,Sprites | ld (pFirst),hl
+ret
+
+cseg
+SpritePtrIX:
+    push de
+        ld l,(ix+Movable_sprite)  ; index
+        ld h,0
+        add hl,hl   ;*2
+        add hl,hl   ;*4
+        ld de,Sprites | add hl,de
+    pop de
+ret
+
+; void ShowSprite(ptr<Movable> pMovable, byte pattern, byte color);
+cseg
+ShowSprite_: public ShowSprite_
+	push af | push hl | push de
+        call SpritePtrIX
+        di
+            ld a,(ix+Movable_y) ; y
+            add a,Top
+            ld (hl),a | inc hl 
+            ld a,(ix+Movable_x) ; x
+            ld (hl),a | inc hl 
+            sla e | sla e
+            ld (hl),e | inc hl ; pattern
+            ld (hl),c ; color
+        ei
+	pop de | pop hl | pop af
+ret
+
+
+SpritePtrA:
+    ld l,a  ; index
+    ld h,0
+    add hl,hl   ;*2
+    add hl,hl   ;*4
+    ld de,Sprites | add hl,de
+ret
+
+; void HideSprite(byte index);
+HideSprite_: public HideSprite_
+	push af | push hl | push de
+        call SpritePtrA
+        di
+            ld (hl),HiddenY
+        ei
+    pop	de | pop hl | pop af
+ret
+
+
+; void HideAllSprites();
+HideAllSprites_: public HideAllSprites_
+	push af | push hl | push bc
+        ld hl,Sprites
+        ld b,Sprite_End
+        di
+            do
+                ld (hl),HiddenY
+                inc hl | inc hl | inc hl | inc hl
+            dwnz
+        ei
+    pop bc | pop hl | pop af
+    ; call UpdateSprites
+ret
+
+scope
+UpdateSprites: public UpdateSprites
+    ; push af | push hl | push de | push bc
+        xor a
+        ld (VdpAddress+2),a
+        ld a,high(4000h or VRAM_SpriteAttribute)
+        ld (VdpAddress+2),a
+
+        ld hl,(pFirst)
+        ld de,Sprite_End or (32 shl 8)
+        do
+            ld a,(hl) ; y
+            cp HiddenY
+            if nz
+                inc hl
+                ld (VdpAddress),a
+                ld b,UnitSize-1
+                do
+                    ld a,(hl) | inc hl
+                    ld (VdpAddress),a
+                dwnz
+                dec d
+                jr z,skip
+            else
+                inc hl | inc hl | inc hl | inc hl
+            endif
+            ld a,l
+            cp low BufferEnd
+            if z
+                ld hl,Sprites
+            endif
+            dec e
+        while nz | wend
+        ld a,0d0h
+        ld (VdpAddress),a
+        skip:
+
+        ld hl,(pFirst)
+        ld c,l
+        ld de,UnitSize | add hl,de
+        do
+            ld a,l
+            cp low BufferEnd
+            if z
+                ld hl,Sprites
+            endif
+            ld a,l
+            cp c
+        while nz
+            ld a,(hl)
+            cp HiddenY
+            if nz
+                dec hl | dec hl | dec hl | dec hl
+                jr exit
+            endif
+            inc hl | inc hl | inc hl | inc hl
+        wend
+        exit:
+        ld (pFirst),hl
+;     pop bc | pop de | pop hl | pop af
+ret
+endscope
