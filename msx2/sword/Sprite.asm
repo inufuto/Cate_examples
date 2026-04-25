@@ -1,6 +1,7 @@
 ﻿include "Vram.inc"
 include "Chars.inc"
 include "Sprite.inc"
+include "VVram.inc"
 
 ext EraseBackup_, DrawSprite_
 
@@ -49,7 +50,12 @@ ShowSprite_: public ShowSprite_
 		ld bc,Sprites | add hl,bc
 		ld a,(ix) | ld (hl),a | inc hl ;x
 		ld a,(ix+1) | ld (hl),a | inc hl ;y
-		ld (hl),e
+		cp VVramHeight*2
+		if c
+			ld (hl),e
+		else
+			ld (hl),InvalidPattern
+		endif
 	pop bc | pop hl | pop af
 ret
 
