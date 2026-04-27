@@ -21,8 +21,12 @@ void HideAllSprites()
 void ShowSprite(ptr<Movable> pMovable, byte pattern)
 {
     ptr<Sprite> p = Sprites + pMovable->sprite;
+    byte y = pMovable->y;
+    if (y >= VVramHeight - 1) {
+        y = InvalidY;
+    }
+    p->y = y;
     p->x = pMovable->x;
-    p->y = pMovable->y;
     p->c = (pattern << 2) + Char_Sprite;
 }
 
