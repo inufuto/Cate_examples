@@ -1,0 +1,45 @@
+
+constexpr byte Char_Box = 0x80;
+constexpr byte Char_Item = 0x84;
+constexpr byte Char_Man = 0x88;
+constexpr byte Char_Sword = 0x8C;
+constexpr byte Char_Monster = 0x90;
+constexpr byte Char_End = 0xA0;
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Wall = 0x4C;
+constexpr byte Char_Ball = 0x4E;
+
+constexpr byte Ptn_Box = 0x0;
+constexpr byte Ptn_Item = 0x4;
+constexpr byte Ptn_Man = 0x8;
+constexpr byte Ptn_Man_Left = 0x8;
+constexpr byte Ptn_Man_Left0 = 0x8;
+constexpr byte Ptn_Man_Left1 = 0xC;
+constexpr byte Ptn_Man_LeftAttack = 0x10;
+constexpr byte Ptn_Man_Right = 0x18;
+constexpr byte Ptn_Man_Right0 = 0x18;
+constexpr byte Ptn_Man_Right1 = 0x1C;
+constexpr byte Ptn_Man_RightAttack = 0x20;
+constexpr byte Ptn_Man_Up = 0x28;
+constexpr byte Ptn_Man_Up0 = 0x28;
+constexpr byte Ptn_Man_Up1 = 0x2C;
+constexpr byte Ptn_Man_UpAttack = 0x30;
+constexpr byte Ptn_Man_Down = 0x38;
+constexpr byte Ptn_Man_Down0 = 0x38;
+constexpr byte Ptn_Man_Down1 = 0x3C;
+constexpr byte Ptn_Man_DownAttack = 0x40;
+constexpr byte Ptn_Monster = 0x48;
+constexpr byte Ptn_Monster_Left = 0x48;
+constexpr byte Ptn_Monster_Left0 = 0x48;
+constexpr byte Ptn_Monster_Left1 = 0x4C;
+constexpr byte Ptn_Monster_Right = 0x50;
+constexpr byte Ptn_Monster_Right0 = 0x50;
+constexpr byte Ptn_Monster_Right1 = 0x54;
+constexpr byte Ptn_Monster_Up = 0x58;
+constexpr byte Ptn_Monster_Up0 = 0x58;
+constexpr byte Ptn_Monster_Up1 = 0x5C;
+constexpr byte Ptn_Monster_Down = 0x60;
+constexpr byte Ptn_Monster_Down0 = 0x60;
+constexpr byte Ptn_Monster_Down1 = 0x64;
+constexpr byte Ptn_End = 0x68;

@@ -1,0 +1,45 @@
+
+Char_Box equ 128
+Char_Item equ 132
+Char_Man equ 136
+Char_Sword equ 140
+Char_Monster equ 144
+Char_End equ 160
+
+Char_Space equ 0
+Char_Wall equ 76
+Char_Ball equ 78
+
+Ptn_Box equ 0
+Ptn_Item equ 4
+Ptn_Man equ 8
+Ptn_Man_Left equ 8
+Ptn_Man_Left0 equ 8
+Ptn_Man_Left1 equ 12
+Ptn_Man_LeftAttack equ 16
+Ptn_Man_Right equ 24
+Ptn_Man_Right0 equ 24
+Ptn_Man_Right1 equ 28
+Ptn_Man_RightAttack equ 32
+Ptn_Man_Up equ 40
+Ptn_Man_Up0 equ 40
+Ptn_Man_Up1 equ 44
+Ptn_Man_UpAttack equ 48
+Ptn_Man_Down equ 56
+Ptn_Man_Down0 equ 56
+Ptn_Man_Down1 equ 60
+Ptn_Man_DownAttack equ 64
+Ptn_Monster equ 72
+Ptn_Monster_Left equ 72
+Ptn_Monster_Left0 equ 72
+Ptn_Monster_Left1 equ 76
+Ptn_Monster_Right equ 80
+Ptn_Monster_Right0 equ 80
+Ptn_Monster_Right1 equ 84
+Ptn_Monster_Up equ 88
+Ptn_Monster_Up0 equ 88
+Ptn_Monster_Up1 equ 92
+Ptn_Monster_Down equ 96
+Ptn_Monster_Down0 equ 96
+Ptn_Monster_Down1 equ 100
+Ptn_End equ 104
