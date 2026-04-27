@@ -1,0 +1,3 @@
+MODE_SEL equ $FFD0
+C_REG_SEL equ $FFD8
+KB equ $FFE0
