@@ -45,18 +45,15 @@ TimerHandler: public TimerHandler
     pshs a
         lda division
         if pl
-            suba #50
+            suba #113
             sta division
-
             inc TimerCount
             jsr SoundHandler
         else
-            adda #6
+            adda #15
             sta division
         endif
     puls a
-; Handler_end:
-; jmp $ed72
 rts
 
 KeyHandler:
