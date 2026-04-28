@@ -1,0 +1,7 @@
+SubBin_start	equ	0C000h
+SubBin_size	equ	210
+CLEARVRAM	equ	0C038h
+DEFCHAR	equ	0C0B2h
+PUT	equ	0C050h
+SUBCHARS	equ	0C100h
+SUBMAIN	equ	0C000h
