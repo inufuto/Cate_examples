@@ -1,0 +1,9 @@
+VramSegment0 equ 0a000h
+VramSegment1 equ 0a200h
+Vram equ 0000h
+VramWidth equ 40
+VramHeight equ 25
+VramStep equ VramWidth/40
+CharHeight equ 8
+VramRowSize equ VramWidth*CharHeight
+PlaneCount equ 4
