@@ -1,0 +1,35 @@
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Logo = 0x0;
+constexpr byte Char_Wall = 0x10;
+constexpr byte Char_Box = 0x14;
+constexpr byte Char_Item = 0x18;
+constexpr byte Char_Sprite = 0x1C;
+constexpr byte Char_End = 0x88;
+
+constexpr byte Pattern_Man = 0;
+constexpr byte Pattern_Man_Left = 0;
+constexpr byte Pattern_Man_Left0 = 0;
+constexpr byte Pattern_Man_Left1 = 1;
+constexpr byte Pattern_Man_LeftAttack = 2;
+constexpr byte Pattern_Man_Right = 4;
+constexpr byte Pattern_Man_Right0 = 4;
+constexpr byte Pattern_Man_Right1 = 5;
+constexpr byte Pattern_Man_RightAttack = 6;
+constexpr byte Pattern_Man_Up = 8;
+constexpr byte Pattern_Man_Up0 = 8;
+constexpr byte Pattern_Man_Up1 = 9;
+constexpr byte Pattern_Man_UpAttack = 10;
+constexpr byte Pattern_Man_Down = 12;
+constexpr byte Pattern_Man_Down0 = 12;
+constexpr byte Pattern_Man_Down1 = 13;
+constexpr byte Pattern_Man_DownAttack = 14;
+constexpr byte Pattern_Monster = 16;
+constexpr byte Pattern_Monster_Left = 16;
+constexpr byte Pattern_Monster_Right = 17;
+constexpr byte Pattern_Monster_Up = 18;
+constexpr byte Pattern_Monster_Down = 19;
+constexpr byte Pattern_Ball = 20;
+constexpr byte Pattern_Point = 0x15;
+constexpr byte Pattern_Oneup = 0x1A;
+constexpr byte Pattern_End = 0x1B;
