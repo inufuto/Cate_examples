@@ -1,0 +1,83 @@
+JOYP equ 0ff00h
+TIMA equ 0ff05h
+TMA equ 0ff06h
+TAC equ 0ff07h
+
+LCDC equ 0ff10h
+LCDCF_B_ON equ 7
+LCDCF_B_WIN9C00 equ 3
+LCDCF_B_WINON equ 5
+LCDCF_B_BG8000 equ 4
+LCDCF_B_BG9C00 equ 2
+LCDCF_B_OBJ16 equ 1
+LCDCF_B_OBJON equ 0
+LCDCF_B_BGON equ 6
+LCDCF_ON equ 1 shl LCDCF_B_ON
+LCDCF_WIN9C00 equ 1 shl LCDCF_B_WIN9C00
+LCDCF_WINON equ 1 shl LCDCF_B_WINON
+LCDCF_G8000 equ 1 shl LCDCF_B_BG8000
+LCDCF_G9C00 equ 1 shl LCDCF_B_BG9C00
+LCDCF_OBJ16 equ 1 shl LCDCF_B_OBJ16
+LCDCF_OBJON equ 1 shl LCDCF_B_OBJON
+LCDCF_BGON equ 1 shl LCDCF_B_BGON
+
+STAT equ 0ff11h
+
+SCY equ 0ff12h
+SCX equ 0ff13h
+LY equ 0ff18h
+LYC equ 0ff19h
+DMA equ 0ff1ah
+BGP equ 0ff1bh
+OBP0 equ 0ff14h
+OBP1 equ 0ff15h
+WY equ  0ff16h
+WX equ  0ff17h
+
+NR10 equ 0ff20h
+NR11 equ 0ff22h
+NR12 equ 0ff21h
+NR13 equ 0ff23h
+NR14 equ 0ff24h
+NR21 equ 0ff25h
+NR22 equ 0ff27h
+NR23 equ 0ff28h
+NR24 equ 0ff29h
+NR30 equ 0ff2ah
+NR31 equ 0ff2bh
+NR32 equ 0ff2ch
+NR33 equ 0ff2eh
+NR34 equ 0ff2dh
+NR41 equ 0ff40h
+NR42 equ 0ff42h
+NR43 equ 0ff41h
+NR44 equ 0ff43h
+NR50 equ 0ff44h
+NR51 equ 0ff46h
+NR52 equ 0ff45h
+
+HRAM equ 0ff80h
+
+IE equ 0ffffh
+
+rAUD1SWEEP equ NR10
+rAUD1LEN equ NR11
+rAUD1ENV equ NR12
+rAUD1LOW equ NR13
+rAUD1HIGH equ NR14
+rAUD2LEN equ NR21
+rAUD2ENV equ NR22
+rAUD2LOW equ NR23
+rAUD2HIGH equ NR24
+rAUD3ENA equ NR30
+rAUD3LEN equ NR31
+rAUD3LEVEL equ NR32
+rAUD3LOW equ NR33
+rAUD3HIGH equ NR34
+rAUD4LEN equ NR41
+rAUD4ENV equ NR42
+rAUD4POLY equ NR43
+rAUD4GO equ NR44
+rAUDVOL equ NR50
+rAUDTERM equ NR51
+rAUDENA equ NR52
