@@ -1,5 +1,5 @@
 	cseg
-bin:	public bin
+sword:	public sword
 	defb	0cdh,4bh,19h,0cdh,29h,1ah,0cdh,3dh
 	defb	30h,21h,19h,1h,22h,0fah,0feh,21h
 	defb	1ch,1h,22h,0f6h,0feh,0fbh,0c3h,0e9h
