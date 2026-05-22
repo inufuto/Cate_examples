@@ -1,6 +1,6 @@
 name=antiair
 
-all: $(name).ram
+all: $(name).ram $(name).d88
 
 cseg=9000
 dseg=C200
@@ -43,6 +43,7 @@ VVram.asm: VVram.c VVram.h Chars.h Sprite.h Movable.h Vram.h \
 Chars.obj: Chars.asm 
 CopyMemory.obj: CopyMemory.asm 
 FixedCode.obj: FixedCode.asm 
+Loader.obj: Loader.asm BinSize.inc 
 Math.obj: Math.asm 
 Print.obj: Print.asm 
 ScanKeys.obj: ScanKeys.asm 
@@ -67,3 +68,16 @@ FixedCode.asm FixedCode.inc: FixedCode.bin
 
 $(name).ram: $(objects) makefile
 	LinkLE.exe $(name).ram $(cseg) $(dseg) $(objects)
+
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg)
+
+Loader.bin: Loader.obj makefile
+    LinkLE.exe Loader.bin f000 f100 Loader.obj
+
+$(name).d88: $(name).bin Loader.bin makefile disk.csx
+    dotnet script disk.csx $(name)
