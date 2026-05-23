@@ -5,6 +5,7 @@ ext Chars, Ascii
 ClearVram:   public ClearVram
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -99,6 +100,7 @@ ret
 TPut: public TPut
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -112,6 +114,7 @@ ret
 TClear8: public TClear8
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -125,6 +128,7 @@ ret
 TPut8: public TPut8
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -138,6 +142,7 @@ ret
 TClearPut: public TClearPut
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -152,6 +157,7 @@ ret
 TPutClear: public TPutClear
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -167,6 +173,7 @@ ret
 TPutPut: public TPutPut
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a
@@ -188,6 +195,7 @@ ret
 TPrintC: public TPrintC
     di
         in a,(22h)
+        and 3
         push af
             or 6
             out (3ch),a

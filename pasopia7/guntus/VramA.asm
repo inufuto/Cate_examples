@@ -34,6 +34,7 @@ InitAsciiPattern_: public InitAsciiPattern_
     push af | push hl | push de | push bc
         di
             in a,(22h)
+            and 3
             push af
                 and 2
                 out (3ch),a
@@ -85,6 +86,7 @@ InitMonoPattern_: public InitMonoPattern_
     push af | push hl | push de | push bc
         di
             in a,(22h)
+            and 3
             push af
                 and 2
                 out (3ch),a
@@ -169,6 +171,7 @@ InitColorPattern_: public InitColorPattern_
     push af | push hl | push de | push bc
         di
             in a,(22h)
+            and 3
             push af
                 and 2
                 out (3ch),a

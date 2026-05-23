@@ -1,6 +1,6 @@
 name=guntus
 
-all: $(name).ram
+all: $(name).ram $(name).d88
 
 cseg=9000
 dseg=C700
@@ -47,22 +47,29 @@ Star.asm: Star.c Star.h Vram.h Chars.h Coord.h VVram.h
 Status.asm: Status.c Status.h Vram.h Print.h Chars.h Sprite.h 
 Team.asm: Team.c Team.h Stage.h MovingEnemy.h Direction.h Sprite.h \
 	Coord.h Enemy.h 
-Vram.asm: Vram.c Vram.h VVram.h Chars.h 
+Vram.asm: Vram.c Vram.h Chars.h 
 VVram.asm: VVram.c Vram.h VVram.h Chars.h Sprite.h EnemyRow.h \
 	Star.h Sound.h 
 Chars.obj: Chars.asm 
 FixedCode.obj: FixedCode.asm 
 Init.obj: Init.asm FixedCode.inc 
-Loader.obj: Loader.asm 
+Loader.obj: Loader.asm BinSize.inc 
 Math.obj: Math.asm 
 Print.obj: Print.asm 
 ScanKeys.obj: ScanKeys.asm 
 Sound.obj: Sound.asm 
 SpriteA.obj: SpriteA.asm Vram.inc VVram.inc 
-Start.obj: Start.asm 
 VramA.obj: VramA.asm FixedCode.inc Vram.inc VVram.inc Chars.inc 
-VramTrans.obj: VramTrans.asm Vram.inc 
+VramTrans.obj: VramTrans.asm 
 VVramA.obj: VVramA.asm VVram.inc 
+
+objects = Main.obj Init.obj VramA.obj \
+	Bang.obj Direction.obj Enemy.obj EnemyBullet.obj EnemyRow.obj Fighter.obj \
+	FighterBullet.obj Item.obj MovingEnemy.obj Sprite.obj Stage.obj Stages.obj \
+	Star.obj Status.obj Team.obj Vram.obj VVram.obj Chars.obj \
+	FixedCode.obj Math.obj Print.obj ScanKeys.obj Sound.obj SpriteA.obj \
+	VVramA.obj \
+	..\..\cate\cate80.lib
 
 FixedCode.bin: VramTrans.obj
 	LinkLE.exe FixedCode.bin $(cseg2) $(dseg2) VramTrans.obj
@@ -70,16 +77,18 @@ FixedCode.bin: VramTrans.obj
 FixedCode.asm FixedCode.inc : FixedCode.bin
 	dotnet script binasm.csx
 
-objects= \
-	Main.obj  \
-	VramA.obj Sound.obj \
-	Bang.obj Direction.obj Enemy.obj EnemyBullet.obj EnemyRow.obj Fighter.obj \
-	FighterBullet.obj Item.obj MovingEnemy.obj Sprite.obj Stage.obj \
-	Stages.obj Star.obj Status.obj Team.obj Vram.obj VVram.obj \
-	Chars.obj Math.obj Print.obj ScanKeys.obj \
-	VVramA.obj SpriteA.obj \
-	FixedCode.obj Init.obj \
-	..\..\cate\cate80.lib
-
 $(name).ram: $(objects)
 	LinkLE.exe $(name).ram $(cseg) $(dseg) $(objects)
+
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg)
+
+Loader.bin: Loader.obj makefile
+    LinkLE.exe Loader.bin f000 f100 Loader.obj
+
+$(name).d88: $(name).bin Loader.bin makefile disk.csx
+    dotnet script disk.csx $(name)
