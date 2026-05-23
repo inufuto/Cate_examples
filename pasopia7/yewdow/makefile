@@ -1,6 +1,6 @@
 name=yewdow
 
-all: $(name).ram
+all: $(name).ram $(name).d88
 
 cseg=9000
 dseg=C200
@@ -45,6 +45,7 @@ Vram.asm: Vram.c Vram.h Chars.h VVram.h Item.h Sprite.h \
 VVram.asm: VVram.c VVram.h Chars.h Sprite.h Movable.h Vram.h 
 Chars.obj: Chars.asm 
 FixedCode.obj: FixedCode.asm 
+Loader.obj: Loader.asm BinSize.inc 
 Math.obj: Math.asm 
 Print.obj: Print.asm 
 ScanKeys.obj: ScanKeys.asm 
@@ -55,19 +56,31 @@ VramA.obj: VramA.asm FixedCode.inc Vram.inc VVram.inc Chars.inc
 VramTrans.obj: VramTrans.asm 
 VVramA.obj: VVramA.asm VVram.inc Chars.inc 
 
+objects = Startup.obj \
+	Actor.obj Car.obj Item.obj Main.obj Man.obj Monster.obj \
+	Movable.obj Point.obj Sprite.obj Stage.obj Stages.obj Status.obj \
+	Vram.obj VVram.obj Chars.obj FixedCode.obj Math.obj Print.obj \
+	ScanKeys.obj Sound.obj StageA.obj VramA.obj VVramA.obj \
+	..\..\cate\cate80.lib
+
 FixedCode.bin: VramTrans.obj makefile
 	LinkLE.exe FixedCode.bin $(fixed) F000 VramTrans.obj
 
 FixedCode.asm FixedCode.inc: FixedCode.bin
 	dotnet script BinAsm.csx
 
-objects = Startup.obj \
-	Actor.obj Car.obj Item.obj Main.obj Man.obj Monster.obj \
-	Movable.obj Point.obj Sprite.obj Stage.obj Stages.obj Status.obj \
-	Vram.obj VVram.obj Chars.obj Math.obj Print.obj ScanKeys.obj \
-	Sound.obj StageA.obj VramA.obj VVramA.obj \
-	FixedCode.obj \
-	..\..\cate\cate80.lib
-
 $(name).ram: $(objects) makefile
 	LinkLE.exe $(name).ram $(cseg) $(dseg) $(objects)
+
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg)
+
+Loader.bin: Loader.obj makefile
+    LinkLE.exe Loader.bin f000 f100 Loader.obj
+
+$(name).d88: $(name).bin Loader.bin makefile disk.csx
+    dotnet script disk.csx $(name)
