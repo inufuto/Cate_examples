@@ -1,6 +1,6 @@
 name=impetusp
 
-all: $(name).ram
+all: $(name).ram $(name).d88
 
 cseg=0100
 dseg=4800-7fff,c000
@@ -78,14 +78,23 @@ objects = Startup.obj \
 	SpritePattern.obj StageA.obj VramA.obj VVramA.obj \
 	..\..\cate\cate80.lib
 
-bin.bin: $(objects) makefile
-	LinkLE.exe bin.bin $(cseg) $(dseg) $(objects)
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+	copy $(name).symbols.txt ~.symbols.txt /y
 
-BinSize.inc: bin.bin BinSize.csx
-	dotnet script BinSize.csx bin $(cseg)
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg)
 
-bin.asm : bin.bin BinAsm.csx
-	dotnet script BinAsm.csx bin
+bin.asm : $(name).bin BinAsm.csx
+	dotnet script BinAsm.csx $(name)
 
 $(name).ram: CopyBank.obj bin.obj makefile
 	LinkLE.exe $(name).ram 9000 8f00 CopyBank.obj bin.obj
+	copy $(name).symbols.txt ram.symbols.txt /y
+	copy ~.symbols.txt $(name).symbols.txt /y
+
+Loader.bin: Loader.obj makefile
+    LinkLE.exe Loader.bin d000 9000 Loader.obj
+
+$(name).d88: $(name).bin Loader.bin makefile disk.csx
+    dotnet script disk.csx $(name)
