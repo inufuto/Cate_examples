@@ -87,7 +87,7 @@ MakePatternMono_: public MakePatternMono_
                     dec c
                 while nz | wend
             pop af
-            and not 2
+            and 3
             out (3ch),a
         ei
     pop bc | pop de | pop hl | pop af
@@ -119,7 +119,7 @@ MakePatternColor_: public MakePatternColor_
                     dec c
                 while nz | wend
             pop af
-            and not 2
+            and 3
             out (3ch),a
         ei
     pop bc | pop de | pop hl | pop af

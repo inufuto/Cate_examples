@@ -54,7 +54,6 @@ void Main()
     PrintStatus();
     GroundToVVram();
     VVramChanged = true;
-    _deb();
     DrawAll();
     Sound_Start();
     StartBGM();

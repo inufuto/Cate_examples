@@ -49,7 +49,7 @@ TransPattern:    public TransPattern
                 add a,a
             while p | wend
         pop af
-        and not 06h
+        and 3
         out (3ch),a
     ei
 ret

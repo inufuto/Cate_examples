@@ -15,7 +15,7 @@ static void Show()
 {
     byte c;
     if (Man.dx == 0) {
-        c = Man.c + 3 * 4;
+        c = Man.c + 4 * 4;
     }
     else {
         c = Man.c + ((Man.status & Actor_SeqMask) << 2);
