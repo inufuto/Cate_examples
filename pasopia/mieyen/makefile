@@ -1,6 +1,6 @@
 name=mieyen
 
-all: $(name).ram
+all: $(name).ram $(name).d88
 
 cseg=9000
 dseg=b400
@@ -36,9 +36,10 @@ Status.asm: Status.c Status.h Vram.h Stage.h Main.h Sprite.h \
 	Movable.h Print.h Chars.h 
 Vram.asm: Vram.c Vram.h 
 VVram.asm: VVram.c VVram.h Sprite.h Movable.h Vram.h Chars.h \
-	Point.h Movable.h Sound.h 
+	Point.h Movable.h 
 Chars.obj: Chars.asm 
 CopyMemory.obj: CopyMemory.asm 
+Loader.obj: Loader.asm BinSize.inc 
 Math.obj: Math.asm 
 Print.obj: Print.asm 
 ScanKeys.obj: ScanKeys.asm 
@@ -57,3 +58,16 @@ objects = Startup.obj \
 
 $(name).ram: $(objects) makefile
 	LinkLE.exe $(name).ram $(cseg) $(dseg) $(objects)
+
+
+$(name).bin: $(objects) makefile
+	LinkLE.exe $(name).bin $(cseg) $(dseg) $(objects)
+
+BinSize.inc: $(name).bin BinSize.csx
+	dotnet script BinSize.csx $(name) $(cseg)
+
+Loader.bin: Loader.obj makefile
+    LinkLE.exe Loader.bin d000 d100 Loader.obj
+
+$(name).d88: $(name).bin Loader.bin makefile disk.csx
+    dotnet script disk.csx $(name)
