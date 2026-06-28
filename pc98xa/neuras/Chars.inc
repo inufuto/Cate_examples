@@ -1,0 +1,31 @@
+
+Char_Space equ 0
+Char_Wall equ 0
+Char_MiniCard equ 16
+Char_Card equ 29
+Char_Title equ 81
+Char_N equ 81
+Char_E equ 85
+Char_U equ 89
+Char_R equ 93
+Char_A equ 97
+Char_S equ 101
+Char_Color equ 105
+Char_Remain equ 105
+Char_Solver equ 106
+Char_Monster equ 110
+Char_ClosedCard equ 114
+Char_End equ 118
+
+Pattern_Solver equ 0
+Pattern_Solver_Left equ 0
+Pattern_Solver_Right equ 2
+Pattern_Solver_Up equ 4
+Pattern_Solver_Down equ 6
+Pattern_Monster equ 8
+Pattern_Monster_Left equ 8
+Pattern_Monster_Right equ 10
+Pattern_Monster_Up equ 12
+Pattern_Monster_Down equ 14
+Pattern_Card equ 16
+Pattern_End equ 17
