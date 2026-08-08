@@ -41,27 +41,29 @@ SendBytes:
     stlm $0,3
     ppo &hde
     do
-        ldi $4,(ix+$sx)
-        stl $4
+        ldim $4,(ix+$sx),8
+        stlm $4,8
         sb $3,$sy
     while nz | wend
     xr $0,&h10
 rtn
 PresentVram_: public PresentVram_
-    phsm $4,5
+    phsm $7,8
+    phsm $11,4
         pre ix,Vram_
         ld $0,&h82
         ld $1,$sx
         ld $2,$sx
         do
-            ld $3,BlockWidth
+            ld $3,BlockWidth/8
             cal SendBytes
-            ld $3,VramRowSize-BlockWidth
+            ld $3,VramRowSize/8-BlockWidth/8
             cal SendBytes
             ad $2,$sy
             an $2,3
         while nz | wend
-    ppsm $0,5
+    ppsm $8,4
+    ppsm $0,8
 rtn
 
 

@@ -65,9 +65,9 @@ void Main()
             monsterNum += 3;
         }
         MoveFires();
-        if ((Clock & 3) == 0) {
+        if ((Clock & 1) == 0) {
             DrawAll();
-            Wait(8 / CoordRate);
+            Wait(8 * 2 / CoordRate);
         }
         ++Clock;
         if (FoodCount == 0) {
