@@ -7,7 +7,7 @@ var loaderAddress = int.Parse(Args[2], System.Globalization.NumberStyles.HexNumb
 
 var loader = new byte[0x100];
 int loaderSize;
-using (var stream = new FileStream("Loader.bin", FileMode.Open, FileAccess.Read))
+using (var stream = new FileStream("loader.bin", FileMode.Open, FileAccess.Read))
 {
     loaderSize = stream.Read(loader);
 }
@@ -21,7 +21,7 @@ using (var stream = new FileStream(name + ".bin", FileMode.Open, FileAccess.Read
 }
 
 
-using (var writer = new StreamWriter("Loader.bas", false, Encoding.ASCII))
+using (var writer = new StreamWriter("loader.bas", false, Encoding.ASCII))
 {
     var line = 10;
 

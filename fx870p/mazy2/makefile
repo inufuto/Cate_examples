@@ -1,6 +1,6 @@
 name=mazy2
 
-all: $(name).pbf Clear.bas Loader.bas $(name).bas
+all: $(name).pbf Clear.bas loader.bas $(name)_1.bas
 
 cseg=1cd0 # MODE110(7376)
 dseg=4200
@@ -62,14 +62,14 @@ $(name).bin: $(objects) makefile
 $(name).pbf: $(objects) makefile
 	LinkLE.exe $(name).pbf $(cseg) $(dseg) $(objects)
 
-Loader.bin: Loader.obj makefile
-	LinkLE.exe Loader.bin $(dseg) $(dseg) Loader.obj
+loader.bin: loader.obj makefile
+	LinkLE.exe loader.bin $(dseg) $(dseg) loader.obj
 
-$(name).bas: $(name).bin BinBas.csx Loader.bin makefile
+$(name)_1.bas: $(name).bin BinBas.csx loader.bin makefile
 	dotnet script BinBas.csx $(name) $(cseg) $(dseg)
 
 Clear.bas: $(name).bin Clear.csx makefile
 	dotnet script Clear.csx $(name)
 
-Loader.bas: MakeLoader.csx $(name).bin Loader.bin makefile
-	dotnet script MakeLoader.csx $(name) $(cseg) $(dseg)
+loader.bas: Makeloader.csx $(name).bin loader.bin makefile
+	dotnet script Makeloader.csx $(name) $(cseg) $(dseg)
