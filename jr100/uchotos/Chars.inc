@@ -1,0 +1,43 @@
+
+Char_Ladder equ 128
+Char_Ladder_Left equ 128
+Char_Ladder_Right equ 129
+Char_Floor equ 130
+Char_Item equ 131
+Char_Fire equ 135
+Char_Monster equ 139
+Char_Monster_Left equ 139
+Char_Monster_Right equ 143
+Char_Monster_Fall equ 147
+Char_Oneup equ 151
+Char_Man equ 155
+Char_End equ 159
+
+Char_Space equ 0
+
+Ptn_Ladder equ 0
+Ptn_Ladder_Left equ 0
+Ptn_Ladder_Right equ 1
+Ptn_Floor equ 2
+Ptn_Item equ 3
+Ptn_Fire equ 7
+Ptn_Monster equ 11
+Ptn_Monster_Left equ 11
+Ptn_Monster_Right equ 15
+Ptn_Monster_Fall equ 19
+Ptn_Oneup equ 23
+Ptn_Man equ 27
+Ptn_Man_Left equ 27
+Ptn_Man_Left_Stop equ 27
+Ptn_Man_Left0 equ 31
+Ptn_Man_Left1 equ 35
+Ptn_Man_Left2 equ 39
+Ptn_Man_Right equ 43
+Ptn_Man_Right_Stop equ 43
+Ptn_Man_Right0 equ 47
+Ptn_Man_Right1 equ 51
+Ptn_Man_Right2 equ 55
+Ptn_Man_Climb equ 59
+Ptn_Man_Climb0 equ 59
+Ptn_Man_Climb1 equ 63
+Ptn_End equ 67

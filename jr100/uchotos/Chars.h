@@ -1,0 +1,43 @@
+
+constexpr byte Char_Ladder = 0x80;
+constexpr byte Char_Ladder_Left = 0x80;
+constexpr byte Char_Ladder_Right = 0x81;
+constexpr byte Char_Floor = 0x82;
+constexpr byte Char_Item = 0x83;
+constexpr byte Char_Fire = 0x87;
+constexpr byte Char_Monster = 0x8B;
+constexpr byte Char_Monster_Left = 0x8B;
+constexpr byte Char_Monster_Right = 0x8F;
+constexpr byte Char_Monster_Fall = 0x93;
+constexpr byte Char_Oneup = 0x97;
+constexpr byte Char_Man = 0x9B;
+constexpr byte Char_End = 0x9F;
+
+constexpr byte Char_Space = 0x0;
+
+constexpr byte Ptn_Ladder = 0x0;
+constexpr byte Ptn_Ladder_Left = 0x0;
+constexpr byte Ptn_Ladder_Right = 0x1;
+constexpr byte Ptn_Floor = 0x2;
+constexpr byte Ptn_Item = 0x3;
+constexpr byte Ptn_Fire = 0x7;
+constexpr byte Ptn_Monster = 0xB;
+constexpr byte Ptn_Monster_Left = 0xB;
+constexpr byte Ptn_Monster_Right = 0xF;
+constexpr byte Ptn_Monster_Fall = 0x13;
+constexpr byte Ptn_Oneup = 0x17;
+constexpr byte Ptn_Man = 0x1B;
+constexpr byte Ptn_Man_Left = 0x1B;
+constexpr byte Ptn_Man_Left_Stop = 0x1B;
+constexpr byte Ptn_Man_Left0 = 0x1F;
+constexpr byte Ptn_Man_Left1 = 0x23;
+constexpr byte Ptn_Man_Left2 = 0x27;
+constexpr byte Ptn_Man_Right = 0x2B;
+constexpr byte Ptn_Man_Right_Stop = 0x2B;
+constexpr byte Ptn_Man_Right0 = 0x2F;
+constexpr byte Ptn_Man_Right1 = 0x33;
+constexpr byte Ptn_Man_Right2 = 0x37;
+constexpr byte Ptn_Man_Climb = 0x3B;
+constexpr byte Ptn_Man_Climb0 = 0x3B;
+constexpr byte Ptn_Man_Climb1 = 0x3F;
+constexpr byte Ptn_End = 0x43;
