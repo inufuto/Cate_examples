@@ -2,8 +2,9 @@
 #include "Vram.h"
 #include "VVram.h"
 
-constexpr byte Invalidpattern = 0xff;
-constexpr byte MaxY = VVramHeight * 8 - 16;
+constexpr byte InvalidPattern = 0xff;
+constexpr byte MaxX = (VVramWidth - 2) * CoordRate;
+constexpr byte MaxY = (VVramHeight - 2) * CoordRate;
 
 Sprite[SpriteCount] Sprites;
 
@@ -11,8 +12,8 @@ void HideAllSprites()
 {
     ptr<Sprite> p;
     for (p : Sprites) {
-        p->pattern = Invalidpattern;
-        p->oldPattern = Invalidpattern;
+        p->pattern = InvalidPattern;
+        p->oldPattern = InvalidPattern;
     }
 }
 
@@ -31,7 +32,7 @@ void HideSprite(byte index)
 {
     ptr<Sprite> p;
     p = Sprites + index;
-    p->pattern = Invalidpattern;
+    p->pattern = InvalidPattern;
 }
 
 
@@ -39,7 +40,11 @@ void EraseSprites()
 {
     ptr<Sprite> p;
     for (p : Sprites) {
-        if (p->oldPattern != Invalidpattern && p->oldY <= MaxY) {
+        if (
+            p->oldPattern != InvalidPattern &&
+            p->oldX <= MaxX &&
+            p->oldY <= MaxY
+        ) {
             EraseBackup(p->oldX, p->oldY);
         }
     }
@@ -50,7 +55,11 @@ void DrawSprites()
 {
     ptr<Sprite> p;
     for (p : Sprites) {
-        if (p->pattern != Invalidpattern && p->y <= MaxY) {
+        if (
+            p->pattern != InvalidPattern &&
+            p->x <= MaxX &&
+            p->y <= MaxY
+        ) {
             DrawSprite(p->x, p->y, p->pattern);
         }
         p->oldX = p->x;
