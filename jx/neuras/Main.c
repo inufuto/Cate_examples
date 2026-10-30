@@ -60,7 +60,7 @@ play:
         DrawAll();
         Sound_Start();
         TimeCount = TimeRate;
-        // StartBGM();
+        StartBGM();
 
         do {
             // if (ScanStop()) goto exit;
@@ -74,7 +74,7 @@ play:
             // UpdateSprites();
 
             if (SolverStatus == Solver_Status_Die) {
-                // StopBGM();
+                StopBGM();
                 EndSolver();
                 lose:
                 --RemainSolverCount;
@@ -90,7 +90,7 @@ play:
                 TimeCount = TimeRate;
                 PrintTime();
                 if (StageTime == 0) {
-                    // StopBGM();
+                    StopBGM();
                     PrintTimeUp();
                     repeat (15) {
                         Sound_Loose();
@@ -107,7 +107,7 @@ play:
                 s -= 3;
             }
         } while (RemainCardCount != 0);
-        // StopBGM();
+        StopBGM();
         Sound_Clear();
         while (StageTime >= BonusRate) {
             AddScore(1);

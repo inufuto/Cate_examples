@@ -1,2 +1,2 @@
 BinTop equ 8000h
-BinSize equ 10907
+BinSize equ 10919
