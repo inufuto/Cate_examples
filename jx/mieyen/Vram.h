@@ -12,4 +12,6 @@ extern void BeginDraw();
 extern void EndDraw();
 extern void DrawSprite(byte x, byte y, byte pattern);
 
+extern void DrawAll();
 extern word Put2C(word vram, byte c);
+extern word Erase2(word vram);

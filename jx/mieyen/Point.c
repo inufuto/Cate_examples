@@ -1,23 +1,25 @@
+#include "Movable.h"
 #include "Point.h"
 #include "Sprite.h"
 #include "Main.h"
 #include "Chars.h"
 
-// constexpr byte SpriteColor = 14;
-constexpr byte MaxCount = Sprite_End - Sprite_Point; 
-constexpr byte MaxTime = 6;
+constexpr byte Count = 2;
+constexpr byte InvalidY = 0xe0;
+constexpr byte Time = 6;
 static const word[] Values = { 10, 20, 40, 80 };
 
-Movable[MaxCount] Points;
+Point[Count] Points;
 
 
 void InitPoints()
 {
-    byte sprite = Sprite_Point;
-    ptr<Movable> pPoint;
+    ptr<Point> pPoint;
+    byte sprite;
+    sprite = Sprite_Point;
     for (pPoint: Points) {
-        pPoint->status = 0;
-        pPoint->sprite = sprite;
+        pPoint->_.y = InvalidY;
+        pPoint->_.sprite = sprite;
         HideSprite(sprite);
         ++sprite;
     }
@@ -26,33 +28,33 @@ void InitPoints()
 
 void StartPoint(byte x, byte y, byte rate)
 {
+    ptr<Point> pPoint;
+    if (rate >= 4) rate = 3;
     AddScore(Values[rate]);
-    ptr<Movable> pPoint;
     for (pPoint: Points) {
-        if ((pPoint->status & Movable_Live) != 0) continue;
-        pPoint->status = Movable_Live | MaxTime << CoordShift;
-        pPoint->x = x;
-        pPoint->y = y;
-        ShowSprite(pPoint, Pattern_Point + rate);
-        return;
+        if (pPoint->_.y == InvalidY) {
+            pPoint->_.x = x;
+            pPoint->_.y = y;
+            pPoint->clock = Time << CoordShift;
+            ShowSprite(&pPoint->_, Pattern_Point + rate);
+            return;
+        }
     }
 }
 
 
 void UpdatePoints()
 {
-    ptr<Movable> pPoint;
+    ptr<Point> pPoint;
     for (pPoint: Points) {
-        byte status = pPoint->status;
-        if ((status & Movable_Live) == 0) continue;
-        byte time = status & ~Movable_Live;
-        if (time == 0) {
-            pPoint->status = 0;
-            HideSprite(pPoint->sprite);
-        }
-        else {
-            --time;
-            pPoint->status = Movable_Live | time;
+        if (pPoint->_.y != InvalidY) {
+            if (pPoint->clock == 0) {
+                pPoint->_.y = InvalidY;
+                HideSprite(pPoint->_.sprite);
+            }
+            else {
+                --pPoint->clock;
+            }
         }
     }
 }

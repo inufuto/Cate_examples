@@ -1,48 +1,53 @@
 #include "Movable.h"
 #include "Sprite.h"
 #include "Vram.h"
+#include "VVram.h"
 
 constexpr byte InvalidPattern = 0xff;
-// constexpr byte MaxY = VramHeight * CharHeight - CharHeight * 2;
 
 struct Sprite {
     byte x, y, pattern;
+    byte oldX, oldY, oldPattern;
 };
 Sprite[Sprite_End] Sprites;
 
 void HideAllSprites()
 {
-    ptr<Sprite> pSprite;
-    for (pSprite : Sprites) {
-        pSprite->pattern = InvalidPattern;
+    ptr<Sprite> p;
+    for (p : Sprites) {
+        p->pattern = InvalidPattern;
+        p->oldPattern = InvalidPattern;
     }
 }
 
 
 void ShowSprite(ptr<Movable> pMovable, byte pattern)
 {
-    ptr<Sprite> pSprite;
-    pSprite = Sprites + pMovable->sprite;
-    pSprite->x = pMovable->x;
-    pSprite->y = pMovable->y;
-    pSprite->pattern = pattern;
+    ptr<Sprite> p;
+    p = Sprites + pMovable->sprite;
+    p->x = pMovable->x;
+    p->y = pMovable->y;
+    p->pattern = pattern;
 }
 
 
 void HideSprite(byte index) 
 {
-    ptr<Sprite> pSprite;
-    pSprite = Sprites + index;
-    pSprite->pattern = InvalidPattern;
+    ptr<Sprite> p;
+    p = Sprites + index;
+    p->pattern = InvalidPattern;
 }
 
 
 void DrawSprites()
 {
-    ptr<Sprite> pSprite;
-    for (pSprite : Sprites) {
-        if (pSprite->pattern != InvalidPattern) {
-            DrawSprite(pSprite->x, pSprite->y, pSprite->pattern);
+    ptr<Sprite> p;
+    for (p : Sprites) {
+        if (p->pattern != InvalidPattern) {
+            DrawSprite(p->x, p->y, p->pattern);
         }
+        p->oldX = p->x;
+        p->oldY = p->y;
+        p->oldPattern = p->pattern;
     }
 }

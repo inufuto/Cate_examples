@@ -1,6 +1,10 @@
-#include "Movable.h"
+struct Point
+{
+    Movable _;
+    byte clock;
+};
 
-extern Movable[] Points;
+extern Point[] Points;
 
 extern void InitPoints();
 extern void StartPoint(byte x, byte y, byte rate);

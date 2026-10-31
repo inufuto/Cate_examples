@@ -11,7 +11,7 @@ Dcsg_NoiseVolume equ 70h
 
 MinVolume equ 63
 
-Tempo equ 180
+tempo equ 170
 
 count equ 3
 Channel_Ptr equ 0
@@ -36,7 +36,7 @@ ret
 
 SoundHandler: public SoundHandler
     mov ax,[time]
-    sub ax,Tempo
+    sub ax,tempo
     if c
         push ax | push bx | push dx | push si
             mov si,Channels
@@ -71,17 +71,17 @@ SoundHandler: public SoundHandler
                         mov [si+Channel_Ptr],bx
                         or al,al
                         if nz
-                            add al,al
-                            xor ah,ah
-                            add ax,cycles
                             push bx
-                                mov bx,ax
-                                mov al,dl
+                                dec al
+                                mov bl,al
+                                xor bh,bh
+                                add bx,bx
+                                add bx,cycles
+                                mov ax,[bx]
+                                or al,dl
                                 or al,80h
-                                or al,[bx]
                                 out DcsgPort,al
-                                inc bx
-                                mov al,[bx]
+                                mov al,ah
                                 out DcsgPort,al
                                 cmp dl,Dcsg_ToneC
                                 if z
@@ -139,10 +139,10 @@ ret
 loose_notes:
     defb 1,A3, 0
 Sound_Loose_: public Sound_Loose_
-    push bx
+    push ax | push bx
         mov bx,loose_notes
         call MelodyWait
-    pop bx
+    pop bx | pop ax
 ret
 
 
@@ -150,112 +150,98 @@ hit_notes:
     defb 1,F4, 1,G4, 1,A4, 1,B4, 1,C5, 1,D5, 1,E5, 1,F5
     defb 0 
 Sound_Hit_: public Sound_Hit_
-    push bx
+    push ax | push bx
         mov bx,hit_notes
         call Melody
-    pop bx
+    pop bx | pop ax
 ret
 
 
-stole_notes:
-    defb 1,F5, 1,E5, 1,D5, 1,C5, 1,B4, 1,A4, 1,G4, 1,F4, 0
+freeze_notes:
+    defb 1,F5, 1,E5, 1,D5, 1,C5, 1,B4, 1,A4, 1,G4, 1,F4
     defb 0 
-Sound_Stole_: public Sound_Stole_
-    push bx
-        mov bx,stole_notes
+Sound_Freeze_: public Sound_Freeze_
+    push ax | push bx
+        mov bx,freeze_notes
         call Melody
-    pop bx
+    pop bx | pop ax
 ret
 
 
-fire_notes:
-    defb 1,F5, 1,D5S, 1,C5S, 1,B4, 1,A4, 1,G5, 0
-Sound_Fire_: public Sound_Fire_
-    push bx
-        mov bx,fire_notes
-        call Melody
-    pop bx
-ret
-
-
-bonus_notes:
-    defb 1,C4, 1, C4S, 1,D4, 1,F4, 1,A4, 1,C5, 0
-Sound_Bonus_: public Sound_Bonus_
-    push bx
-        mov bx,bonus_notes
-        call Melody
-    pop bx
+beep_notes:
+    defb 1,A4, 0
+Sound_Beep_: public Sound_Beep_
+    push ax | push bx
+        mov bx,beep_notes
+        call MelodyWait
+    pop bx | pop ax
 ret
 
 
 start_notes: 
-    defb N4,C4, N4,E4, N8,G4, N4,E4, N4,F4
-    defb N8,F4, N4,A4, N8,C5, N4P,A4 
-    defb N2P,C5, N4,0
+    defb N4,C5, N4,C5, N4,G4, N4,G4, N8L,E5, N8R,D5, N8L,E5, N8R+N4,D5
+    defb N4,D5, N2P,C5, N4,0
     defb 0
 Sound_Start_: public Sound_Start_
-    push bx
+    push ax | push bx
         mov bx,start_notes
         call MelodyWait
-    pop bx
+    pop bx | pop ax
 ret
 
 clear_notes: 
-    defb N8,A4, N8,A4, N8,G4, N8,F4, N8,G4, N4,A4, N4,B4
-    defb N8,B4, N8,A4, N8,G4, N8,A4, N4,B4, N8+N2,C5, N2,0
+    defb N4,C4, N4,E4, N4+N8L,G4, N4,A4 
+    defb N8R,A4, N8L,G4, N8R,F4, N8L,G4, N8R,G4, N8L,A4, N8R,B4
+    defb N2P,C5, N4,0
     defb 0
 Sound_Clear_: public Sound_Clear_
-    push bx
+    push ax | push bx
         mov bx,clear_notes
         call MelodyWait
-    pop bx
+    pop bx | pop ax
 ret
 
 over_notes: 
-    defb N8,C5, N8,F4, N8,A4, N8,E4,  N8,G4, N8,A4, N8,B4, N8,C5
-    defb N2P,C5, N4,0
+    defb N8L,C5, N8R,C5, N8L,B4, N8R,B4, N8L,A4, N8R,A4, N8L,G4, N8R,E4
+    defb N8L,G4, N8R,G4, N8L,A4, N8R,B4, N2,C5
     defb 0
 Sound_GameOver_: public Sound_GameOver_
-    push bx
+    push ax | push bx
         mov bx,over_notes
         call MelodyWait
-    pop bx
+    pop bx | pop ax
 ret
 
 
 BGM_B:
-    defb N4,C4, N4,G4, N8,C4, N4,G4, N4,A4
-    defb N8,A4, N8,G4, N8,G4, N8,F4, N8,F4, N8,E4, N8,E4
-    defb N4,D4, N4,D4, N8,D4, N4,E4, N4P,D4
-    defb N2P,0
-
-    defb N4,C4, N4,G4, N8,C4, N4,G4, N4,A4
-    defb N8,A4, N8,G4, N8,G4, N8,F4, N8,F4, N8,E4, N8,E4
-    defb N4,F4, N4,F4, N8,F4, N4,A4, N4P,G4
-    defb N2P,0
-
-    defb N8,E4, N8,E4, N8,E4, N4,E4, N8,E4, N4,A4
-    defb N8,D4, N8,D4, N8,D4, N4,D4, N8,D4, N4,G4
-    defb N8,0, N8,A4, N8,0, N8,G4, N8,0, N8,F4, N8,0, N8,E4
-    defb N4,D4, N4,E4, N2,C4
-
+    defb N4,C5, N4,C5, N4,G4, N4,G4, N8L,E5, N8R,D5, N8L,E5, N2,D5, N8R,0 ; 3-5
+    defb N4,E5, N4,G5, N8L,D5, N8R,C5, N8L,D5, N1,E5, N8R,0 ; 5-6
+    defb N4,F5, N4,F5, N4,E5, N4,E5, N8L,D5, N8R,D5, N8L,D5, N2,E5, N8R,0 ; 7-8
+    defb N4,F5, N4,F5, N4,E5, N4,E5, N8L,G5, N8R,G5, N8L,G5, N2,D5, N8R,0 ; 9-10
+    
+    defb N4,C5, N4,C5, N4,G4, N4,G4, N8L,E5, N8R,D5, N8L,E5, N2,D5, N8R,0 ; 11-12
+    defb N4,E5, N4,G5, N8L,D5, N8R,C5, N8L,D5, N1,E5, N8R,0 ; 13-14
+    defb N4,F5, N4,F5, N4,E5, N4,E5, N8L,G5, N8R,G5, N8L,G5, N8R+N4,E5, N4,D5 ; 15-16
+    defb N4,C5, N4,G4, N8L,C5, N4,D5, N1,C5, N8R,0 ; 17-18
+    
     defb 0ffh
 BGM_C:
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 3
-    defb N8,A2, N4,0, N4P,C3, N8,E3, N8,0; 4
-    defb N8,D3, N4,0, N4P,F3, N8,A3, N8,0; 5
-    defb N8,G3, N4,0, N4P,B2, N8,D3, N8,0; 6
-
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 7
-    defb N8,A2, N4,0, N4P,C3, N8,E3, N8,0; 8
-    defb N8,F3, N4,0, N8,F3, N8,G3, N4,0, N8,G3; 9
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 10
-
-    defb N8,C3, N4,0, N8,C3, N8,A2, N4,0, N8,A2; 11
-    defb N8,D3, N4,0, N8,D3, N8,G3, N4,0, N8,G3; 12
-    defb N8,0, N8,F3, N8,0, N8,F3, N8,0, N8,G3, N8,0, N8,G3
-    defb N8,C3, N4,0, N4P,E3, N8,G3, N8,0; 14
-
+    defb N8L,C3, N8R,0, N8L,C3, N8R,0, N4,C3, N8L,0, N8R,C3 ; 19
+    defb N8L,0, N8R,C3, N8L,0, N8R,C3, N8L,C3, N8R,D3, N8L,C3, N8R,D3S ; 20
+    defb N8L,E3, N8R,B2, N8L,E3, N8R,0, N4,E3, N8L,0, N4,A2 ; 21-
+    defb N8R,A2, N8L,0, N8R,A2, N8L,A2, N8R,0, N8L,A2, N8R,0 ; 22
+    defb N8L,F3, N8R,C3, N8L,F3, N8R,0, N4,F3, N8L,0, N4,D3 ; 23-
+    defb N8R,D3, N8L,0, N8R,D3, N8L,D3, N8R,0, N8L,D3, N8R,0 ; 24
+    defb N8L,F3, N8R,0, N8L,F3, N8R,0, N4,F3, N8L,0, N4,G3 ; 25-
+    defb N8R,G3, N8L,0, N8R,D3, N8L,G3, N8R,D3, N8L,G3, N8R,0 ; 26
+    defb N8L,C3, N8R,0, N8L,C3, N8R,0, N4,C3, N8L,0, N8R,C3 ; 27
+    defb N8L,0, N8R,C3, N8L,0, N8R,C3, N8L,C3, N8R,D3, N8L,C3, N8R,D3S ; 28
+    defb N8L,E3, N8R,B2, N8L,E3, N8R,0, N4,E3, N8L,0, N4,A2 ; 29-
+    defb N8R,A2, N8L,0, N8R,E3, N8L,A2, N8R,E3, N8L,A2, N8R,0 ; 30
+    defb N8L,F3, N8R,0, N8L,F3, N8R,0, N4,F3, N8L,0, N4,E3 ; 31-
+    defb N8R,E3, N8L,0, N8R,E3, N8L,E3, N8R,0, N8L,E3, N8R,0 ; 32
+    defb N8L,C3, N8R,0, N8L,C3, N8R,0, N4,G3, N8L,0, N4,C3 ;33-
+    defb N8R,C3, N8L,0, N8R,C3, N8L,C3, N8R,0, N8L,C3, N8R,0 ; 34
     defb 0ffh
 
 StartBGM_: public StartBGM_
@@ -293,6 +279,16 @@ StopBGM_: public StopBGM_
 ret
 
 
+N8 equ 6
+N8L equ 8
+N8R equ 4
+N8P equ N8*3/2
+N4 equ N8*2
+N4P equ N4*3/2
+N2 equ N4*2
+N2P equ N2*3/2
+N1 equ N2*2
+
 A2 equ 1
 A2S equ 2
 B2 equ 3
@@ -328,14 +324,6 @@ E5 equ 32
 F5 equ 33
 F5S equ 34
 G5 equ 35
-
-N8 equ 6
-N8P equ N8*3/2
-N4 equ N8*2
-N4P equ N4*3/2
-N2 equ N4*2
-N2P equ N2*3/2
-N1 equ N2*2
 
 cycles:
 defb 8,63 ; A2

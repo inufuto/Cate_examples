@@ -1,4 +1,4 @@
-RndCount equ 32
+; RndCount equ 32
 
 ; dseg
 ; RndIndex_: public RndIndex_

@@ -1,123 +1,130 @@
 #include "Man.h"
-#include "Sprite.h"
-#include "Chars.h"
-#include "Stage.h"
 #include "ScanKeys.h"
+#include "Chars.h"
+#include "Sprite.h"
+#include "Stage.h"
+#include "Actor.h"
 #include "Sound.h"
-#include "Fire.h"
-#include "Main.h"
 #include "VVram.h"
+#include "Monster.h"
 
 extern void _deb();
 
-// constexpr byte SpriteColor = 15;
+constexpr byte Man_ButtonOn = 0x40;
+constexpr byte Man_ArrowOn = 0x20;
+constexpr byte FreezeTime = 20 * CoordRate;
 
-static const byte[] Keys = { Keys_Left, Keys_Right, Keys_Up, Keys_Down };
+static const byte[] KeyCodes = {
+    Keys_Left, Keys_Right, Keys_Up, Keys_Down
+};
 
-Man Man;
-ptr<Direction> pManDirection;
-
+Actor Man;
+static byte ArrowX, ArrowY;
 
 static void Show()
 {
-    ShowMovable(&Man, Pattern_Man);
+    byte pattern;
+    pattern = (Man.status & Actor_PatternMask) + Pattern_Man;
+    ShowSprite(&Man._, pattern);
 }
+
 
 void InitMan()
 {
-    Man.sprite = Sprite_Man;
-    Man.status = Movable_Live;
+    Man._.sprite = Sprite_Man;
+    Man.status = Actor_Live | Direction_Right;
     Man.dx = 0;
     Man.dy = 0;
-    pManDirection = Directions + Direction_Left;
-    LocateMovable(&Man, pStage->start);
+    LocateMovable(&Man._, pStage->start);
     Show();
 }
 
 
 void MoveMan()
 {
-    static byte clock;
-    constexpr byte FireInterval = CoordRate * 4 - 1;
-    static byte keyCount;
-    // if ((Man.status & Movable_Loose) == 0) {
-        if (((Man.x | Man.y) & CoordMask) == 0) {
-            byte key = ScanKeys();
-            if ((key & Keys_Dir) != 0) {
-                ptr<Direction> pDirection = Directions;
-                ptr<byte> pKey = Keys;
-                repeat (4) {
-                    if ((key & *pKey) != 0) {
-                        if (CanMove(&Man, pDirection->dx, pDirection->dy)) {
-                            pManDirection = pDirection;
-                            goto move;
-                        }
-                        else if (CanMove(&Man, pManDirection->dx, pManDirection->dy)) {
-                            goto move;
-                        }
+    if ((Man.status & Actor_Live) != 0) {
+        byte key;
+        key = ScanKeys();
+        if (IsOnCellGrid(&Man._)) {
+            byte newDirection;
+            ptr<byte> pKeyCode;
+            newDirection = 0;
+            for (pKeyCode: KeyCodes) {
+                if ((key & *pKeyCode) != 0) {
+                    if (CanMove(&Man, newDirection)) {
+                        SetDirection(&Man, newDirection);
+                        goto move;
                     }
-                    ++pDirection;
-                    ++pKey;
+                    {
+                        byte oldDirection;
+                        oldDirection = Man.status & Actor_DirectionMask;
+                        if (CanMove(&Man,oldDirection)) goto move;
+                    }
                 }
+                newDirection += 2;
             }
+            stop:
             Man.dx = 0;
             Man.dy = 0;
-            goto button;
-            move:;
-            SetDirection(&Man, pManDirection);
-            button:
-            if ((key & Keys_Button0) != 0) {
-                if (keyCount == 0) {
-                    StartFire();
-                    keyCount = FireInterval;
+            move:
+            if ((key & Keys_Button0) != 0 && (Man.status & (Man_ButtonOn | Man_ArrowOn)) == 0) {
+                byte x, y;
+                Man.status |= Man_ButtonOn;
+                x = Man._.x >> CoordShift;
+                y = Man._.y >> CoordShift;
+                if (GetCell(x >> 1, y >> 1) == Cell_Space) {
+                    ArrowX = x;
+                    ArrowY = y;
+                    Man.status |= Man_ArrowOn;
+                    VPut2CXY(x, y, Char_Arrow_Null);
+                    Sound_Beep();
                 }
-                else {
-                    --keyCount;
-                }
-            }
-            else {
-                keyCount = 0;
             }
         }
-        MoveMovable(&Man);
-        if (IsOnGrid(&Man)) {
-            byte column = ToGrid(Man.x);
-            byte row = ToGrid(Man.y);
-            byte cell = GetCell(column, row);
-            if ((cell & (Cell_Dot | Cell_Food)) == 0) {
-                SetCell(column, row, cell | Cell_Dot);
-                AddScore(1);
-            }
+        else if ((Man.status & Man_ArrowOn) != 0) {
+            byte direction;
+            Man.status &= ~Man_ArrowOn;
+            direction = Man.status & Actor_DirectionMask;
+            SetCell(ArrowX >> 1, ArrowY >> 1, (direction >> 1) | Cell_Arrow);
+            VPut2CXY(ArrowX, ArrowY, (direction << 1) + Char_Arrow);
         }
-    // }
-    // else {
-    //     if ((clock & CoordMask) == 0) {
-    //         Man.status += 2;
-    //         if ((Man.status & Movable_Pattern) == 0) {
-    //             Man.status = Man.status & ~Movable_Loose;
-    //         }
-    //     }
-    // }
-    Show();
-    ++clock;
+        if ((key & Keys_Button0) == 0) {
+            Man.status &= ~Man_ButtonOn;
+        }
+        Move(&Man);
+        Show();
+        if (IsOnCoordGrid(&Man._)) {
+            HitManMonsters();
+        }
+    }
+    else {
+        if ((Man.clock & CoordMask) == 0) {
+            static const byte[] patterns = {
+                Pattern_Man + 0,
+                Pattern_Man + 4,
+                Pattern_Man + 2,
+                Pattern_Man + 6,
+            };
+            byte pattern;
+            pattern = patterns[(Man.clock >> CoordShift) & 3];
+            ShowSprite(&Man._, pattern);
+        }
+        --Man.clock;
+        if (Man.clock == 0) {
+            Man.status |= Actor_Live;
+            Show();
+        }
+    }
 }
 
 
-// void FreezeMan()
-// {
-//     Man.status = (Man.status & ~Movable_Pattern) | (Movable_Loose | Movable_Live);
-//     Sound_Stole();
-// }
-
-
-void LooseMan()
+bool HitMan(ptr<Movable> pMovable)
 {
-    byte i;
-    i = 0;
-    do {
-        ShowSprite(&Man, Pattern_Man + ((i & 3) << 1));
-        DrawAll();
-        Sound_Loose();
-        ++i;
-    } while (i < 8);
+    if ((Man.status & Actor_Live) != 0 && IsNear(pMovable, &Man._)) {
+        Man.status &= ~Actor_Live;
+        Man.clock = FreezeTime;
+        Sound_Freeze();
+        return true;
+    }
+    return false;
 }

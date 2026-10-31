@@ -47,6 +47,7 @@ boot:
             push ax
                 mov al,'|' | call PrintC
             pop ax
+                        _deb: public _deb
             shl al,1 | add bh,al
             mov cl,1 ; sector
             inc dh ; head
