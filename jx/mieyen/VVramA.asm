@@ -1,23 +1,11 @@
 include "VVram.inc"
-include "Vram.inc"
-include "Chars.inc"
 
 ext VVram_
-ext CellMap_,LeftX_,DotOffset_
-
-ColumnCount equ 16*8
-FloorCount equ 5
-FloorHeight equ 4
-ColumnsPerByte equ 4
-MapWidth equ ColumnCount/ColumnsPerByte
-
 
 ; ptr<byte> VVramPtr(byte x, byte y);
 cseg
 VVramPtr_: public VVramPtr_
     push dx
-        inc al
-        inc dl
         mov dh,al
         mov al,VVramWidth
         mul dl
@@ -26,4 +14,15 @@ VVramPtr_: public VVramPtr_
         add ax,dx
         add ax,VVram_
     pop dx
+ret
+
+
+; ptr<byte> VPut(ptr<byte> pVVram, byte c);
+cseg
+VPut_: public VPut_
+    push bx
+        mov bx,ax
+        mov [bx],dl
+    pop bx
+    inc ax
 ret

@@ -1,47 +1,45 @@
 #include "Main.h"
 #include "Status.h"
-#include "Movable.h"
 #include "ScanKeys.h"
 #include "Stage.h"
+#include "Sprite.h"
 #include "Sound.h"
 #include "Man.h"
-#include "Sprite.h"
-#include "Item.h"
-#include "Car.h"
 #include "Monster.h"
+#include "Fire.h"
 #include "Point.h"
-#include "Vram.h"
+#include "VVram.h"
 
 constexpr byte MaxTimeDenom = 50 / (8 / CoordRate);
-constexpr byte BonusRate = 4;
 
 word Score;
 word HiScore;
 byte RemainCount;
 byte CurrentStage;
-byte StageTime;
+byte FoodCount;
 static byte Clock;
+static sbyte monsterNum;
 
+extern void _deb();
 void Main()
 {
-    byte key, timeDenom;
-    sbyte monsterNum;
-
     HiScore = 0;
     Score = 0;
     CurrentStage = 0;
     RemainCount = 3;
-    StageTime = 0;
+    FoodCount = 0;
 
     title:
     Title();
+    byte key;
     do {
         // if (ScanStop()) goto exit;
         key = ScanKeys();
     } while ((key & (Keys_Button0 | Keys_Button1)) == 0);
+
     play:
     Score = 0;
-    if ((key & Keys_Button1) == 0) {
+    if ((key & Keys_Button1) == 0 && (key & Keys_Dir) == 0) {
         CurrentStage = 0;
     }
     RemainCount = 3;
@@ -51,63 +49,51 @@ void Main()
     InitTrying();
     Clock = 0;
     monsterNum = 0;
-    timeDenom = MaxTimeDenom;
-    Sound_Start();
+    byte timeDenom = MaxTimeDenom;
+    Sound_Start();     
     StartBGM();
     do {
+        //     if (ScanStop()) goto exit;
         if ((Clock & 3) == 0) {
-            UpdatePoints();
             MoveMan();
-            if (monsterNum >= 0) {
-                MoveMonsters();
-                monsterNum -= 10;
-            }
-            monsterNum += 3;
-            if ((Clock & 7) == 0) {
-                MoveCars();
-                BlinkItems();
-                DrawAll();
-                WaitTimer(8 * 2 / CoordRate);
-            }
-            --timeDenom;
-            if (timeDenom == 0) {
-                --StageTime;
-                timeDenom = MaxTimeDenom;
-                PrintTime();
-                if (StageTime == 0) {
-                    PrintTimeUp();
-                    WaitTimer(120);
-                    lose:
-                    StopBGM();
-                    // 
-                    --RemainCount;
-                    if (RemainCount > 0) {
-                        goto try;
-                    } 
-                    PrintGameOver();
-                    Sound_GameOver();
-                    goto title;
-                }
-            }
-            if (pLostCar != nullptr) {
-                LooseCar();
-                goto lose;
-            }
+            UpdatePoints();
+        }
+        if ((Clock & 7) == 0) {
+            MoveMonsters();
+        }
+        MoveFires();
+        if ((Clock & 3) == 0) {
+            DrawAll();
+            WaitTimer(8 / CoordRate);
         }
         ++Clock;
-    } while (ItemCount != 0);
-    DrawAll();
+        if (FoodCount == 0) {
+            WaitTimer(30);
+            lose:
+            StopBGM();
+            LooseMan();
+            --RemainCount;
+            if (RemainCount > 0) {
+                goto try;
+            } 
+            PrintGameOver();
+            Sound_GameOver();
+            goto title;
+        }
+        if ((Man.status & Movable_Live) == 0) {
+            goto lose;
+        }
+    } while (MonsterCount != 0);
     WaitTimer(30);
     StopBGM();
     Sound_Clear();
-    while (StageTime >= BonusRate) {
-        AddScore(2);
-        StageTime -= BonusRate;
-        PrintTime();
-        Sound_Beep();
+    while (FoodCount != 0) {
+        --FoodCount;
+        AddScore(50);
+        PrintStatus();
+        Sound_Bonus();
+        WaitTimer(30);
     }
-    StageTime = 0;
-    PrintStatus();
     ++CurrentStage;
     goto stage;
 }
@@ -121,5 +107,6 @@ void AddScore(word pts)
     }
     PrintScore();
 }
+
 
 void _deb(){}

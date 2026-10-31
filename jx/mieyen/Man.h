@@ -1,7 +1,11 @@
-#include "Actor.h"
+#include "Movable.h"
 
-extern Actor Man;
+struct Man : Movable {};
+
+extern Man Man;
+extern ptr<Direction> pManDirection;
 
 extern void InitMan();
 extern void MoveMan();
-extern bool HitMan(ptr<Movable> pMovable);
+// extern void FreezeMan();
+extern void LooseMan();

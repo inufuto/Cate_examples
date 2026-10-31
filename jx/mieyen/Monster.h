@@ -1,13 +1,13 @@
-#include "Actor.h"
+#include "Movable.h"
 
-struct Monster {
-    Actor _;
-    byte startX, startY;
+struct Monster : Movable {
+    byte targetX, targetY;
 };
 
 extern Monster[] Monsters;
+extern byte MonsterCount;
 
 extern void InitMonsters();
+extern void StartMonsters();
 extern void MoveMonsters();
-extern void HitCarMonsters(ptr<Movable> pMovable);
-extern void HitManMonsters();
+extern ptr<Monster> HitMonster(ptr<Movable> pMovable);

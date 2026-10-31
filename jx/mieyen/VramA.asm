@@ -201,12 +201,12 @@ cseg
 EndDraw_: public EndDraw_
 	push ax | push cx | push dx | push bx | push si | push di
         mov ax,VramSegment | mov es,ax
-        mov bx,SpriteLayer+(VVramWidth+1)*2
+        mov bx,SpriteLayer
 		mov si,Backup
 		mov di,Vram+VramRowSize*TopY
-		mov ch,VVramHeight-2
+		mov ch,VVramHeight
 		do
-			mov cl,VVramWidth-2
+			mov cl,VVramWidth
 			do 
 				mov ax,[bx] | inc bx | inc bx
 				or ah,ah
@@ -239,8 +239,7 @@ EndDraw_: public EndDraw_
 				inc si
 				dec cl
 			while nz | wend
-            add bx,2*2
-			add di,VramRowSize-(VVramWidth-2)*VramStep
+			add di,VramRowSize-VVramWidth*VramStep
 			dec ch
 		while nz | wend
 	pop di | pop si | pop bx | pop dx | pop cx | pop ax
@@ -251,14 +250,12 @@ ret
 cseg
 DrawSprite_: public DrawSprite_
 	push ax | push cx | push dx | push bx | push si | push di
-        add al,2
-        add dl,2
         mov dh,al ; dx=(x,y)
         mov bx,dx ; bx=(x,y)
         shr bl,1 ;y grid
         and bh,0feh ;x grid
 		mov al,VVramWidth*2 | mul bl
-		add al,bh | adc ah,0
+		add al,bh
         add ax,SpriteLayer
         mov bx,ax ; bx=pSpriteLayer
 
@@ -578,6 +575,7 @@ MixCenter:
     add si,4
 ret
 MixLeft:
+                    _deb: public _deb
     mov ax,[bx] | inc bx | inc bx
     mov [di],ax | inc di | inc di
     call MixByte
