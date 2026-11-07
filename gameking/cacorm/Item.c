@@ -90,6 +90,7 @@ void EraseItems()
                 }
                 PresentVram();
                 Sound_Hit();
+                WaitTimer(8);
             }
         }
     }

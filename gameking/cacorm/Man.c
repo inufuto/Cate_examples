@@ -127,6 +127,7 @@ void LooseMan()
         ShowSprite(&Man._, patterns[i & 3]);
         PresentVram();
         Sound_Loose();
+        WaitTimer(8);
         ++i;
     } while (i < 8);
 }

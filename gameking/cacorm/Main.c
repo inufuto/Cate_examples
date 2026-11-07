@@ -104,7 +104,9 @@ void Main()
         AddScore(5);
         StageTime -= BonusRate;
         PrintTime();
+        PresentVram();
         Sound_Beep();
+        WaitTimer(8);
     }
     StageTime = 0;
     PrintStatus();
