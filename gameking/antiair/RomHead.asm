@@ -1,11 +1,16 @@
+; Cartridge header template: file offset $00-$201, linked at $8000 (cseg=8000-8201,4000).
+; $8050-$8052 is the BIOS sound table pointer { lo, hi, bank }. MakeSoundRom.csx patches it
+; in the finished ROM image, so keep it as $00,$00,$00 here.
 cseg
-; L8000: public L8000
+	; $8000: title
 	defb $b9,$e3,$d6,$dd,$b4,$fa,$b4,$fa
 	defb $d0,$c7,$b5,$e7,$d7,$d3,$bf,$c6
 	defb $bc,$bc,$d3,$d0,$cf,$de,$b9,$ab
 	defb $cb,$be
 
-    defs $66
+    defs $36		; $801A-$804F
+	defb $00,$00,$00	; $8050: sound table pointer (patched by MakeSoundRom.csx)
+    defs $2d		; $8053-$807F
 ; L8080: public L8080
 	defb $30,$20,$00,$00,$00,$00,$00,$00
 	defb $3f,$3c,$33,$f0,$00,$00,$00,$00
