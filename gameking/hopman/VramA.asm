@@ -92,7 +92,7 @@ ClearScreen_: public ClearScreen_
     pha
         lda #low Vram_ | sta <pDestination
         lda #high Vram_ | sta <pDestination+1
-        ldx #VramHeight*(CharHeight+AsciiHeight*2)
+        ldx #VramHeight*CharHeight+AsciiHeight*2 ; Vram_ + ScorePane_ + StagePane_ (rows of VramWidth bytes)
         do
             ldy #0 | tya
             do

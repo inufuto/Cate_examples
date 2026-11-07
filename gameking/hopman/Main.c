@@ -110,6 +110,7 @@ void Main()
         PrintTime();
         DrawAll();
         Sound_Beep();
+        WaitTimer(8);
     }
     StageTime = 0;
     PrintStatus();

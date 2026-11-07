@@ -107,7 +107,7 @@ DrawSprites: public DrawSprites
             lda Sprite_pattern,x
             cmp #InvalidPattern
             if ne
-                lda Sprite_y,x | sta <yCount
+                lda Sprite_y,x | sta <yPos
                 asl a ;*2
                 clc|adc Sprite_y,x ;*3
                 stz <pDestination+1
@@ -140,7 +140,7 @@ DrawSprites: public DrawSprites
                 phx
                     lda #CharHeight*2 | sta <yCount
                     do
-                        lda <yCount
+                        lda <yPos
                         cmp #32
                         if cc
                             ldy <charOffset
