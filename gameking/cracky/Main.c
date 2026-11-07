@@ -107,6 +107,7 @@ void Main()
         PrintTime();
         DrawAll();
         Sound_Beep();
+        WaitTimer(6);
     }
     StageTime = 0;
     PrintStatus();

@@ -164,6 +164,7 @@ void LooseMan()
         // UpdateSprites();
         DrawAll();
         Sound_Loose();
+        WaitTimer(6);
         ++i;
     } while (i < 8);
 }

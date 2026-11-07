@@ -1,12 +1,17 @@
+; Cartridge header template: file offset $00-$201, linked at $8000 (cseg=8000-8201,4000).
+; $8050-$8052 is the BIOS sound table pointer { lo, hi, bank }. MakeSoundRom.csx patches it
+; in the finished ROM image, so keep it as $00,$00,$00 here.
 cseg
-L8000: public L8000
+	; $8000: title
 	defb $b9,$e3,$d6,$dd,$b4,$fa,$b4,$fa
 	defb $d0,$c7,$b5,$e7,$d7,$d3,$bf,$c6
 	defb $bc,$bc,$d3,$d0,$cf,$de,$b9,$ab
 	defb $cb,$be
 
-    defs $66
-L8080: public L8080
+    defs $36		; $801A-$804F
+	defb $00,$00,$00	; $8050: sound table pointer (patched by MakeSoundRom.csx)
+    defs $2d		; $8053-$807F
+; L8080: public L8080
 	defb $30,$20,$00,$00,$00,$00,$00,$00
 	defb $3f,$3c,$33,$f0,$00,$00,$00,$00
 	defb $00,$00,$00,$03,$fc,$f3,$cc,$ff
@@ -33,7 +38,7 @@ L8080: public L8080
 	defb $00,$00,$00,$03,$ff,$ff,$ff,$ff
 	defb $ff,$00,$00,$00,$00,$00,$00,$00
 	defb $3f,$ff,$ff,$ff,$fc,$00
-L814E: public L814E
+; L814E: public L814E
 	defb $00,$00,$00,$00,$00,$28,$03,$ff
 	defb $ff,$ff,$f0,$00,$00,$22,$00,$22
 	defb $02,$82,$80,$ff,$ff,$ff,$f0,$00
@@ -58,4 +63,4 @@ L814E: public L814E
 	defb $00,$f0,$f3,$c3,$03,$ff,$03,$c0
 	defb $ff,$0f,$00,$00
 
-RomHeadEnd: public RomHeadEnd
+; RomHeadEnd: public RomHeadEnd

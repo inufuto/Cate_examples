@@ -45,14 +45,14 @@ void PrintStatus()
 
 void PrintScore()
 {
-    ptr<byte> pVram;
-    pVram = PrintNumber5(ScorePane, Score);
+    ptr<byte> pVram = PrintNumber5(ScorePane, Score);
     PrintC(pVram, '0');
 }
 
 void PrintTime()
 {
-    PrintByteNumber3(ScorePane + 7, StageTime);
+    ptr<byte> pVram = PrintByteNumber3(ScorePane + 7, StageTime);
+    PrintC(pVram, ' ');
 }
 
 void PrintGameOver()

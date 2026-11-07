@@ -1,7 +1,7 @@
 include "GameKing.inc"
 
 ext Main_
-ext InitSound,SoundHandler
+ext InitSound
 
 dseg
 TimerCount: 
@@ -21,7 +21,8 @@ Startup: public Startup
     lda ExtRom4Port | sta $95
     lda $8f | ora #$02 | sta $8f
     lda #$18 | sta Timer2Port
-    lda #$08 | sta InterruptEnablePort
+    ; BIOSの音声関数は $8E を $3E に書き戻すので、Timer 2(bit3)を $8E 側にも反映しておく
+    lda #$08 | sta $8e | sta InterruptEnablePort
 
     ; lda #$36 or $80 | sta $16
     ; lda #$77 | sta $17
@@ -39,7 +40,6 @@ Handler: public Handler
             adc #128
             pha
                 inc TimerCount
-                jsr SoundHandler
             pla
         endif
         sta Denom
