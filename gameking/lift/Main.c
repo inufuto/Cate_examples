@@ -113,6 +113,7 @@ void Main()
         PrintTime();
         PresentVram();
         Sound_Beep();
+        WaitTimer(8);
     }
     StageTime = 0;
     PrintStatus();

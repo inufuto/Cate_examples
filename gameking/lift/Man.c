@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "Sound.h"
 #include "Vram.h"
+#include "Main.h"
 
 Actor Man;
 
@@ -108,6 +109,7 @@ void LooseMan()
         ShowSprite(&Man._, patterns[i & 3]);
         PresentVram();
         Sound_Loose();
+        WaitTimer(8);
         ++i;
     } while (i < 8);
     Man.status &= ~Actor_Live;

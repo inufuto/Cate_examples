@@ -1,3 +1,5 @@
+.SUFFIXES: .c .asm .obj .wav .adp
+
 name=lift
 
 all: $(name).bin
@@ -10,7 +12,7 @@ zseg=00d0
 	Cate65.exe -65c02 -v2 $*.c
 
 .asm.obj:
-	Asm65.exe -65c02 $*.asm
+	Asm65.exe -65c02 -v2 $*.asm
 
 Actor.asm: Actor.c Movable.h Actor.h Stage.h Lift.h 
 Item.asm: Item.c Item.h Stage.h Stages.h Vram.h Chars.h \
@@ -24,7 +26,7 @@ Main.asm: Main.c Main.h ScanKeys.h Movable.h Sprite.h Movable.h \
 	Lift.h Man.h Actor.h Item.h Point.h Movable.h 
 Man.asm: Man.c Movable.h Actor.h Man.h Actor.h Stage.h \
 	Sprite.h Movable.h Chars.h ScanKeys.h Item.h Sound.h \
-	Vram.h 
+	Vram.h Main.h 
 Math.asm: Math.c Math.h 
 Monster.asm: Monster.c Movable.h Actor.h Monster.h Stages.h Stage.h \
 	Sprite.h Movable.h Chars.h Man.h Actor.h Lift.h 
@@ -55,9 +57,27 @@ objects = RomHead.obj Startup.obj \
 	StageA.obj VramA.obj ZeroPage.obj \
 	..\..\cate\cate65.lib
 
+loose.adp: loose.wav
+hit.adp: hit.wav
+beep.adp: beep.wav
+start.adp: start.wav
+clear.adp: clear.wav
+over.adp: over.wav
+bgm.adp: bgm.wav
+
+adps = \
+	loose.adp \
+	hit.adp \
+	beep.adp \
+	start.adp \
+	clear.adp \
+	over.adp \
+	bgm.adp
+
 _raw.bin: $(objects) makefile
 	LinkLE.exe _raw.bin $(cseg) $(dseg) $(zseg) $(objects)
 	copy _raw.symbols.txt $(name).symbols.txt /y
 
-$(name).bin: _raw.bin MakeRom.csx
-	dotnet script MakeRom.csx $(name)
+$(name).bin: _raw.bin MakeRom.csx $(adps)
+	dotnet script MakeRom.csx _raw2
+	dotnet script MakeSoundRom.csx _raw2.bin $(name).bin $(adps) -r 4

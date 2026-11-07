@@ -1,7 +1,7 @@
 include "GameKing.inc"
 
 ext Main_
-ext InitSound,SoundHandler
+ext InitSound
 
 dseg
 TimerCount: 
@@ -21,12 +21,8 @@ Startup: public Startup
     lda ExtRom4Port | sta $95
     lda $8f | ora #$02 | sta $8f
     lda #$18 | sta Timer2Port
-    lda #$08 | sta InterruptEnablePort
+    lda #$08 | sta $8e | sta InterruptEnablePort
 
-    ; lda #$36 or $80 | sta $16
-    ; lda #$77 | sta $17
-    ; lda #$c8 | sta $12
-    ; lda #$0d | sta $13
     jsr InitSound
 jmp Main_
 
@@ -39,7 +35,6 @@ Handler: public Handler
             adc #128
             pha
                 inc TimerCount
-                jsr SoundHandler
             pla
         endif
         sta Denom
