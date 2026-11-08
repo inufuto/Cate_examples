@@ -1,0 +1,22 @@
+
+constexpr byte Pattern_Man = 0;
+constexpr byte Pattern_Man_Left = 0;
+constexpr byte Pattern_Man_Left0 = 0;
+constexpr byte Pattern_Man_Left1 = 1;
+constexpr byte Pattern_Man_LeftAttack = 2;
+constexpr byte Pattern_Man_Right = 4;
+constexpr byte Pattern_Man_Right0 = 4;
+constexpr byte Pattern_Man_Right1 = 5;
+constexpr byte Pattern_Man_RightAttack = 6;
+constexpr byte Pattern_Man_Up = 8;
+constexpr byte Pattern_Man_Up0 = 8;
+constexpr byte Pattern_Man_Up1 = 9;
+constexpr byte Pattern_Man_UpAttack = 10;
+constexpr byte Pattern_Man_Down = 12;
+constexpr byte Pattern_Man_Down0 = 12;
+constexpr byte Pattern_Man_Down1 = 13;
+constexpr byte Pattern_Man_DownAttack = 14;
+constexpr byte Pattern_Monster = 16;
+constexpr byte Pattern_Ball = 17;
+constexpr byte Pattern_Oneup = 0x12;
+constexpr byte Pattern_End = 0x13;
