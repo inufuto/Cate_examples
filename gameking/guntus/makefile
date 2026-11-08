@@ -1,3 +1,5 @@
+.SUFFIXES: .c .asm .obj .wav .adp
+
 name=guntus
 
 all: $(name).bin
@@ -10,7 +12,10 @@ zseg=00d0
 	Cate65.exe -65c02 -v2 $*.c
 
 .asm.obj:
-	Asm65.exe -65c02 $*.asm
+	Asm65.exe -65c02 -v2 $*.asm
+
+.wav.adp:
+	dotnet script EncodeWav.csx $*.wav $*.adp --no-normalize -r 4
 
 Bang.asm: Bang.c Bang.h Vram.h Sprite.h Stage.h Chars.h \
 	Coord.h 
@@ -68,9 +73,27 @@ objects = RomHead.obj Startup.obj \
 	VVramA.obj ZeroPage.obj \
 	..\..\cate\cate65.lib
 
+fire.adp: fire.wav
+highBang.adp: highBang.wav
+lowBang.adp: lowBang.wav
+up.adp: up.wav
+start.adp: start.wav
+over.adp: over.wav
+bgm.adp: bgm.wav
+
+adps = \
+	fire.adp \
+	highBang.adp \
+	lowBang.adp \
+	up.adp \
+	start.adp \
+	over.adp \
+	bgm.adp
+
 _raw.bin: $(objects) makefile
 	LinkLE.exe _raw.bin $(cseg) $(dseg) $(zseg) $(objects)
 	copy _raw.symbols.txt $(name).symbols.txt /y
 
-$(name).bin: _raw.bin MakeRom.csx
-	dotnet script MakeRom.csx $(name)
+$(name).bin: _raw.bin MakeRom.csx $(adps)
+	dotnet script MakeRom.csx _raw2
+	dotnet script MakeSoundRom.csx _raw2.bin $(name).bin $(adps) -r 4
