@@ -43,6 +43,7 @@ void Main() {
     static sbyte monsterNum = 0;
     Sound_Start();
     StartBGM();
+    SwitchStatus(0);
     do {
         // if (ScanStop()) return;
         if ((Clock & 3) == 0) {

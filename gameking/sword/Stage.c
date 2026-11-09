@@ -82,6 +82,7 @@ void InitStage()
     InitBalls();
     InitPoints();
     InitOneUp();
+    SwitchStatus(1);
 }
 
 void SetCell(byte column, byte row, byte cell)
