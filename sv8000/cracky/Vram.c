@@ -1,0 +1,25 @@
+#include "Vram.h"
+#include "Destruction.h"
+#include "Stage.h"
+#include "Sprite.h"
+
+void DrawAll()
+{
+    EraseSprites();
+    DrawDestructions();
+    DrawSprites();
+    FlushVBuffer();
+}
+
+
+word Put2C(word vram, byte c)
+{
+    repeat (2) {
+        repeat (2) {
+            vram = Put(vram, c);
+            ++c;
+        }
+        vram += VramRowSize - 2;
+    }
+    return vram + 2 - VramRowSize * 2;
+}
