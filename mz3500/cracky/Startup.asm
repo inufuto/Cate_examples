@@ -4,10 +4,11 @@ ext InitVram
 ext Main_
 ext TimerCount
 ext HaltSub, ResumeSub
+ext JoystickAvailable_
 
 cseg
     xor a | out (0f8h),a ; Motor off
-
+    ld (JoystickAvailable_),a
     call InitVram
 jp Main_
 
