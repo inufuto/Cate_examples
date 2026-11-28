@@ -1,0 +1,26 @@
+
+constexpr byte Char_Space = 0x0;
+constexpr byte Char_Ascii = 0x0;
+constexpr word Char_Wall = 0x20;
+constexpr word Char_Title = 0x30;
+constexpr word Char_N = 0x30;
+constexpr word Char_E = 0x34;
+constexpr word Char_U = 0x38;
+constexpr word Char_R = 0x3C;
+constexpr word Char_A = 0x40;
+constexpr word Char_S = 0x44;
+constexpr word Char_CardFace = 0x48;
+constexpr word Char_Color = 0x7C;
+constexpr word Char_Sprite = 0x7C;
+constexpr word Char_Solver = 0x7C;
+constexpr byte Char_Solver_Left = 0x7C;
+constexpr byte Char_Solver_Right = 0x84;
+constexpr byte Char_Solver_Up = 0x8C;
+constexpr byte Char_Solver_Down = 0x94;
+constexpr byte Char_Monster = 0x9C;
+constexpr byte Char_Monster_Left = 0x9C;
+constexpr byte Char_Monster_Right = 0xA4;
+constexpr byte Char_Monster_Up = 0xAC;
+constexpr byte Char_Monster_Down = 0xB4;
+constexpr byte Char_CardBack = 0xBC;
+constexpr byte Char_End = 0xC0;
